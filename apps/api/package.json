@@ -15,12 +15,13 @@
   "dependencies": {
     "@hono/node-server": "^1.13.2",
     "@lucia-auth/adapter-drizzle": "^1.1.0",
+    "dotenv": "^16.4.7",
     "drizzle-orm": "^0.36.3",
     "hono": "^4.6.13",
     "lucia": "^3.2.2",
     "oslo": "^1.2.1",
     "postgres": "^3.4.5",
-    "dotenv": "^16.4.7"
+    "resend": "^6.12.3"
   },
   "devDependencies": {
     "@types/node": "^22.9.0",

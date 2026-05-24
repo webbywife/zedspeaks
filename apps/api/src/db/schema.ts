@@ -45,6 +45,17 @@ export const sessions = pgTable('sessions', {
   expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'date' }).notNull(),
 })
 
+// ── Email PINs ────────────────────────────────────────────────────────────────
+
+export const emailPins = pgTable('email_pins', {
+  id: text('id').primaryKey(),
+  email: text('email').notNull(),
+  pinHash: text('pin_hash').notNull(),
+  expiresAt: timestamp('expires_at').notNull(),
+  usedAt: timestamp('used_at'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+})
+
 // ── Access Requests ───────────────────────────────────────────────────────────
 
 export const accessRequests = pgTable('access_requests', {

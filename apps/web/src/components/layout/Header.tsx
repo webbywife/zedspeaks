@@ -1,5 +1,8 @@
-import { Settings, Camera } from 'lucide-react'
+import { Settings, Camera, LogOut } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { useBoardStore } from '../../store/boardStore'
+import { useAuthStore } from '../../store/authStore'
+import { logout } from '../../hooks/useAuth'
 import { ZedMascot } from '../mascot/ZedMascot'
 
 interface HeaderProps {
@@ -8,6 +11,14 @@ interface HeaderProps {
 
 export function Header({ onCameraOpen }: HeaderProps) {
   const setOpen = useBoardStore((s) => s.setVoiceSettingsOpen)
+  const setUser = useAuthStore((s) => s.setUser)
+  const navigate = useNavigate()
+
+  const handleLogout = async () => {
+    await logout()
+    setUser(null)
+    navigate('/login')
+  }
 
   return (
     <header className="flex items-center justify-between px-3 py-2 bg-blue-900 text-white shrink-0">
@@ -38,6 +49,13 @@ export function Header({ onCameraOpen }: HeaderProps) {
           aria-label="Voice settings"
         >
           <Settings size={20} />
+        </button>
+        <button
+          onClick={handleLogout}
+          className="flex items-center justify-center w-9 h-9 rounded-xl text-blue-200 hover:bg-blue-800 active:bg-blue-700 transition-colors"
+          aria-label="Sign out"
+        >
+          <LogOut size={18} />
         </button>
       </div>
     </header>

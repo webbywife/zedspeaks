@@ -5,6 +5,7 @@ import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
 import { secureHeaders } from 'hono/secure-headers'
 import { authRouter } from './routes/auth'
+import { adminRouter } from './routes/admin'
 import { profilesRouter } from './routes/profiles'
 import { boardsRouter } from './routes/boards'
 import { cellsRouter } from './routes/cells'
@@ -29,6 +30,7 @@ app.get('/health', (c) => c.json({ ok: true, service: 'zedspeaks-api' }))
 
 // Routes
 app.route('/auth', authRouter)
+app.route('/admin', adminRouter)
 app.route('/profiles', profilesRouter)
 app.route('/boards', boardsRouter)
 app.route('/cells', cellsRouter)
