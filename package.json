@@ -2,6 +2,10 @@
   "name": "zedspeaks",
   "private": true,
   "workspaces": ["apps/*"],
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
   "scripts": {
     "dev": "npm run dev --workspace=apps/web",
     "build": "npm run build --workspace=apps/web",
