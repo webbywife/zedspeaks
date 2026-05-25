@@ -29,7 +29,9 @@ export const accessRequestStatusEnum = pgEnum('access_request_status', [
 export const users = pgTable('users', {
   id: text('id').primaryKey(),
   email: text('email').unique().notNull(),
+  username: text('username').unique(),
   passwordHash: text('password_hash'),
+  googleId: text('google_id').unique(),
   name: text('name').notNull(),
   role: userRoleEnum('role').default('caregiver').notNull(),
   approvedAt: timestamp('approved_at'),

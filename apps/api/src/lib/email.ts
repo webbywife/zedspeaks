@@ -1,7 +1,16 @@
-import { Resend } from 'resend'
+import nodemailer from 'nodemailer'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-const FROM = process.env.FROM_EMAIL ?? 'ZedSpeaks <noreply@zedspeaks.com>'
+function transporter() {
+  return nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.GMAIL_USER,
+      pass: process.env.GMAIL_APP_PASSWORD,
+    },
+  })
+}
+
+const FROM = process.env.GMAIL_USER ?? 'noreply@zedspeaks.com'
 
 function shell(content: string) {
   return `<!DOCTYPE html><html><body style="font-family:-apple-system,sans-serif;background:#f8fafc;padding:40px 20px;margin:0">
@@ -11,27 +20,14 @@ function shell(content: string) {
 </div></body></html>`
 }
 
-export async function sendPinEmail(to: string, pin: string) {
-  await resend.emails.send({
-    from: FROM,
-    to,
-    subject: `Your ZedSpeaks login code: ${pin}`,
-    html: shell(`
-      <p style="color:#475569;margin:0 0 20px">Your login code is below. It expires in 10 minutes.</p>
-      <div style="font-size:40px;font-weight:800;letter-spacing:10px;text-align:center;padding:20px;background:#fdf2f8;border-radius:12px;color:#1e293b">${pin}</div>
-      <p style="color:#94a3b8;font-size:13px;margin:20px 0 0">Didn't request this? You can safely ignore this email.</p>
-    `),
-  })
-}
-
 export async function sendApprovalEmail(to: string, name: string, frontendUrl: string) {
-  await resend.emails.send({
-    from: FROM,
+  await transporter().sendMail({
+    from: `ZedSpeaks <${FROM}>`,
     to,
     subject: `You're approved for ZedSpeaks!`,
     html: shell(`
       <p style="color:#1e293b;font-size:18px;font-weight:700;margin:0 0 8px">Hi ${name}, you're approved!</p>
-      <p style="color:#475569;margin:0 0 20px">Your ZedSpeaks account is now active. Sign in with your email to get started.</p>
+      <p style="color:#475569;margin:0 0 20px">Your ZedSpeaks account is now active. Sign in to get started.</p>
       <a href="${frontendUrl}/login" style="display:inline-block;padding:12px 24px;background:#db2777;color:#fff;border-radius:12px;font-weight:700;text-decoration:none">Open ZedSpeaks</a>
     `),
   })
@@ -44,8 +40,8 @@ export async function sendAdminNotificationEmail(
   relation: string,
   frontendUrl: string,
 ) {
-  await resend.emails.send({
-    from: FROM,
+  await transporter().sendMail({
+    from: `ZedSpeaks <${FROM}>`,
     to: adminEmail,
     subject: `New ZedSpeaks access request from ${applicantName}`,
     html: shell(`
