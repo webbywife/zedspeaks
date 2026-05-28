@@ -22,18 +22,18 @@ export function arasaacUrl(id: number): string {
 
 export const SYMBOLS: AACSymbol[] = [
   // ── Needs ────────────────────────────────────────────────────────────────
-  { id: 'eat',        label: 'Eat',        spokenText: 'eat',        arasaacId: 5492,  emoji: '🍽️', category: 'needs' },
+  { id: 'eat',        label: 'Eat',        spokenText: 'eat',        arasaacId: 6456,  emoji: '🍽️', category: 'needs' },
   { id: 'drink',      label: 'Drink',      spokenText: 'drink',      arasaacId: 4483,  emoji: '🥤', category: 'needs' },
-  { id: 'sleep',      label: 'Sleep',      spokenText: 'sleep',      arasaacId: 7038,  emoji: '😴', category: 'needs' },
+  { id: 'sleep',      label: 'Sleep',      spokenText: 'sleep',      arasaacId: 6479,  emoji: '😴', category: 'needs' },
   { id: 'bathroom',   label: 'Bathroom',   spokenText: 'bathroom',   arasaacId: 6854,  emoji: '🚽', category: 'needs' },
   { id: 'help',       label: 'Help',       spokenText: 'help',       arasaacId: 7429,  emoji: '🆘', category: 'needs' },
   { id: 'pain',       label: 'Hurt',       spokenText: 'I am hurt',  arasaacId: 5870,  emoji: '🤕', category: 'needs' },
-  { id: 'more',       label: 'More',       spokenText: 'more',       arasaacId: 5575,  emoji: '➕', category: 'needs' },
-  { id: 'stop',       label: 'Stop',       spokenText: 'stop',       arasaacId: 6138,  emoji: '🛑', category: 'needs' },
-  { id: 'yes',        label: 'Yes',        spokenText: 'yes',        arasaacId: 27329, emoji: '✅', category: 'needs' },
+  { id: 'more',       label: 'More',       spokenText: 'more',       arasaacId: 5508,  emoji: '➕', category: 'needs' },
+  { id: 'stop',       label: 'Stop',       spokenText: 'stop',       arasaacId: 7196,  emoji: '🛑', category: 'needs' },
+  { id: 'yes',        label: 'Yes',        spokenText: 'yes',        arasaacId: 5584,  emoji: '✅', category: 'needs' },
   { id: 'no',         label: 'No',         spokenText: 'no',         arasaacId: 27328, emoji: '❌', category: 'needs' },
-  { id: 'please',     label: 'Please',     spokenText: 'please',     arasaacId: 5576,  emoji: '🙏', category: 'needs' },
-  { id: 'thanks',     label: 'Thank you',  spokenText: 'thank you',  arasaacId: 5536,  emoji: '💙', category: 'needs' },
+  { id: 'please',     label: 'Please',     spokenText: 'please',     arasaacId: 8195,  emoji: '🙏', category: 'needs' },
+  { id: 'thanks',     label: 'Thank you',  spokenText: 'thank you',  arasaacId: 8129,  emoji: '💙', category: 'needs' },
 
   // ── Feelings — illustrated with Zed's own face ───────────────────────────
   { id: 'happy',     label: 'Happy',     spokenText: 'I am happy',     arasaacId: 3196, emoji: '😊', category: 'feelings', customImageUrl: '/assets/moods/joy.png',       moodId: 'joy'       },
