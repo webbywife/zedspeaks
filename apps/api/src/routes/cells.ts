@@ -37,14 +37,10 @@ cellsRouter.put('/', async (c) => {
 
   if (body.cells.length === 0) return c.json([])
 
-  const inserted = await db.insert(cells).values(
-    body.cells.map((cell) => ({
-      id: crypto.randomUUID(),
-      boardId: body.boardId,
-      ...cell,
-    }))
-  ).returning()
-
+  await db.insert(cells).values(
+    body.cells.map((cell) => ({ id: crypto.randomUUID(), boardId: body.boardId, ...cell }))
+  )
+  const inserted = await db.select().from(cells).where(eq(cells.boardId, body.boardId))
   return c.json(inserted)
 })
 
@@ -58,6 +54,7 @@ cellsRouter.patch('/:id', async (c) => {
   if (!cell) return c.json({ error: 'Not found' }, 404)
   if (!await ownsBoard(user.id, cell.boardId)) return c.json({ error: 'Forbidden' }, 403)
 
-  const [updated] = await db.update(cells).set(body).where(eq(cells.id, id)).returning()
+  await db.update(cells).set(body).where(eq(cells.id, id))
+  const [updated] = await db.select().from(cells).where(eq(cells.id, id))
   return c.json(updated)
 })

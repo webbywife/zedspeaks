@@ -20,9 +20,9 @@
     "drizzle-orm": "^0.36.3",
     "hono": "^4.6.13",
     "lucia": "^3.2.2",
+    "mysql2": "^3.22.4",
     "nodemailer": "^8.0.8",
     "oslo": "^1.2.1",
-    "postgres": "^3.4.5",
     "resend": "^6.12.3"
   },
   "devDependencies": {

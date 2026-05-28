@@ -1,57 +1,48 @@
 import {
-  pgTable,
+  mysqlTable,
   text,
   timestamp,
   boolean,
-  integer,
-  jsonb,
-  pgEnum,
-} from 'drizzle-orm/pg-core'
+  int,
+  json,
+  mysqlEnum,
+  varchar,
+} from 'drizzle-orm/mysql-core'
 import { relations } from 'drizzle-orm'
 
 // ── Enums ────────────────────────────────────────────────────────────────────
 
-export const userRoleEnum = pgEnum('user_role', [
-  'aac_user',
-  'caregiver',
-  'therapist',
-  'admin',
-])
-
-export const accessRequestStatusEnum = pgEnum('access_request_status', [
-  'pending',
-  'approved',
-  'denied',
-])
+const userRoleValues = ['aac_user', 'caregiver', 'therapist', 'admin'] as const
+const accessRequestStatusValues = ['pending', 'approved', 'denied'] as const
 
 // ── Auth (Lucia) ──────────────────────────────────────────────────────────────
 
-export const users = pgTable('users', {
-  id: text('id').primaryKey(),
-  email: text('email').unique().notNull(),
-  username: text('username').unique(),
+export const users = mysqlTable('users', {
+  id: varchar('id', { length: 36 }).primaryKey(),
+  email: varchar('email', { length: 255 }).unique().notNull(),
+  username: varchar('username', { length: 20 }).unique(),
   passwordHash: text('password_hash'),
-  googleId: text('google_id').unique(),
-  name: text('name').notNull(),
-  role: userRoleEnum('role').default('caregiver').notNull(),
+  googleId: varchar('google_id', { length: 255 }).unique(),
+  name: varchar('name', { length: 255 }).notNull(),
+  role: mysqlEnum('role', userRoleValues).default('caregiver').notNull(),
   approvedAt: timestamp('approved_at'),
   isActive: boolean('is_active').default(true).notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 
-export const sessions = pgTable('sessions', {
-  id: text('id').primaryKey(),
-  userId: text('user_id')
+export const sessions = mysqlTable('sessions', {
+  id: varchar('id', { length: 255 }).primaryKey(),
+  userId: varchar('user_id', { length: 36 })
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
-  expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'date' }).notNull(),
+  expiresAt: timestamp('expires_at').notNull(),
 })
 
 // ── Email PINs ────────────────────────────────────────────────────────────────
 
-export const emailPins = pgTable('email_pins', {
-  id: text('id').primaryKey(),
-  email: text('email').notNull(),
+export const emailPins = mysqlTable('email_pins', {
+  id: varchar('id', { length: 36 }).primaryKey(),
+  email: varchar('email', { length: 255 }).notNull(),
   pinHash: text('pin_hash').notNull(),
   expiresAt: timestamp('expires_at').notNull(),
   usedAt: timestamp('used_at'),
@@ -60,105 +51,105 @@ export const emailPins = pgTable('email_pins', {
 
 // ── Access Requests ───────────────────────────────────────────────────────────
 
-export const accessRequests = pgTable('access_requests', {
-  id: text('id').primaryKey(),
-  email: text('email').notNull(),
-  applicantName: text('applicant_name').notNull(),
-  relation: text('relation').notNull(),           // e.g. "Parent", "Therapist"
+export const accessRequests = mysqlTable('access_requests', {
+  id: varchar('id', { length: 36 }).primaryKey(),
+  email: varchar('email', { length: 255 }).notNull(),
+  applicantName: varchar('applicant_name', { length: 255 }).notNull(),
+  relation: varchar('relation', { length: 100 }).notNull(),
   reason: text('reason').notNull(),
-  diagnosis: text('diagnosis'),                    // optional
-  status: accessRequestStatusEnum('status').default('pending').notNull(),
+  diagnosis: text('diagnosis'),
+  status: mysqlEnum('status', accessRequestStatusValues).default('pending').notNull(),
   reviewedAt: timestamp('reviewed_at'),
-  reviewedBy: text('reviewed_by').references(() => users.id),
+  reviewedBy: varchar('reviewed_by', { length: 36 }).references(() => users.id),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 
 // ── AAC Profiles ──────────────────────────────────────────────────────────────
 
-export const aacProfiles = pgTable('aac_profiles', {
-  id: text('id').primaryKey(),
-  caregiverId: text('caregiver_id')
+export const aacProfiles = mysqlTable('aac_profiles', {
+  id: varchar('id', { length: 36 }).primaryKey(),
+  caregiverId: varchar('caregiver_id', { length: 36 })
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
-  name: text('name').notNull(),
+  name: varchar('name', { length: 255 }).notNull(),
   avatarUrl: text('avatar_url'),
-  gridCols: integer('grid_cols').default(5).notNull(),
-  gridRows: integer('grid_rows').default(4).notNull(),
-  fontScale: integer('font_scale').default(100).notNull(),     // percent
+  gridCols: int('grid_cols').default(5).notNull(),
+  gridRows: int('grid_rows').default(4).notNull(),
+  fontScale: int('font_scale').default(100).notNull(),
   ttsVoiceUri: text('tts_voice_uri'),
-  ttsRate: integer('tts_rate').default(85).notNull(),          // stored ×100 (0.85 → 85)
-  ttsPitch: integer('tts_pitch').default(115).notNull(),       // 1.15 → 115
-  ttsVolume: integer('tts_volume').default(100).notNull(),
-  lockPin: text('lock_pin'),
+  ttsRate: int('tts_rate').default(85).notNull(),
+  ttsPitch: int('tts_pitch').default(115).notNull(),
+  ttsVolume: int('tts_volume').default(100).notNull(),
+  lockPin: varchar('lock_pin', { length: 10 }),
   highContrast: boolean('high_contrast').default(false).notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 
 // ── Boards ────────────────────────────────────────────────────────────────────
 
-export const boards = pgTable('boards', {
-  id: text('id').primaryKey(),
-  profileId: text('profile_id')
+export const boards = mysqlTable('boards', {
+  id: varchar('id', { length: 36 }).primaryKey(),
+  profileId: varchar('profile_id', { length: 36 })
     .notNull()
     .references(() => aacProfiles.id, { onDelete: 'cascade' }),
-  name: text('name').notNull(),
+  name: varchar('name', { length: 255 }).notNull(),
   isHome: boolean('is_home').default(false).notNull(),
-  parentBoardId: text('parent_board_id'),         // self-reference for sub-boards
+  parentBoardId: varchar('parent_board_id', { length: 36 }),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 
 // ── Cells ─────────────────────────────────────────────────────────────────────
 
-export const cells = pgTable('cells', {
-  id: text('id').primaryKey(),
-  boardId: text('board_id')
+export const cells = mysqlTable('cells', {
+  id: varchar('id', { length: 36 }).primaryKey(),
+  boardId: varchar('board_id', { length: 36 })
     .notNull()
     .references(() => boards.id, { onDelete: 'cascade' }),
-  position: integer('position').notNull(),        // 0-indexed slot in the grid
-  label: text('label').notNull(),
+  position: int('position').notNull(),
+  label: varchar('label', { length: 255 }).notNull(),
   spokenText: text('spoken_text').notNull(),
-  iconUrl: text('icon_url'),                       // ARASAAC URL or custom photo
-  bgColor: text('bg_color').default('#ffffff'),
-  linkBoardId: text('link_board_id'),              // navigate to sub-board on tap
-  customAudioUrl: text('custom_audio_url'),        // caregiver-recorded voice
+  iconUrl: text('icon_url'),
+  bgColor: varchar('bg_color', { length: 20 }).default('#ffffff'),
+  linkBoardId: varchar('link_board_id', { length: 36 }),
+  customAudioUrl: text('custom_audio_url'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 
 // ── Communication Logs ────────────────────────────────────────────────────────
 
-export const communicationLogs = pgTable('communication_logs', {
-  id: text('id').primaryKey(),
-  profileId: text('profile_id')
+export const communicationLogs = mysqlTable('communication_logs', {
+  id: varchar('id', { length: 36 }).primaryKey(),
+  profileId: varchar('profile_id', { length: 36 })
     .notNull()
     .references(() => aacProfiles.id, { onDelete: 'cascade' }),
   spokenText: text('spoken_text').notNull(),
-  boardId: text('board_id'),
-  cellIds: jsonb('cell_ids').$type<string[]>().default([]),
+  boardId: varchar('board_id', { length: 36 }),
+  cellIds: json('cell_ids').$type<string[]>().default([]),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 
 // ── Visual Schedules ──────────────────────────────────────────────────────────
 
-export const schedules = pgTable('schedules', {
-  id: text('id').primaryKey(),
-  profileId: text('profile_id')
+export const schedules = mysqlTable('schedules', {
+  id: varchar('id', { length: 36 }).primaryKey(),
+  profileId: varchar('profile_id', { length: 36 })
     .notNull()
     .references(() => aacProfiles.id, { onDelete: 'cascade' }),
-  label: text('label').notNull(),
+  label: varchar('label', { length: 255 }).notNull(),
   iconUrl: text('icon_url'),
-  scheduledTime: text('scheduled_time'),           // HH:MM
-  daysOfWeek: jsonb('days_of_week').$type<number[]>().default([]),  // 0=Sun…6=Sat
-  sortOrder: integer('sort_order').default(0).notNull(),
+  scheduledTime: varchar('scheduled_time', { length: 5 }),
+  daysOfWeek: json('days_of_week').$type<number[]>().default([]),
+  sortOrder: int('sort_order').default(0).notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 
 // ── Profile–Therapist Link ────────────────────────────────────────────────────
 
-export const profileTherapists = pgTable('profile_therapists', {
-  profileId: text('profile_id')
+export const profileTherapists = mysqlTable('profile_therapists', {
+  profileId: varchar('profile_id', { length: 36 })
     .notNull()
     .references(() => aacProfiles.id, { onDelete: 'cascade' }),
-  therapistId: text('therapist_id')
+  therapistId: varchar('therapist_id', { length: 36 })
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
   canSuggest: boolean('can_suggest').default(false).notNull(),

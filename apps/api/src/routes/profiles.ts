@@ -23,14 +23,9 @@ profilesRouter.post('/', async (c) => {
 
   if (!body.name) return c.json({ error: 'Name required' }, 400)
 
-  const [profile] = await db.insert(aacProfiles).values({
-    id: crypto.randomUUID(),
-    caregiverId: user.id,
-    name: body.name,
-    gridCols: body.gridCols ?? 5,
-    gridRows: body.gridRows ?? 4,
-  }).returning()
-
+  const id = crypto.randomUUID()
+  await db.insert(aacProfiles).values({ id, caregiverId: user.id, name: body.name, gridCols: body.gridCols ?? 5, gridRows: body.gridRows ?? 4 })
+  const [profile] = await db.select().from(aacProfiles).where(eq(aacProfiles.id, id))
   return c.json(profile, 201)
 })
 
@@ -43,7 +38,8 @@ profilesRouter.patch('/:id', async (c) => {
   const [existing] = await db.select().from(aacProfiles).where(eq(aacProfiles.id, id))
   if (!existing || existing.caregiverId !== user.id) return c.json({ error: 'Not found' }, 404)
 
-  const [updated] = await db.update(aacProfiles).set(body).where(eq(aacProfiles.id, id)).returning()
+  await db.update(aacProfiles).set(body).where(eq(aacProfiles.id, id))
+  const [updated] = await db.select().from(aacProfiles).where(eq(aacProfiles.id, id))
   return c.json(updated)
 })
 

@@ -48,13 +48,9 @@ boardsRouter.post('/', async (c) => {
   if (!body.profileId || !body.name) return c.json({ error: 'profileId and name required' }, 400)
   if (!await ownsProfile(user.id, body.profileId)) return c.json({ error: 'Forbidden' }, 403)
 
-  const [board] = await db.insert(boards).values({
-    id: crypto.randomUUID(),
-    profileId: body.profileId,
-    name: body.name,
-    isHome: body.isHome ?? false,
-  }).returning()
-
+  const id = crypto.randomUUID()
+  await db.insert(boards).values({ id, profileId: body.profileId, name: body.name, isHome: body.isHome ?? false })
+  const [board] = await db.select().from(boards).where(eq(boards.id, id))
   return c.json(board, 201)
 })
 
@@ -68,7 +64,8 @@ boardsRouter.patch('/:id', async (c) => {
   if (!existing) return c.json({ error: 'Not found' }, 404)
   if (!await ownsProfile(user.id, existing.profileId)) return c.json({ error: 'Forbidden' }, 403)
 
-  const [updated] = await db.update(boards).set(body).where(eq(boards.id, id)).returning()
+  await db.update(boards).set(body).where(eq(boards.id, id))
+  const [updated] = await db.select().from(boards).where(eq(boards.id, id))
   return c.json(updated)
 })
 
