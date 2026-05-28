@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { Eye, EyeOff, Mail, Lock, User, AtSign } from 'lucide-react'
+import { Eye, EyeOff } from 'lucide-react'
 import { useAuthStore } from '../store/authStore'
 import { useAuthCheck } from '../hooks/useAuth'
 
 const API = import.meta.env.VITE_API_URL ?? 'http://localhost:3001'
 
-type Tab = 'signin' | 'signup'
+type Mode = 'signin' | 'signup'
 
 function GoogleButton() {
   return (
     <a
       href={`${API}/auth/google`}
-      className="flex items-center justify-center gap-3 w-full py-3 rounded-xl border-2 border-gray-200 bg-white text-slate-700 font-semibold text-sm hover:bg-gray-50 hover:border-gray-300 transition-colors"
+      className="flex items-center justify-center gap-3 w-full py-2.5 rounded-lg border border-gray-300 bg-white text-slate-700 font-medium text-sm hover:bg-gray-50 transition-colors"
     >
       <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
         <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
@@ -25,21 +25,7 @@ function GoogleButton() {
   )
 }
 
-function Divider() {
-  return (
-    <div className="flex items-center gap-3 my-1">
-      <div className="flex-1 h-px bg-gray-200" />
-      <span className="text-xs text-gray-400">or</span>
-      <div className="flex-1 h-px bg-gray-200" />
-    </div>
-  )
-}
-
-function PasswordInput({
-  value,
-  onChange,
-  placeholder = 'Password',
-}: {
+function PasswordInput({ value, onChange, placeholder = 'Password' }: {
   value: string
   onChange: (v: string) => void
   placeholder?: string
@@ -47,7 +33,6 @@ function PasswordInput({
   const [show, setShow] = useState(false)
   return (
     <div className="relative">
-      <Lock size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
       <input
         type={show ? 'text' : 'password'}
         value={value}
@@ -55,7 +40,7 @@ function PasswordInput({
         placeholder={placeholder}
         required
         minLength={8}
-        className="w-full pl-9 pr-10 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-pink-400 bg-gray-50 transition-colors"
+        className="w-full px-3 py-2.5 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent pr-10"
       />
       <button
         type="button"
@@ -75,15 +60,17 @@ export function LoginPage() {
   const { user, checked, setUser } = useAuthStore()
   useAuthCheck()
 
-  const [tab, setTab] = useState<Tab>('signin')
+  const [mode, setMode] = useState<Mode>('signin')
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(params.get('error') === 'oauth_failed' ? 'Google sign-in failed. Please try again.' : '')
+  const [error, setError] = useState(
+    params.get('error') === 'oauth_failed' ? 'Google sign-in failed. Please try again.' : ''
+  )
 
-  // Sign in state
-  const [siEmail, setSiEmail] = useState('')
+  // Sign in
+  const [siIdentifier, setSiIdentifier] = useState('')
   const [siPassword, setSiPassword] = useState('')
 
-  // Sign up state
+  // Sign up
   const [suName, setSuName] = useState('')
   const [suUsername, setSuUsername] = useState('')
   const [suEmail, setSuEmail] = useState('')
@@ -95,16 +82,17 @@ export function LoginPage() {
     if (checked && user) navigate('/board', { replace: true })
   }, [checked, user, navigate])
 
+  const switchMode = (m: Mode) => { setMode(m); setError('') }
+
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
-    setError('')
+    setLoading(true); setError('')
     try {
       const r = await fetch(`${API}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ email: siEmail, password: siPassword }),
+        body: JSON.stringify({ email: siIdentifier, password: siPassword }),
       })
       const data = await r.json()
       if (r.status === 403 && data.status === 'pending') { navigate('/pending'); return }
@@ -121,20 +109,13 @@ export function LoginPage() {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
     if (suPassword !== suConfirm) { setError('Passwords do not match'); return }
-    setLoading(true)
-    setError('')
+    setLoading(true); setError('')
     try {
       const r = await fetch(`${API}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({
-          email: suEmail,
-          password: suPassword,
-          name: suName,
-          username: suUsername,
-          relation: suRelation,
-        }),
+        body: JSON.stringify({ email: suEmail, password: suPassword, name: suName, username: suUsername, relation: suRelation }),
       })
       const data = await r.json()
       if (!r.ok) throw new Error(data.error ?? 'Sign up failed')
@@ -149,135 +130,144 @@ export function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center px-4">
-      <div className="w-full max-w-sm">
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <img
-            src="/assets/moods/joy.png"
-            alt="Zed"
-            className="w-16 h-16 rounded-full object-cover mx-auto mb-3 shadow"
-          />
-          <h1 className="text-2xl font-black text-pink-600">ZedSpeaks</h1>
-        </div>
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4">
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col gap-4">
-          <GoogleButton />
-          <Divider />
+      {/* Logo */}
+      <div className="text-center mb-6">
+        <img src="/assets/moods/joy.png" alt="Zed" className="w-10 h-10 rounded-full object-cover mx-auto mb-2 shadow" />
+        <h1 className="text-2xl font-black text-pink-600">ZedSpeaks</h1>
+        <p className="text-sm text-gray-500">AAC Communication Board</p>
+      </div>
 
-          {/* Tabs */}
-          <div className="flex rounded-xl bg-gray-100 p-1 gap-1">
-            {(['signin', 'signup'] as Tab[]).map((t) => (
-              <button
-                key={t}
-                onClick={() => { setTab(t); setError('') }}
-                className={`flex-1 py-2 rounded-lg text-sm font-bold transition-colors ${
-                  tab === t ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400 hover:text-slate-600'
-                }`}
-              >
-                {t === 'signin' ? 'Sign in' : 'Sign up'}
-              </button>
-            ))}
-          </div>
+      {/* Card */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 w-full max-w-sm">
 
-          {/* Sign in */}
-          {tab === 'signin' && (
-            <form onSubmit={handleSignIn} className="flex flex-col gap-3">
-              <div className="relative">
-                <Mail size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+        {mode === 'signin' ? (
+          <>
+            <h2 className="text-xl font-bold text-gray-900 mb-6">Sign in to ZedSpeaks</h2>
+            <form onSubmit={handleSignIn} className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-medium text-gray-700">Email or Username</label>
                 <input
-                  type="email"
-                  value={siEmail}
-                  onChange={(e) => setSiEmail(e.target.value)}
-                  placeholder="Email"
+                  type="text"
+                  value={siIdentifier}
+                  onChange={(e) => setSiIdentifier(e.target.value)}
                   required
                   autoFocus
-                  className="w-full pl-9 pr-3 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-pink-400 bg-gray-50 transition-colors"
+                  className="w-full px-3 py-2.5 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                 />
               </div>
-              <PasswordInput value={siPassword} onChange={setSiPassword} />
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-medium text-gray-700">Password</label>
+                <PasswordInput value={siPassword} onChange={setSiPassword} />
+              </div>
+
+              <div className="flex items-center justify-between text-sm">
+                <label className="flex items-center gap-2 text-gray-600 cursor-pointer">
+                  <input type="checkbox" className="rounded border-gray-300 text-pink-600" />
+                  Remember me
+                </label>
+                <button type="button" className="text-pink-600 hover:underline font-medium">
+                  Forgot password?
+                </button>
+              </div>
+
               {error && <p className="text-sm text-red-600">{error}</p>}
+
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 rounded-xl bg-pink-600 text-white font-bold text-sm disabled:opacity-50 hover:bg-pink-700 transition-colors"
+                className="w-full py-2.5 rounded-lg bg-pink-600 text-white font-semibold text-sm disabled:opacity-50 hover:bg-pink-700 transition-colors mt-1"
               >
-                {loading ? 'Signing in…' : 'Sign in'}
+                {loading ? 'Signing in…' : 'Sign In'}
               </button>
             </form>
-          )}
 
-          {/* Sign up */}
-          {tab === 'signup' && (
-            <form onSubmit={handleSignUp} className="flex flex-col gap-3">
-              <div className="relative">
-                <User size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input
-                  type="text"
-                  value={suName}
-                  onChange={(e) => setSuName(e.target.value)}
-                  placeholder="Full name"
-                  required
-                  autoFocus
-                  className="w-full pl-9 pr-3 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-pink-400 bg-gray-50 transition-colors"
-                />
-              </div>
-              <div className="relative">
-                <AtSign size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input
-                  type="text"
-                  value={suUsername}
-                  onChange={(e) => setSuUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
-                  placeholder="username"
-                  required
-                  minLength={3}
-                  maxLength={20}
-                  className="w-full pl-9 pr-3 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-pink-400 bg-gray-50 transition-colors"
-                />
-              </div>
-              <div className="relative">
-                <Mail size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input
-                  type="email"
-                  value={suEmail}
-                  onChange={(e) => setSuEmail(e.target.value)}
-                  placeholder="Email"
-                  required
-                  className="w-full pl-9 pr-3 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-pink-400 bg-gray-50 transition-colors"
-                />
-              </div>
-              <PasswordInput value={suPassword} onChange={setSuPassword} placeholder="Password (min. 8 chars)" />
-              <PasswordInput value={suConfirm} onChange={setSuConfirm} placeholder="Confirm password" />
-              <select
-                value={suRelation}
-                onChange={(e) => setSuRelation(e.target.value)}
-                className="w-full px-3 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-pink-400 bg-gray-50"
-              >
-                <option>Parent/Caregiver</option>
-                <option>Therapist</option>
-                <option>Teacher</option>
-                <option>Other</option>
-              </select>
-              {error && <p className="text-sm text-red-600">{error}</p>}
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full py-3 rounded-xl bg-pink-600 text-white font-bold text-sm disabled:opacity-50 hover:bg-pink-700 transition-colors"
-              >
-                {loading ? 'Creating account…' : 'Request access'}
+            <div className="flex items-center gap-3 my-4">
+              <div className="flex-1 h-px bg-gray-200" />
+              <span className="text-xs text-gray-400">or</span>
+              <div className="flex-1 h-px bg-gray-200" />
+            </div>
+
+            <GoogleButton />
+
+            <p className="text-center text-sm text-gray-500 mt-6">
+              Don't have an account?{' '}
+              <button onClick={() => switchMode('signup')} className="text-pink-600 font-semibold hover:underline">
+                Sign up
               </button>
-              <p className="text-xs text-center text-slate-400">
+            </p>
+          </>
+        ) : (
+          <>
+            <h2 className="text-xl font-bold text-gray-900 mb-6">Create an account</h2>
+            <form onSubmit={handleSignUp} className="flex flex-col gap-3">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-medium text-gray-700">Full name</label>
+                <input type="text" value={suName} onChange={(e) => setSuName(e.target.value)} required autoFocus
+                  className="w-full px-3 py-2.5 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent" />
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-medium text-gray-700">Username</label>
+                <input type="text" value={suUsername}
+                  onChange={(e) => setSuUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
+                  required minLength={3} maxLength={20} placeholder="e.g. leaabarentos"
+                  className="w-full px-3 py-2.5 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent" />
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-medium text-gray-700">Email</label>
+                <input type="email" value={suEmail} onChange={(e) => setSuEmail(e.target.value)} required
+                  className="w-full px-3 py-2.5 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent" />
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-medium text-gray-700">Password</label>
+                <PasswordInput value={suPassword} onChange={setSuPassword} placeholder="Min. 8 characters" />
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-medium text-gray-700">Confirm password</label>
+                <PasswordInput value={suConfirm} onChange={setSuConfirm} placeholder="Confirm password" />
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-medium text-gray-700">I am a</label>
+                <select value={suRelation} onChange={(e) => setSuRelation(e.target.value)}
+                  className="w-full px-3 py-2.5 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 bg-white">
+                  <option>Parent/Caregiver</option>
+                  <option>Therapist</option>
+                  <option>Teacher</option>
+                  <option>Other</option>
+                </select>
+              </div>
+
+              {error && <p className="text-sm text-red-600">{error}</p>}
+
+              <button type="submit" disabled={loading}
+                className="w-full py-2.5 rounded-lg bg-pink-600 text-white font-semibold text-sm disabled:opacity-50 hover:bg-pink-700 transition-colors mt-1">
+                {loading ? 'Creating account…' : 'Request Access'}
+              </button>
+
+              <p className="text-xs text-center text-gray-400">
                 Your account will be reviewed before you can sign in.
               </p>
             </form>
-          )}
-        </div>
 
-        <div className="text-center mt-6">
-          <Link to="/" className="text-xs text-slate-400 hover:text-slate-600">
-            ← Back to ZedSpeaks
-          </Link>
-        </div>
+            <p className="text-center text-sm text-gray-500 mt-5">
+              Already have an account?{' '}
+              <button onClick={() => switchMode('signin')} className="text-pink-600 font-semibold hover:underline">
+                Sign in
+              </button>
+            </p>
+          </>
+        )}
+      </div>
+
+      <div className="mt-6">
+        <Link to="/" className="text-xs text-gray-400 hover:text-gray-600">← Back to ZedSpeaks</Link>
       </div>
     </div>
   )
