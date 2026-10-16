@@ -22,19 +22,27 @@ OUT = os.path.join(ROOT, "apps/web/public/photos")
 CREDITS_TS = os.path.join(ROOT, "apps/web/src/data/photoCredits.ts")
 KEY_FILE = os.path.expanduser("~/.config/zedspeaks/pexels.key")
 
-# card id -> search words (generic, no brands)
+# card id -> search words (generic, no brands). Not listed = icon on purpose:
+# blocks, play, park, store (no clear generic photo), car, toycars (real car designs are brands)
 QUERIES = {
-    "blocks": "colorful toy building blocks", "toycars": "small toy cars collection", "car": "family car parked",
-    "play": "children toys on floor", "read": "open picture book",
-    "cookie": "chocolate chip cookies", "juice": "glass of orange juice", "milk": "glass of milk",
-    "apple": "red apple fruit", "banana": "bananas fruit", "icecream": "ice cream cone", "water": "glass of water",
-    "watch": "television living room", "listen": "headphones", "outside": "sunny garden yard",
-    "park": "playground park", "store": "grocery store shelves", "home": "house exterior", "school": "school building",
-    "chicken": "fried chicken plate", "eggs": "fried eggs breakfast", "sandwich": "sandwich plate",
+    "read": "open picture book",
+    "cookie": "chocolate chip cookies", "juice": "orange juice glass white background", "milk": "glass of milk",
+    "apple": "red apple fruit", "banana": "bananas fruit", "icecream": "vanilla ice cream cone dessert", "water": "glass of water",
+    "watch": "television living room", "listen": "headphones", "outside": "green grass backyard trees",
+    "home": "house exterior", "school": "empty school classroom",
+    "chicken": "fried chicken plate", "eggs": "fried egg on white plate", "sandwich": "sandwich plate",
     "pizza": "pizza slice", "bread": "bread loaf",
 }
+# a photo's description must mention one of these, and none of the AVOID words
+MUST = {"blocks": r"block|brick", "play": r"toy", "park": r"playground|slide|swing", "store": r"supermarket|grocery",
+        "toycars": r"toy|model|miniature", "eggs": r"egg", "juice": r"juice", "listen": r"headphone",
+        "icecream": r"ice cream", "watch": r"tv|television"}
+AVOID = re.compile(r"black and white|eerie|dark|lego|logo|brand|sign|neon|warehouse|aerial|drone", re.I)
 PEOPLE_WORDS = re.compile(r"\b(person|people|man|men|woman|women|child|children|kid|kids|boy|girl|baby|"
-                          r"hand|hands|face|family|student|teacher|couple|crowd|selfie)\b", re.I)
+                          r"hand|hands|face|family|student|teacher|couple|crowd|selfie|backpacker|tourist|walker|"
+                          r"worker|shopper|customer|guy|lady|player|someone|individual|portrait|female|male|millennial|"
+                          r"young|adult|teen|toddler|mother|father|daughter|son|friend|human|body|finger|arm|leg)s?\b", re.I)
+ODD_WORDS = re.compile(r"\b(conceptual|concept|surreal|abstract|illustration|3d|render)\b", re.I)
 
 
 def api(query, page):
@@ -65,16 +73,24 @@ def main():
             continue
         skip = credits.get(cid, {}).get("pexels_id")
         chosen = None
-        for photo in api(query, 1):
-            if photo["id"] == skip or PEOPLE_WORDS.search(photo.get("alt") or ""):
+        for photo in [p for page in (1, 2, 3) for p in api(query, page)]:
+            alt = photo.get("alt") or ""
+            if (photo["id"] == skip or PEOPLE_WORDS.search(alt) or ODD_WORDS.search(alt) or AVOID.search(alt)
+                    or (cid in MUST and not re.search(MUST[cid], alt, re.I))):
+                continue
+            try:
+                with urllib.request.urlopen(urllib.request.Request(photo["src"]["large"], headers={"User-Agent": "ZedSpeaks/1.0"}), timeout=60) as r:
+                    card(r.read(), os.path.join(OUT, cid + ".jpg"))
+            except Exception as e:  # a photo that won't download: try the next one
+                print(f"{cid}: skipped photo {photo['id']} ({e})")
                 continue
             chosen = photo
             break
         if not chosen:
-            print(f"{cid}: no suitable photo, keeping the icon")
+            print(f"{cid}: no suitable photo, using the icon")
+            if credits.pop(cid, None):
+                os.remove(os.path.join(OUT, cid + ".jpg"))
             continue
-        with urllib.request.urlopen(urllib.request.Request(chosen["src"]["large"], headers={"User-Agent": "ZedSpeaks/1.0"}), timeout=60) as r:
-            card(r.read(), os.path.join(OUT, cid + ".jpg"))
         credits[cid] = {"file": cid + ".jpg", "pexels_id": chosen["id"], "url": chosen["url"],
                         "photographer": chosen["photographer"], "photographer_url": chosen["photographer_url"],
                         "alt": chosen.get("alt") or "", "license": "Pexels License (https://www.pexels.com/license/)"}
