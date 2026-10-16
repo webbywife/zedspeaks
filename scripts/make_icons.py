@@ -32,7 +32,7 @@ GLYPHS = {
                    outside="sun", bedroom="bed-double"),
     "actions": dict(go="circle-arrow-right", play="toy-brick", read="book-open", watch="tv", listen="headphones",
                     run="footprints", sit="armchair", wait="hourglass", look="eye", come="hand", open="door-open",
-                    want="hand-metal"),
+                    want="hand-metal", lego="toy-brick", tomica="car-front"),
 }
 
 # feeling -> (eyes, brows, mouth, extra)

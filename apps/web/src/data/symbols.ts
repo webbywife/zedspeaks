@@ -91,6 +91,8 @@ export const SYMBOLS: AACSymbol[] = [
   // ── Actions ──────────────────────────────────────────────────────────────
   { id: 'go',     label: 'Go',     spokenText: 'go',     arasaacId: 4690,  emoji: '🚶', category: 'actions' },
   { id: 'play',   label: 'Play',   spokenText: 'play',   arasaacId: 26498, emoji: '🎮', category: 'actions' },
+  { id: 'lego',       label: 'Lego',       spokenText: 'Lego',        arasaacId: 0,     emoji: '🧱', category: 'actions' },
+  { id: 'tomica',     label: 'Tomica cars', spokenText: 'my Tomica cars', arasaacId: 0, emoji: '🚗', category: 'actions' },
   { id: 'read',   label: 'Read',   spokenText: 'read',   arasaacId: 6097,  emoji: '📖', category: 'actions' },
   { id: 'watch',  label: 'Watch',  spokenText: 'watch',  arasaacId: 6569,  emoji: '📺', category: 'actions' },
   { id: 'listen', label: 'Listen', spokenText: 'listen', arasaacId: 5569,  emoji: '👂', category: 'actions' },
