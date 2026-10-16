@@ -11,3 +11,4 @@ apps/api/dist
 .claude/
 scripts/samples/
 scripts/_sheet*
+scripts/_photos*
