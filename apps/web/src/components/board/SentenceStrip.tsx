@@ -26,7 +26,7 @@ export function SentenceStrip({ items, onSpeak, onClear, onBackspace }: Sentence
       {/* Sentence chips */}
       <div
         ref={scrollRef}
-        className="flex-1 flex items-center gap-1.5 overflow-x-auto scrollbar-none min-h-[48px] py-1"
+        className="flex-1 min-w-0 flex items-center gap-1.5 overflow-x-auto scrollbar-none min-h-[48px] py-1"
         style={{ scrollbarWidth: 'none' }}
       >
         {isEmpty ? (

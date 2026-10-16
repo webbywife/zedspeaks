@@ -15,6 +15,15 @@ export function getCategoryMeta(id: CategoryId): CategoryMeta {
   return CATEGORIES.find(c => c.id === id)!
 }
 
+import { PHOTO_CREDITS } from './photoCredits'
+
+/** A starter card's picture: a credited Pexels photo when we have one, else our icon */
+export function cardImage(id: string): { src: string; photo: boolean } {
+  return id in PHOTO_CREDITS
+    ? { src: `${import.meta.env.BASE_URL}photos/${id}.jpg`, photo: true }
+    : { src: iconUrl(id), photo: false }
+}
+
 // ZedSpeaks icon set (scripts/make_icons.py → public/icons/)
 export function iconUrl(id: string): string {
   return `${import.meta.env.BASE_URL}icons/${id}.svg`
@@ -91,6 +100,8 @@ export const SYMBOLS: AACSymbol[] = [
   // ── Actions ──────────────────────────────────────────────────────────────
   { id: 'go',     label: 'Go',     spokenText: 'go',     arasaacId: 4690,  emoji: '🚶', category: 'actions' },
   { id: 'play',   label: 'Play',   spokenText: 'play',   arasaacId: 26498, emoji: '🎮', category: 'actions' },
+  { id: 'blocks',      label: 'Blocks',     spokenText: 'building blocks',        arasaacId: 0,     emoji: '🧱', category: 'actions' },
+  { id: 'toycars',    label: 'Toy cars',  spokenText: 'toy cars', arasaacId: 0, emoji: '🚗', category: 'actions' },
   { id: 'read',   label: 'Read',   spokenText: 'read',   arasaacId: 6097,  emoji: '📖', category: 'actions' },
   { id: 'watch',  label: 'Watch',  spokenText: 'watch',  arasaacId: 6569,  emoji: '📺', category: 'actions' },
   { id: 'listen', label: 'Listen', spokenText: 'listen', arasaacId: 5569,  emoji: '👂', category: 'actions' },

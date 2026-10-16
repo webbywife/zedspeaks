@@ -40,6 +40,9 @@ def texts():
     out = [a or b for a, b in re.findall(r"spokenText:\s*" + q, s)]
     for m in re.finditer(r"\bp\(\s*" + q + r"\s*,\s*" + q + r"\s*,\s*" + q, p):
         out.append(m.group(5) or m.group(6) or "")
+    for name in os.listdir(DATA):
+        if name.endswith(".ts"):
+            out += [a or b for a, b in re.findall(r"\bsay\(\s*" + q + r"\s*\)", open(os.path.join(DATA, name)).read())]
     return sorted({(t or "").replace("\\'", "'") for t in out if (t or "").strip()})
 
 
@@ -79,6 +82,12 @@ def main():
             open(os.path.join(OUT, name), "wb").write(tts(t, a[1]))
             man[k] = name
             new += 1
+        keep = {norm(t) for t in texts()} | {"_voice"}
+        for k in [k for k in man if k not in keep]:  # phrases removed from the app
+            if man[k] not in {v for kk, v in man.items() if kk in keep}:
+                try: os.remove(os.path.join(OUT, man[k]))
+                except FileNotFoundError: pass
+            del man[k]
         json.dump(man, open(man_f, "w"), indent=1, sort_keys=True)
         print(f"{new} new clips, {len(man) - 1} total -> {OUT}")
     else:
