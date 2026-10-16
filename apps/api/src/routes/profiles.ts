@@ -1,9 +1,9 @@
 import { Hono } from 'hono'
 import { eq } from 'drizzle-orm'
-import { db } from '../db'
-import { aacProfiles } from '../db/schema'
-import { requireAuth } from '../middleware/auth'
-import type { AppEnv } from '../lib/types'
+import { db } from '../db/index.js'
+import { aacProfiles } from '../db/schema.js'
+import { requireAuth } from '../middleware/auth.js'
+import type { AppEnv } from '../lib/types.js'
 
 export const profilesRouter = new Hono<AppEnv>()
 

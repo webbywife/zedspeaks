@@ -2,12 +2,12 @@ import { Hono } from 'hono'
 import { getCookie, setCookie } from 'hono/cookie'
 import { Google, generateCodeVerifier, generateState } from 'arctic'
 import { Argon2id } from 'oslo/password'
-import { db } from '../db'
-import { users, accessRequests } from '../db/schema'
-import { lucia } from '../lib/auth'
+import { db } from '../db/index.js'
+import { users, accessRequests } from '../db/schema.js'
+import { lucia } from '../lib/auth.js'
 import { eq, or } from 'drizzle-orm'
-import { sendAdminNotificationEmail } from '../lib/email'
-import type { AppEnv } from '../lib/types'
+import { sendAdminNotificationEmail } from '../lib/email.js'
+import type { AppEnv } from '../lib/types.js'
 
 export const authRouter = new Hono<AppEnv>()
 

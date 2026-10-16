@@ -4,12 +4,12 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
 import { secureHeaders } from 'hono/secure-headers'
-import { authRouter } from './routes/auth'
-import { adminRouter } from './routes/admin'
-import { profilesRouter } from './routes/profiles'
-import { boardsRouter } from './routes/boards'
-import { cellsRouter } from './routes/cells'
-import { symbolsRouter } from './routes/symbols'
+import { authRouter } from './routes/auth.js'
+import { adminRouter } from './routes/admin.js'
+import { profilesRouter } from './routes/profiles.js'
+import { boardsRouter } from './routes/boards.js'
+import { cellsRouter } from './routes/cells.js'
+import { symbolsRouter } from './routes/symbols.js'
 
 const app = new Hono()
 

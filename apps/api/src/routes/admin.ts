@@ -1,10 +1,10 @@
 import { Hono } from 'hono'
-import { db } from '../db'
-import { users, accessRequests } from '../db/schema'
+import { db } from '../db/index.js'
+import { users, accessRequests } from '../db/schema.js'
 import { eq } from 'drizzle-orm'
-import { requireAdmin } from '../middleware/auth'
-import { sendApprovalEmail } from '../lib/email'
-import type { AppEnv } from '../lib/types'
+import { requireAdmin } from '../middleware/auth.js'
+import { sendApprovalEmail } from '../lib/email.js'
+import type { AppEnv } from '../lib/types.js'
 
 export const adminRouter = new Hono<AppEnv>()
 

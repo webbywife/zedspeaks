@@ -1,7 +1,7 @@
 import type { MiddlewareHandler } from 'hono'
 import { getCookie } from 'hono/cookie'
-import { lucia } from '../lib/auth'
-import type { AppEnv } from '../lib/types'
+import { lucia } from '../lib/auth.js'
+import type { AppEnv } from '../lib/types.js'
 
 export const requireAuth: MiddlewareHandler<AppEnv> = async (c, next) => {
   const sessionId = getCookie(c, lucia.sessionCookieName)
