@@ -61,4 +61,6 @@ export interface CustomSymbol {
   /** base64 data URL */
   imageData: string
   createdAt: number
+  /** Home shelf or 'kitchen'; older photos have none and show on the first shelf */
+  shelf?: string
 }

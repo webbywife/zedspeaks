@@ -40,6 +40,9 @@ def texts():
     out = [a or b for a, b in re.findall(r"spokenText:\s*" + q, s)]
     for m in re.finditer(r"\bp\(\s*" + q + r"\s*,\s*" + q + r"\s*,\s*" + q, p):
         out.append(m.group(5) or m.group(6) or "")
+    for name in os.listdir(DATA):
+        if name.endswith(".ts"):
+            out += [a or b for a, b in re.findall(r"\bsay\(\s*" + q + r"\s*\)", open(os.path.join(DATA, name)).read())]
     return sorted({(t or "").replace("\\'", "'") for t in out if (t or "").strip()})
 
 

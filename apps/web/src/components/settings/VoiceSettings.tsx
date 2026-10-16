@@ -56,7 +56,7 @@ function Slider({
 }
 
 export function VoiceSettings() {
-  const { voiceSettingsOpen, ttsSettings, updateTTSSettings, setVoiceSettingsOpen } =
+  const { voiceSettingsOpen, ttsSettings, updateTTSSettings, setVoiceSettingsOpen, layout, setLayout } =
     useBoardStore()
   const { voices } = useTTS(ttsSettings)
 
@@ -91,7 +91,7 @@ export function VoiceSettings() {
           >
             {/* Header */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200">
-              <h2 className="text-lg font-bold text-gray-900">Voice Settings</h2>
+              <h2 className="text-lg font-bold text-gray-900">Settings</h2>
               <button
                 onClick={() => setVoiceSettingsOpen(false)}
                 className="flex items-center justify-center w-9 h-9 rounded-xl hover:bg-gray-100 text-gray-500"
@@ -102,6 +102,30 @@ export function VoiceSettings() {
             </div>
 
             <div className="flex-1 overflow-y-auto px-5 py-5 flex flex-col gap-6">
+
+              {/* Layout: parents pick what suits their child */}
+              <div className="flex flex-col gap-2">
+                <p className="text-sm font-medium text-gray-700">Layout</p>
+                <div className="grid grid-cols-2 gap-2">
+                  {([
+                    ['tabs', 'App tabs', 'Shelves, kitchen, talk'],
+                    ['classic', 'Classic board', 'One picture board'],
+                  ] as const).map(([id, name, hint]) => (
+                    <button
+                      key={id}
+                      onClick={() => setLayout(id)}
+                      className={`flex flex-col items-start px-3 py-2 rounded-xl text-left border-2 transition-colors ${
+                        layout === id
+                          ? 'bg-blue-600 border-blue-600 text-white'
+                          : 'bg-white border-gray-200 text-gray-700 hover:border-blue-400'
+                      }`}
+                    >
+                      <span className="text-sm font-semibold">{name}</span>
+                      <span className={`text-xs ${layout === id ? 'text-blue-100' : 'text-gray-500'}`}>{hint}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
 
               {/* Presets */}
               <div className="flex flex-col gap-2">

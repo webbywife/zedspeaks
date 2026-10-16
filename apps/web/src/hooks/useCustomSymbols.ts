@@ -67,12 +67,13 @@ export function useCustomSymbols() {
     dbOp<CustomSymbol[]>('readonly', (s) => s.getAll()).then(setSymbols).catch(console.error)
   }, [])
 
-  const save = useCallback(async (label: string, imageData: string): Promise<CustomSymbol> => {
+  const save = useCallback(async (label: string, imageData: string, shelf?: string): Promise<CustomSymbol> => {
     const sym: CustomSymbol = {
       id: crypto.randomUUID(),
       label,
       imageData,
       createdAt: Date.now(),
+      shelf,
     }
     await dbOp('readwrite', (s) => s.put(sym))
     setSymbols((prev) => [sym, ...prev])

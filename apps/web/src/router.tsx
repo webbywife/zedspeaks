@@ -18,6 +18,8 @@ export const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
+  // Local development only: see the board without signing in (not in production builds)
+  ...(import.meta.env.DEV ? [{ path: '/preview', element: <App /> }] : []),
   {
     path: '/admin',
     element: (
