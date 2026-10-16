@@ -15,6 +15,11 @@ export function getCategoryMeta(id: CategoryId): CategoryMeta {
   return CATEGORIES.find(c => c.id === id)!
 }
 
+// ZedSpeaks icon set (scripts/make_icons.py → public/icons/)
+export function iconUrl(id: string): string {
+  return `${import.meta.env.BASE_URL}icons/${id}.svg`
+}
+
 // ARASAAC pictogram URL helper — images are cached by the service worker after first load
 export function arasaacUrl(id: number): string {
   return `https://static.arasaac.org/pictograms/${id}/${id}_300.png`

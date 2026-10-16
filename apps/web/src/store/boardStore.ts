@@ -39,6 +39,7 @@ export const useBoardStore = create<BoardStore>()(
         volume: 1.0,
         voiceURI: null,
         autoSpeak: false,
+        naturalVoice: true,
       },
       voiceSettingsOpen: false,
       mascotMood: 'hopeful' as MoodId,

@@ -119,7 +119,7 @@ export default function App() {
   // ── Sentence strip controls ─────────────────────────────────────────────────
   const handleSpeak = useCallback(() => {
     const text = sentenceItems.map((i) => i.spokenText).join(' ')
-    speak(text)
+    speak(text, sentenceItems.map((i) => i.spokenText))
     flashMood(sentenceItems.length >= 3 ? 'excited' : 'joy', 'Speaking!')
   }, [sentenceItems, speak, flashMood])
 

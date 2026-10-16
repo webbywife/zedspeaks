@@ -131,10 +131,32 @@ export function VoiceSettings() {
                 </div>
               </div>
 
+              {/* Natural (recorded) voice toggle */}
+              <div className="flex items-center justify-between py-1">
+                <div>
+                  <p className="text-sm font-medium text-gray-700">Natural voice</p>
+                  <p className="text-xs text-gray-500">Recorded voice for every card. Typed words use the device voice.</p>
+                </div>
+                <button
+                  role="switch"
+                  aria-checked={ttsSettings.naturalVoice !== false}
+                  onClick={() => updateTTSSettings({ naturalVoice: ttsSettings.naturalVoice === false })}
+                  className={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors ${
+                    ttsSettings.naturalVoice !== false ? 'bg-blue-600' : 'bg-gray-300'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${
+                      ttsSettings.naturalVoice !== false ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </div>
+
               {/* Voice selector */}
               {voices.length > 0 && (
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-sm font-medium text-gray-700">Voice</label>
+                  <label className="text-sm font-medium text-gray-700">Device voice (for typed words)</label>
                   <select
                     value={ttsSettings.voiceURI ?? ''}
                     onChange={(e) => updateTTSSettings({ voiceURI: e.target.value || null })}

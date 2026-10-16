@@ -26,7 +26,7 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,mp3,json}'],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/static\.arasaac\.org\/.*/i,

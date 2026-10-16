@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { arasaacUrl, getCategoryMeta } from '../../data/symbols'
+import { arasaacUrl, iconUrl, getCategoryMeta } from '../../data/symbols'
 import type { AACSymbol } from '../../types'
 
 interface SymbolButtonProps {
@@ -9,7 +9,12 @@ interface SymbolButtonProps {
 }
 
 export function SymbolButton({ symbol, onTap }: SymbolButtonProps) {
-  const [imgError, setImgError] = useState(false)
+  // Own icon set first, then the ARASAAC pictogram, then the emoji.
+  const sources = symbol.customImageUrl
+    ? [symbol.customImageUrl]
+    : [iconUrl(symbol.id), arasaacUrl(symbol.arasaacId)]
+  const [srcIndex, setSrcIndex] = useState(0)
+  const imgError = srcIndex >= sources.length
   const category = getCategoryMeta(symbol.category)
 
   return (
@@ -27,9 +32,9 @@ export function SymbolButton({ symbol, onTap }: SymbolButtonProps) {
       <div className="flex items-center justify-center flex-1 w-full">
         {!imgError ? (
           <img
-            src={symbol.customImageUrl ?? arasaacUrl(symbol.arasaacId)}
+            src={sources[srcIndex]}
             alt={symbol.label}
-            onError={() => setImgError(true)}
+            onError={() => setSrcIndex((i) => i + 1)}
             className={`w-full h-full object-cover ${symbol.customImageUrl ? 'max-h-20 rounded-lg' : 'max-h-16 object-contain'}`}
             loading="lazy"
           />

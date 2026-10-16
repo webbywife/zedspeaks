@@ -29,6 +29,7 @@ export interface TTSSettings {
   volume: number
   voiceURI: string | null
   autoSpeak: boolean
+  naturalVoice?: boolean // pre-recorded clips; undefined = on
 }
 
 export interface CategoryMeta {
