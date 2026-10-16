@@ -1,6 +1,6 @@
 import { Plus } from 'lucide-react'
 import { SHELVES } from '../../data/shelves'
-import { SYMBOLS, iconUrl } from '../../data/symbols'
+import { SYMBOLS, cardImage } from '../../data/symbols'
 import type { CustomSymbol } from '../../types'
 import { PictureCard } from './PictureCard'
 
@@ -27,7 +27,7 @@ export function HomeTab({ photos, onPick, onAddPhoto, onDelete }: HomeTabProps) 
                   onTap={() => onPick(p.label, p.label)} onDelete={() => onDelete(p.id)} />
               ))}
               {starters.map((s) => (
-                <PictureCard key={s.id} label={s.label} src={iconUrl(s.id)} emoji={s.emoji}
+                <PictureCard key={s.id} label={s.label} {...cardImage(s.id)} emoji={s.emoji}
                   onTap={() => onPick(s.label, s.spokenText)} />
               ))}
               <button

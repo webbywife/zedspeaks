@@ -82,6 +82,12 @@ def main():
             open(os.path.join(OUT, name), "wb").write(tts(t, a[1]))
             man[k] = name
             new += 1
+        keep = {norm(t) for t in texts()} | {"_voice"}
+        for k in [k for k in man if k not in keep]:  # phrases removed from the app
+            if man[k] not in {v for kk, v in man.items() if kk in keep}:
+                try: os.remove(os.path.join(OUT, man[k]))
+                except FileNotFoundError: pass
+            del man[k]
         json.dump(man, open(man_f, "w"), indent=1, sort_keys=True)
         print(f"{new} new clips, {len(man) - 1} total -> {OUT}")
     else:

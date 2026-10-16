@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ChefHat, Plus, X } from 'lucide-react'
 import { ORDER_END, ORDER_START, STARTER_DISHES } from '../../data/kitchen'
-import { SYMBOLS, iconUrl } from '../../data/symbols'
+import { SYMBOLS, cardImage } from '../../data/symbols'
 import type { CustomSymbol } from '../../types'
 import { PictureCard } from '../home/PictureCard'
 
@@ -31,7 +31,7 @@ export function KitchenTab({ dishes, speak, onAddDish, onDelete }: KitchenTabPro
   const menu: Dish[] = [
     ...dishes.map((d) => ({ key: d.id, id: d.id, label: d.label, spoken: d.label, src: d.imageData, photo: true })),
     ...(dishes.length ? [] : SYMBOLS.filter((s) => STARTER_DISHES.includes(s.id)).map((s) => ({
-      key: s.id, label: s.label, spoken: s.spokenText, src: iconUrl(s.id), photo: false, emoji: s.emoji,
+      key: s.id, label: s.label, spoken: s.spokenText, ...cardImage(s.id), emoji: s.emoji,
     }))),
   ]
 
