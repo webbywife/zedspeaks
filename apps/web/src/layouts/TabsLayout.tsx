@@ -21,6 +21,7 @@ import { useActiveProfile } from '../store/profileStore'
 import { KITCHEN_SHELF } from '../data/shelves'
 import { CATEGORIES, getSymbolsByCategory } from '../data/symbols'
 import { feelingSymbols } from '../data/characters'
+import { followsStarter, talkSentence } from '../data/talkSentences'
 import { useBoardStore } from '../store/boardStore'
 import { useTTS } from '../hooks/useTTS'
 import { useCustomSymbols } from '../hooks/useCustomSymbols'
@@ -66,9 +67,12 @@ export function TabsLayout() {
 
   // Zed's face in the header shows the feeling he taps, then settles back
   const moodTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  // Talk cards say a short sentence ("I want to eat"); after "I want" they add just their word
   const tapSymbol = useCallback((s: AACSymbol) => {
-    add(s.label, s.spokenText)
-    speak(s.spokenText)
+    const last = useBoardStore.getState().sentenceItems.at(-1)?.spokenText
+    const text = followsStarter(last) ? s.spokenText : talkSentence(s)
+    add(s.label, text)
+    speak(text)
     if (s.moodId) {
       setMascotState(s.moodId)
       setMascotFace(s.customImageUrl ?? null)
