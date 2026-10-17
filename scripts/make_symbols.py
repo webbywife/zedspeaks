@@ -20,6 +20,8 @@ import base64, json, os, re, sys, time, urllib.request
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "scripts/_gen")
 API = os.environ.get("DRAWTHINGS_URL", "http://127.0.0.1:7860")
+# Seconds to rest after each picture so the laptop stays cool (REST=0 for full speed)
+REST = int(os.environ.get("REST", "30"))
 
 STYLE = ("flat vector sticker illustration, bold thick black outlines around every shape, simple shapes, "
          "soft bright pastel colors, plain white background, one object, centered, no text")
@@ -73,7 +75,8 @@ def run(words):
         for attempt in range(3):  # the server can drop one request (e.g. after a settings change)
             try:
                 open(os.path.join(OUT, slug(w) + ".png"), "wb").write(generate(w, h))
-                print(f"[{i}/{len(todo)}] {w}")
+                print(f"[{i}/{len(todo)}] {w}", flush=True)
+                time.sleep(REST)
                 break
             except Exception as e:
                 if attempt == 2:
