@@ -9,7 +9,7 @@ export type CharacterId = 'boy' | 'girl'
 
 export const CHARACTERS: { id: CharacterId; label: string; hint: string; face: string }[] = [
   { id: 'boy', label: 'Boy', hint: 'Zed', face: '/assets/characters/boy/happy.webp' },
-  { id: 'girl', label: 'Girl', hint: 'Ponytail', face: '/assets/characters/girl/happy.webp' },
+  { id: 'girl', label: 'Girl', hint: 'Zofi', face: '/assets/characters/girl/happy.webp' },
 ]
 
 type Feeling = [file: string, label: string, spoken: string, emoji: string, mood: MoodId]
