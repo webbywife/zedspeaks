@@ -46,13 +46,13 @@ export function ProfileForm({ initial, submitLabel, onSubmit, onCancel }: {
         <span className="text-sm font-bold text-slate-700">Picture</span>
         <div className="grid grid-cols-4 sm:grid-cols-7 gap-2">
           <label className={`aspect-square rounded-2xl border-2 flex flex-col items-center justify-center gap-1 text-xs font-semibold cursor-pointer overflow-hidden ${
-            avatar === 'photo' ? 'border-blue-600 bg-blue-50' : 'border-dashed border-slate-300 text-slate-500'}`}>
+            avatar === 'photo' ? 'border-pink-600 bg-pink-50' : 'border-dashed border-slate-300 text-slate-500'}`}>
             {photo ? <img src={photo} alt="" className="w-full h-full object-cover" /> : <><Camera size={22} /> Photo</>}
             <input type="file" accept="image/*" capture="user" className="hidden" onChange={(e) => takePhoto(e.target.files?.[0])} />
           </label>
           {AVATAR_PICS.map((p) => (
             <button type="button" key={p} onClick={() => setAvatar(`pic:${p}`)} aria-label={p.replace(/-/g, ' ')}
-              className={`aspect-square rounded-2xl border-2 bg-white p-1.5 ${avatar === `pic:${p}` ? 'border-blue-600' : 'border-slate-200'}`}>
+              className={`aspect-square rounded-2xl border-2 bg-white p-1.5 ${avatar === `pic:${p}` ? 'border-pink-600' : 'border-slate-200'}`}>
               <img src={picUrl(p)} alt="" className="w-full h-full object-contain" />
             </button>
           ))}
@@ -63,7 +63,7 @@ export function ProfileForm({ initial, submitLabel, onSubmit, onCancel }: {
       {error && <p className="text-sm text-red-600 font-semibold">{error}</p>}
       <div className="flex gap-2">
         <button type="button" onClick={onCancel} className="flex-1 h-12 rounded-xl bg-slate-100 font-bold text-slate-700">Cancel</button>
-        <button disabled={busy} className="flex-1 h-12 rounded-xl bg-blue-700 text-white font-bold disabled:opacity-50">{busy ? 'Saving…' : submitLabel}</button>
+        <button disabled={busy} className="flex-1 h-12 rounded-xl bg-pink-600 text-white font-bold disabled:opacity-50">{busy ? 'Saving…' : submitLabel}</button>
       </div>
     </form>
   )

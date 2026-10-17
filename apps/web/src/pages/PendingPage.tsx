@@ -19,7 +19,7 @@ export function PendingPage() {
       </p>
       <p className="text-sm text-slate-400">
         Already approved?{' '}
-        <Link to="/login" className="text-pink-600 font-semibold">
+        <Link to="/login" className="text-pink-700 font-semibold">
           Sign in
         </Link>
       </p>

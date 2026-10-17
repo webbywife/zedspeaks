@@ -37,7 +37,7 @@ function TypeSayBar({ onPhraseTap }: { onPhraseTap: (p: Phrase) => void }) {
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-3 flex flex-col gap-2 shrink-0">
-      <p className="text-xs font-black uppercase tracking-widest text-pink-600">
+      <p className="text-xs font-black uppercase tracking-widest text-pink-700">
         Type anything to say it
       </p>
 
@@ -72,7 +72,7 @@ function TypeSayBar({ onPhraseTap }: { onPhraseTap: (p: Phrase) => void }) {
       <button
         onClick={handleSave}
         disabled={!canSpeak || alreadySaved}
-        className="flex items-center gap-2 w-full justify-center py-2 rounded-xl border-2 border-dashed border-pink-300 text-pink-600 text-sm font-semibold disabled:opacity-30 active:scale-95 transition-transform"
+        className="flex items-center gap-2 w-full justify-center py-2 rounded-xl border-2 border-dashed border-pink-300 text-pink-700 text-sm font-semibold disabled:opacity-30 active:scale-95 transition-transform"
       >
         <BookmarkPlus size={16} />
         {alreadySaved ? 'Already saved' : 'Save as a phrase'}

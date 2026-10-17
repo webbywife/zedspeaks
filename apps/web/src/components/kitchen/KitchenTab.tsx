@@ -45,9 +45,9 @@ export function KitchenTab({ dishes, speak, onAddDish, onDelete }: KitchenTabPro
   return (
     <div className="flex-1 overflow-y-auto">
       <div className="max-w-5xl mx-auto p-4 flex flex-col gap-4">
-        <div className="rounded-3xl bg-gradient-to-br from-orange-100 to-amber-50 border border-orange-200 px-5 py-4 flex items-center gap-4">
+        <div className="rounded-3xl bg-gradient-to-br from-pink-50 to-white border border-pink-100 px-5 py-4 flex items-center gap-4">
           <span className="w-14 h-14 shrink-0 rounded-2xl bg-white shadow-sm flex items-center justify-center">
-            <ChefHat className="text-orange-500" size={32} />
+            <ChefHat className="text-pink-600" size={32} />
           </span>
           <div className="min-w-0">
             <h2 className="text-xl font-black text-slate-900">Mom's Kitchen</h2>
@@ -58,12 +58,12 @@ export function KitchenTab({ dishes, speak, onAddDish, onDelete }: KitchenTabPro
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
           {menu.map((d) => (
             <PictureCard key={d.key} wide label={d.label} src={d.src} photo={d.photo} emoji={d.emoji}
-              footer={<span className="mx-2 mb-2 h-9 rounded-xl bg-orange-500 text-white text-sm font-bold flex items-center justify-center">Order</span>}
+              footer={<span className="mx-2 mb-2 h-9 rounded-xl bg-pink-600 text-white text-sm font-bold flex items-center justify-center">Order</span>}
               onTap={() => setPicked(d)} onDelete={d.id ? () => onDelete(d.id!) : undefined} />
           ))}
           <button
             onClick={onAddDish}
-            className="rounded-2xl border-2 border-dashed border-orange-300 bg-white/60 text-orange-700 flex flex-col items-center justify-center gap-1 text-sm font-semibold min-h-40"
+            className="rounded-2xl border-2 border-dashed border-pink-300 bg-white/60 text-pink-700 flex flex-col items-center justify-center gap-1 text-sm font-semibold min-h-40"
           >
             <Plus size={28} /> Add a dish
             <span className="text-xs font-medium text-slate-500 px-3 text-center">Take a photo of something you cook</span>
@@ -88,18 +88,18 @@ export function KitchenTab({ dishes, speak, onAddDish, onDelete }: KitchenTabPro
               </div>
               {sent ? (
                 <div className="flex flex-col items-center text-center gap-2 py-6">
-                  <ChefHat className="text-orange-500" size={56} />
+                  <ChefHat className="text-pink-600" size={56} />
                   <p className="text-xl font-bold text-slate-900">Order sent!</p>
                   <p className="text-slate-600">Mom is cooking {picked.label.toLowerCase()} for you.</p>
                   <button onClick={close} className="mt-4 w-full py-3 rounded-2xl bg-slate-900 text-white font-bold">Done</button>
                 </div>
               ) : (
                 <>
-                  <div className="w-full aspect-[4/3] rounded-2xl bg-orange-50 overflow-hidden flex items-center justify-center">
+                  <div className="w-full aspect-[4/3] rounded-2xl bg-pink-50 overflow-hidden flex items-center justify-center">
                     <img src={picked.src} alt="" className={picked.photo ? 'w-full h-full object-cover' : 'w-1/2 h-1/2 object-contain'} />
                   </div>
                   <p className="text-xl font-bold text-slate-900">{picked.label}</p>
-                  <button onClick={() => order(picked)} className="w-full py-4 rounded-2xl bg-orange-500 text-white text-lg font-bold active:scale-95 transition-transform">
+                  <button onClick={() => order(picked)} className="w-full py-4 rounded-2xl bg-pink-600 text-white text-lg font-bold active:scale-95 transition-transform">
                     Order
                   </button>
                 </>

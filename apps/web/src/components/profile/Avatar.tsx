@@ -15,7 +15,7 @@ export function Avatar({ profile, size = 96 }: { profile: Pick<ChildProfile, 'id
   if (photo) return <img src={photo} alt="" style={box} className="rounded-full object-cover bg-white ring-4 ring-white shadow" />
   if (pic) return <img src={pic} alt="" style={box} className="rounded-full object-contain bg-white p-2 ring-4 ring-white shadow" />
   return (
-    <span style={box} className="rounded-full bg-blue-100 text-blue-800 ring-4 ring-white shadow flex items-center justify-center font-black"
+    <span style={box} className="rounded-full bg-pink-100 text-pink-700 ring-4 ring-white shadow flex items-center justify-center font-black"
       aria-hidden>
       <span style={{ fontSize: size * 0.42 }}>{profile.name.slice(0, 1).toUpperCase()}</span>
     </span>

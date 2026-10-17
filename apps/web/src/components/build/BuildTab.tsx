@@ -15,7 +15,7 @@ export function BuildTab({ onPiece }: BuildTabProps) {
     <div className="flex-1 overflow-y-auto pb-4">
       <Section title="1. Start with">
         <div className="flex flex-wrap gap-2 px-3">
-          {STARTERS.map((p) => <Chip key={p.text} piece={p} tone="bg-blue-600 text-white border-blue-700" onTap={onPiece} />)}
+          {STARTERS.map((p) => <Chip key={p.text} piece={p} tone="bg-pink-600 text-white border-pink-600" onTap={onPiece} />)}
         </div>
       </Section>
 
@@ -24,7 +24,7 @@ export function BuildTab({ onPiece }: BuildTabProps) {
           {GROUPS.map((g) => (
             <button key={g.id} onClick={() => setGroup(g.id)}
               className={`shrink-0 px-3 h-10 rounded-full text-sm font-bold border ${
-                group === g.id ? 'bg-blue-900 text-white border-blue-900' : 'bg-white text-slate-700 border-slate-300'}`}>
+                group === g.id ? 'bg-pink-600 text-white border-pink-600' : 'bg-white text-slate-700 border-slate-300'}`}>
               <span aria-hidden>{g.emoji}</span> {g.label}
             </button>
           ))}

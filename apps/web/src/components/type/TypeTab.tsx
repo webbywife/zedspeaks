@@ -60,14 +60,14 @@ export function TypeTab({ speak }: TypeTabProps) {
       <div className="flex items-start gap-2 px-3 py-3 bg-white border-b border-slate-200">
         <p className="flex-1 min-w-0 min-h-[56px] text-2xl font-bold text-slate-900 break-words leading-snug">
           {text || <span className="text-slate-400 text-base font-medium italic">Type a word…</span>}
-          <span className="inline-block w-0.5 h-6 bg-blue-600 align-middle animate-pulse ml-0.5" />
+          <span className="inline-block w-0.5 h-6 bg-pink-600 align-middle animate-pulse ml-0.5" />
         </p>
         <button onClick={() => setText('')} disabled={!text} aria-label="Clear"
           className="w-11 h-11 rounded-xl bg-red-50 text-red-500 flex items-center justify-center disabled:opacity-30">
           <X size={20} />
         </button>
         <button onClick={() => speak(text)} disabled={!text.trim()}
-          className="flex items-center gap-2 px-4 h-11 rounded-xl bg-green-600 text-white font-bold disabled:opacity-30">
+          className="flex items-center gap-2 px-4 h-11 rounded-xl bg-pink-600 text-white font-bold disabled:opacity-30">
           <Volume2 size={18} /> Speak
         </button>
       </div>
@@ -90,7 +90,7 @@ export function TypeTab({ speak }: TypeTabProps) {
         </div>
         <div className="flex gap-1.5">
           <button onClick={toggleSayKeys}
-            className={`px-3 h-12 rounded-xl text-xs font-bold ${sayKeys ? 'bg-blue-100 text-blue-800' : 'bg-slate-200 text-slate-500'}`}>
+            className={`px-3 h-12 rounded-xl text-xs font-bold ${sayKeys ? 'bg-pink-100 text-pink-700' : 'bg-slate-200 text-slate-500'}`}>
             {sayKeys ? 'Keys talk' : 'Keys quiet'}
           </button>
           <motion.button whileTap={{ scale: 0.97 }} onClick={space}
@@ -108,7 +108,7 @@ export function TypeTab({ speak }: TypeTabProps) {
 }
 
 const TONES = {
-  number: 'bg-blue-50 border-blue-200 text-blue-900',
+  number: 'bg-pink-50 border-pink-200 text-pink-700',
   letter: 'bg-white border-slate-300 text-slate-900',
   symbol: 'bg-amber-50 border-amber-200 text-amber-900',
 }

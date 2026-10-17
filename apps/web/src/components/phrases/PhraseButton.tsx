@@ -18,7 +18,7 @@ const TYPE_STYLES: Record<PhraseType, { bg: string; border: string; icon: React.
   starter: {
     bg: 'bg-pink-50',
     border: 'border-pink-400',
-    icon: <ChevronsRight size={16} className="text-pink-600 shrink-0" />,
+    icon: <ChevronsRight size={16} className="text-pink-700 shrink-0" />,
     badge: 'bg-pink-100 text-pink-700',
   },
 }

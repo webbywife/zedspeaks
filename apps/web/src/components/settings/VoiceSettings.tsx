@@ -40,7 +40,7 @@ function Slider({
     <div className="flex flex-col gap-1">
       <div className="flex justify-between text-sm font-medium text-gray-700">
         <span>{label}</span>
-        <span className="text-blue-700">{format ? format(value) : value}</span>
+        <span className="text-pink-700">{format ? format(value) : value}</span>
       </div>
       <input
         type="range"
@@ -116,12 +116,12 @@ export function VoiceSettings() {
                       onClick={() => setLayout(id)}
                       className={`flex flex-col items-start px-3 py-2 rounded-xl text-left border-2 transition-colors ${
                         layout === id
-                          ? 'bg-blue-600 border-blue-600 text-white'
-                          : 'bg-white border-gray-200 text-gray-700 hover:border-blue-400'
+                          ? 'bg-pink-600 border-pink-600 text-white'
+                          : 'bg-white border-gray-200 text-gray-700 hover:border-pink-400'
                       }`}
                     >
                       <span className="text-sm font-semibold">{name}</span>
-                      <span className={`text-xs ${layout === id ? 'text-blue-100' : 'text-gray-500'}`}>{hint}</span>
+                      <span className={`text-xs ${layout === id ? 'text-pink-100' : 'text-gray-500'}`}>{hint}</span>
                     </button>
                   ))}
                 </div>
@@ -143,8 +143,8 @@ export function VoiceSettings() {
                         }
                         className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold border-2 transition-colors ${
                           active
-                            ? 'bg-blue-600 border-blue-600 text-white'
-                            : 'bg-white border-gray-200 text-gray-700 hover:border-blue-400'
+                            ? 'bg-pink-600 border-pink-600 text-white'
+                            : 'bg-white border-gray-200 text-gray-700 hover:border-pink-400'
                         }`}
                       >
                         {preset.isZed && <Sparkles size={14} />}
@@ -166,7 +166,7 @@ export function VoiceSettings() {
                   aria-checked={ttsSettings.naturalVoice !== false}
                   onClick={() => updateTTSSettings({ naturalVoice: ttsSettings.naturalVoice === false })}
                   className={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors ${
-                    ttsSettings.naturalVoice !== false ? 'bg-blue-600' : 'bg-gray-300'
+                    ttsSettings.naturalVoice !== false ? 'bg-pink-600' : 'bg-gray-300'
                   }`}
                 >
                   <span
@@ -184,7 +184,7 @@ export function VoiceSettings() {
                   <select
                     value={ttsSettings.voiceURI ?? ''}
                     onChange={(e) => updateTTSSettings({ voiceURI: e.target.value || null })}
-                    className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-pink-600"
                   >
                     <option value="">System default</option>
                     {voices.map((v) => (
@@ -237,7 +237,7 @@ export function VoiceSettings() {
                   aria-checked={ttsSettings.autoSpeak}
                   onClick={() => updateTTSSettings({ autoSpeak: !ttsSettings.autoSpeak })}
                   className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors ${
-                    ttsSettings.autoSpeak ? 'bg-blue-600' : 'bg-gray-300'
+                    ttsSettings.autoSpeak ? 'bg-pink-600' : 'bg-gray-300'
                   }`}
                 >
                   <span

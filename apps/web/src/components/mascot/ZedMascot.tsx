@@ -36,7 +36,7 @@ export function ZedMascot({ size = 'md' }: ZedMascotProps) {
   return (
     <div className="flex items-center gap-2 relative">
       {/* Mood portrait */}
-      <div className={`${dim} rounded-full overflow-hidden border-2 border-blue-400 shrink-0 shadow-sm`}>
+      <div className={`${dim} rounded-full overflow-hidden border-2 border-pink-400 shrink-0 shadow-sm`}>
         <AnimatePresence mode="wait">
           <motion.img
             key={mascotMood}

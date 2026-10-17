@@ -78,11 +78,11 @@ export function TabsLayout() {
 
   return (
     <div className="flex flex-col h-dvh bg-slate-50 overflow-hidden">
-      <header className="px-4 py-2 bg-blue-900 flex items-center gap-3 shrink-0">
+      <header className="px-4 py-2 bg-white border-b border-gray-100 flex items-center gap-3 shrink-0">
         <ZedMascot size="sm" />
-        <h1 className="text-lg font-black text-white">Zed<span className="text-blue-300">Speaks</span></h1>
+        <h1 className="text-xl font-black text-pink-600">ZedSpeaks</h1>
         {profile && (
-          <Link to="/start" className="ml-auto flex items-center gap-2 pl-1 pr-3 h-10 rounded-full bg-white/10 text-white font-bold"
+          <Link to="/start" className="ml-auto flex items-center gap-2 pl-1 pr-3 h-10 rounded-full bg-pink-50 text-pink-700 font-bold"
             aria-label={`${profile.name}. Switch child`}>
             <Avatar profile={profile} size={32} />
             {profile.name}
@@ -113,7 +113,7 @@ export function TabsLayout() {
       <nav className="flex bg-white border-t border-slate-200 shrink-0" aria-label="Main">
         {TABS.map(({ id, label, Icon }) => (
           <button key={id} onClick={() => setTab(id)}
-            className={`flex-1 flex flex-col items-center gap-0.5 py-2 text-xs font-semibold ${tab === id ? 'text-blue-700' : 'text-slate-500'}`}
+            className={`flex-1 flex flex-col items-center gap-0.5 py-2 text-xs font-semibold ${tab === id ? 'text-pink-700' : 'text-slate-500'}`}
             aria-current={tab === id ? 'page' : undefined}>
             <Icon size={24} />
             {label}

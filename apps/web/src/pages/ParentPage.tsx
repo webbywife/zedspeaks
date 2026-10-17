@@ -19,9 +19,9 @@ export function ParentPage() {
 
   return (
     <div className="min-h-dvh bg-slate-50">
-      <header className="px-4 py-3 bg-blue-900 flex items-center gap-3">
-        <button onClick={() => navigate('/start')} aria-label="Back" className="text-white"><ArrowLeft size={22} /></button>
-        <h1 className="text-lg font-black text-white">Parent corner</h1>
+      <header className="px-4 py-3 bg-white border-b border-gray-100 flex items-center gap-3">
+        <button onClick={() => navigate('/start')} aria-label="Back" className="text-slate-700"><ArrowLeft size={22} /></button>
+        <h1 className="text-lg font-black text-slate-900">Parent corner</h1>
       </header>
 
       <main className="max-w-2xl mx-auto p-4 flex flex-col gap-4">
@@ -61,7 +61,7 @@ export function ParentPage() {
         </section>
 
         <section className="bg-white rounded-3xl border border-slate-200 p-4 text-sm text-slate-600 flex gap-3">
-          <Shield className="shrink-0 text-blue-700" size={20} />
+          <Shield className="shrink-0 text-pink-700" size={20} />
           <p>
             We keep only each child's nickname and picture choice on our server. Photos you take stay on this device.
             Deleting a child removes their profile from our server. No ads, and we never sell data.

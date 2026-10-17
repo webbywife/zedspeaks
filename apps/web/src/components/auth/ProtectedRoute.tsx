@@ -22,7 +22,7 @@ export function ProtectedRoute({ children, adminOnly = false }: Props) {
   if (!checked) {
     return (
       <div className="flex items-center justify-center h-dvh bg-slate-100">
-        <div className="w-8 h-8 border-4 border-pink-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-pink-600 border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }

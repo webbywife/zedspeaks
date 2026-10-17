@@ -20,8 +20,8 @@ export function StartPage() {
 
   return (
     <div className="min-h-dvh bg-slate-50 flex flex-col">
-      <header className="px-4 py-3 bg-blue-900">
-        <h1 className="text-lg font-black text-white">Zed<span className="text-blue-300">Speaks</span></h1>
+      <header className="px-4 py-3 bg-white border-b border-gray-100">
+        <h1 className="text-xl font-black text-pink-600">ZedSpeaks</h1>
       </header>
 
       <main className="flex-1 w-full max-w-2xl mx-auto px-4 py-8 flex flex-col gap-8">
