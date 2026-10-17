@@ -1,4 +1,4 @@
-import { Settings, Lock } from 'lucide-react'
+import { Settings, Lock, Heart, ChevronRight } from 'lucide-react'
 import { useBoardStore } from '../../store/boardStore'
 import { PHOTO_CREDITS } from '../../data/photoCredits'
 import { FeedbackCard } from './FeedbackCard'
@@ -24,6 +24,15 @@ export function MeTab() {
         <p className="text-sm text-slate-600"><b>Android:</b> Settings → Security → App pinning → On. Open recent apps, tap the ZedSpeaks icon, tap Pin.</p>
       </div>
       <FeedbackCard />
+      {/* Parents only (never on the child's screens): a calm invitation, no pop-ups or locked features */}
+      <a href="/support" className="p-4 rounded-2xl bg-pink-50 border border-pink-100 flex items-center gap-3">
+        <Heart className="text-pink-600 fill-pink-600 shrink-0" size={22} />
+        <span className="flex-1">
+          <span className="block font-bold text-slate-900">Help keep ZedSpeaks free</span>
+          <span className="block text-sm text-slate-600">Share it, send feedback, or sponsor a family. Always optional.</span>
+        </span>
+        <ChevronRight className="text-slate-400 shrink-0" size={20} />
+      </a>
       <p className="text-xs text-slate-400 text-center">
         Photos you add stay on this device. <a href="/privacy" className="underline">Privacy Notice</a>
       </p>

@@ -3,6 +3,7 @@ import { LandingPage } from './pages/LandingPage'
 import { LoginPage } from './pages/LoginPage'
 import { PendingPage } from './pages/PendingPage'
 import { PrivacyPage } from './pages/PrivacyPage'
+import { SupportPage } from './pages/SupportPage'
 import { AdminPage } from './pages/AdminPage'
 import { ProtectedRoute } from './components/auth/ProtectedRoute'
 import App from './App'
@@ -15,6 +16,7 @@ export const router = createBrowserRouter([
   { path: '/login', element: <LoginPage /> },
   { path: '/pending', element: <PendingPage /> },
   { path: '/privacy', element: <PrivacyPage /> },
+  { path: '/support', element: <SupportPage /> },
   // Signing in goes straight to the board (the child-picker step was removed, 17 Oct 2026)
   { path: '/start', element: <Navigate to="/board" replace /> },
   { path: '/parent', element: <Navigate to="/board" replace /> },

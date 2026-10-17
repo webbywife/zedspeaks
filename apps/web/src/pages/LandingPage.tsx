@@ -372,7 +372,10 @@ export function LandingPage() {
           <motion.div {...rise} className="max-w-6xl mx-auto rounded-[2rem] bg-pink-600 text-white p-8 sm:p-14 grid lg:grid-cols-2 gap-10 items-center overflow-hidden">
             <div>
               <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4">Give your child a voice today</h2>
-              <p className="text-lg text-pink-100 mb-8">Free for families, always. Set up in minutes on any phone or tablet.</p>
+              <p className="text-lg text-pink-100 mb-2">Free for families, always. Set up in minutes on any phone or tablet.</p>
+              <p className="text-sm text-pink-100 mb-8">
+                ZedSpeaks is family-run. <Link to="/support" className="underline font-semibold text-white">Here's how you can help keep it free →</Link>
+              </p>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link to="/login" className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-white text-pink-700 font-bold text-lg hover:bg-pink-50 transition-colors">
                   Get started free <ArrowRight size={20} />
@@ -410,6 +413,7 @@ export function LandingPage() {
               <span className="font-bold text-slate-900">About</span>
               <a href="#story" className="text-slate-600 hover:text-slate-900">Our story</a>
               <Link to="/privacy" className="text-slate-600 hover:text-slate-900">Privacy Notice</Link>
+              <Link to="/support" className="text-slate-600 hover:text-slate-900">Help keep it free</Link>
               <span className="text-slate-600">Free for families, always</span>
             </div>
             <div className="flex flex-col gap-2">
