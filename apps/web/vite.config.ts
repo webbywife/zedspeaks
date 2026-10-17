@@ -31,6 +31,8 @@ export default defineConfig({
         // The Mulberry library (~3,000 SVGs) is fetched on demand; our own small zs-*.webp pictures
         // are on the cards, so they're downloaded up front and work offline
         globIgnores: ['symbols/*.svg', 'symbols/index.json'],
+        // /api/* is the API server (e.g. Google sign-in): never answer it with the offline app page
+        navigateFallbackDenylist: [/^\/api\//],
         runtimeCaching: [
           {
             urlPattern: ({ url }) => url.pathname.startsWith('/symbols/'),

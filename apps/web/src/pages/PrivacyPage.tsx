@@ -67,7 +67,7 @@ export function PrivacyPage() {
         <Section title="What we never collect">
           <ul className="list-disc pl-6 flex flex-col gap-2">
             <li>Your name, or your child's name, age, school or diagnosis.</li>
-            <li>What your child taps, types or says in the app.</li>
+            <li>What your child taps or says in the app, or any record of it.</li>
             <li>Your photos.</li>
             <li>Location, contacts, advertising IDs or tracking cookies. ZedSpeaks has no ads and no analytics.</li>
           </ul>
@@ -94,8 +94,14 @@ export function PrivacyPage() {
           <ul className="list-disc pl-6 flex flex-col gap-2">
             <li><b>Our hosting server</b>, located in Buffalo, New York, USA, where the account database is kept. This means your email is stored outside the Philippines.</li>
             <li><b>Google</b>, only if you choose Google sign-in, and to send our approval email (Gmail).</li>
+            <li><b>ElevenLabs</b>, for typed words only, as described below (no email or account details).</li>
           </ul>
-          <p>Card voices are recorded in advance, so nothing your child does is sent to any voice service.</p>
+          <p>
+            Picture cards use voices recorded in advance. When your child <b>types</b> something new (or a family photo has a new
+            name), only that text is sent from our server to <b>ElevenLabs</b>, our voice provider, to say it in the same voice.
+            It is sent without your email or any account details, it is not logged, and the finished sound is saved only so the
+            same words play instantly next time. Offline, the phone's own voice is used instead.
+          </p>
         </Section>
 
         <Section title="How long we keep it">

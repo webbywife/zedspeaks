@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import type { TTSSettings } from '../types'
+import { API } from '../lib/api'
 
 // Pre-recorded natural voice clips (scripts/make_voice.py → public/voice/).
 // Keys are normalized spoken text; must match norm() in make_voice.py.
@@ -24,6 +25,38 @@ export function normalize(text: string): string {
 function clipFor(text: string): string | null {
   const name = manifest?.[normalize(text)]
   return name ? VOICE_BASE + name : null
+}
+
+// Typed text and family photo names: made in the same teen voice by our server, then kept
+// on this device so repeats are instant and work offline.
+const LIVE_CACHE = 'zedspeaks-live-voice'
+const liveUrls = new Map<string, string>()
+
+async function liveClip(text: string): Promise<string | null> {
+  const key = normalize(text)
+  if (!key) return null
+  const hit = liveUrls.get(key)
+  if (hit) return hit
+  const cacheKey = `${location.origin}/__live-voice/${encodeURIComponent(key)}`
+  try {
+    const cache = 'caches' in window ? await caches.open(LIVE_CACHE) : null
+    let res = cache ? await cache.match(cacheKey) : undefined
+    if (!res) {
+      if (!navigator.onLine) return null
+      const r = await fetch(`${API}/tts`, {
+        method: 'POST', credentials: 'include',
+        headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text }),
+      })
+      if (!r.ok || !(r.headers.get('content-type') ?? '').includes('audio')) return null
+      res = r
+      if (cache) await cache.put(cacheKey, r.clone())
+    }
+    const url = URL.createObjectURL(await res.blob())
+    liveUrls.set(key, url)
+    return url
+  } catch {
+    return null
+  }
 }
 
 function stopClips() {
@@ -97,6 +130,14 @@ export function useTTS(settings: TTSSettings) {
         const urls = whole ? [whole] : (parts ?? []).map(clipFor)
         if (urls.length && urls.every(Boolean)) {
           playClips(urls as string[])
+          return
+        }
+        // Not pre-recorded: ask for the same voice live, phone voice only if that fails (e.g. offline)
+        const token = queueToken
+        const live = await liveClip(text)
+        if (token !== queueToken) return // something else was tapped meanwhile
+        if (live) {
+          playClips([live])
           return
         }
       }

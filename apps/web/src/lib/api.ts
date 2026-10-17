@@ -1,9 +1,10 @@
 // Small fetch helper for the ZedSpeaks API (session cookie, JSON in and out).
-// Each web address uses the API on the same domain, so one build serves zedspeaks.io and the
-// old zed.abarentos.com during the move (session cookies stay same-site).
+// On zedspeaks.io the API lives on the SAME address, at /api (nginx passes it to the API server).
+// Same-origin means sign-in cookies are ordinary first-party cookies that every browser keeps,
+// and there is no cross-site (CORS) step that privacy settings or installed-app windows can block.
 function apiBase(): string {
   const host = typeof window !== 'undefined' ? window.location.hostname : ''
-  if (host === 'zedspeaks.io' || host.endsWith('.zedspeaks.io')) return 'https://api.zedspeaks.io'
+  if (host === 'zedspeaks.io' || host.endsWith('.zedspeaks.io')) return `${window.location.origin}/api`
   return import.meta.env.VITE_API_URL ?? 'http://localhost:3001'
 }
 
