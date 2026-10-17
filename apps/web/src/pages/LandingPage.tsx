@@ -152,6 +152,7 @@ function Nav() {
               <span className="relative">{l.label}</span>
             </a>
           ))}
+          <Link to="/research" className="px-3 py-1.5 rounded-full text-slate-600 hover:text-slate-900">Research</Link>
           <Link to="/support" className="px-3 py-1.5 rounded-full text-slate-600 hover:text-slate-900 flex items-center gap-1.5">
             <Heart size={14} className="text-pink-600 fill-pink-600" /> Support
           </Link>
@@ -295,6 +296,23 @@ export function LandingPage() {
           </div>
         </section>
 
+        {/* Evidence: short and honest, links to the full summary */}
+        <section className="px-5 py-14">
+          <motion.div {...rise} className="max-w-4xl mx-auto rounded-[2rem] border border-slate-200 p-6 sm:p-10 grid md:grid-cols-[1fr_auto] gap-6 items-center">
+            <div>
+              <p className="text-sm font-bold uppercase tracking-wide text-pink-700 mb-2">Backed by research</p>
+              <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-3">Picture talkers help children communicate, and they don't stop speech</h2>
+              <p className="text-slate-600 leading-relaxed">
+                Reviews of decades of studies found large benefits for autistic children's communication, and no loss of speech.
+                Most children even talked a little more.
+              </p>
+            </div>
+            <Link to="/research" className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-pink-600 text-white font-bold hover:bg-pink-700 whitespace-nowrap">
+              See the research <ArrowRight size={18} />
+            </Link>
+          </motion.div>
+        </section>
+
         {/* Product tabs */}
         <section id="features" className="max-w-6xl mx-auto px-5 py-20 scroll-mt-20">
           <motion.div {...rise} className="text-center max-w-2xl mx-auto mb-10">
@@ -421,6 +439,7 @@ export function LandingPage() {
               <a href="#story" className="text-slate-600 hover:text-slate-900">Our story</a>
               <Link to="/privacy" className="text-slate-600 hover:text-slate-900">Privacy Notice</Link>
               <Link to="/support" className="text-slate-600 hover:text-slate-900">Help keep it free</Link>
+              <Link to="/research" className="text-slate-600 hover:text-slate-900">Does AAC work?</Link>
               <span className="text-slate-600">Free for families, always</span>
             </div>
             <div className="flex flex-col gap-2">
