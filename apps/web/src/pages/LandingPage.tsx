@@ -41,7 +41,7 @@ const TABS = [
     id: 'kitchen', label: "Mom's Kitchen", title: 'Order what Mom cooks',
     desc: 'A family menu of the dishes you make. Pick one, tap Order, and it asks for you.',
     points: ['"Mom, can you cook adobo for me, please?"', 'Add photos of your own dishes', 'Filipino home dishes included'],
-    images: [pic('chicken-adobo'), pic('sinigang'), pic('pancit'), pic('spaghetti')],
+    images: [pic('chicken-adobo'), pic('sinigang'), pic('fried-rice'), pic('spaghetti')],
   },
   {
     id: 'build', label: 'Build', title: 'Build real sentences',
