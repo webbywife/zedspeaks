@@ -10,7 +10,7 @@ function transporter() {
   })
 }
 
-const FROM = process.env.GMAIL_USER ?? 'noreply@zedspeaks.com'
+const FROM = process.env.GMAIL_USER ?? 'zedspeaks.info@gmail.com'
 
 const esc = (v: string) => v.replace(/[&<>"']/g, (ch) => `&#${ch.charCodeAt(0)};`)
 

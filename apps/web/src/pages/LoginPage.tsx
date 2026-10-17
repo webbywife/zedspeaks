@@ -164,7 +164,7 @@ export function LoginPage() {
 
               <div className="flex items-center justify-between gap-3 text-sm">
                 <span className="text-gray-500">You'll stay signed in on this device.</span>
-                <a href="mailto:privacy@zedspeaks.io?subject=Forgot%20my%20ZedSpeaks%20password" className="text-pink-600 hover:underline font-medium whitespace-nowrap">
+                <a href="mailto:zedspeaks.info@gmail.com?subject=Forgot%20my%20ZedSpeaks%20password" className="text-pink-600 hover:underline font-medium whitespace-nowrap">
                   Forgot password?
                 </a>
               </div>

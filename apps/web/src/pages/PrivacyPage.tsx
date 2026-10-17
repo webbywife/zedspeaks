@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 
 const FONT = { fontFamily: "'Plus Jakarta Sans Variable', ui-sans-serif, system-ui, sans-serif" }
-const CONTACT = 'privacy@zedspeaks.io'
+const CONTACT = 'zedspeaks.info@gmail.com'
 const UPDATED = '17 October 2026'
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
