@@ -89,6 +89,10 @@ def main():
         open(f, "wb").write(tts("Hi! I'm Zed. I want to eat, please. Thank you!", a[1]))
         print(f)
     elif a[:1] == ["--voice"]:
+        global OUT
+        # --voice ID [--dir voice-girl]: record into another folder (one folder per character voice)
+        if "--dir" in a:
+            OUT = os.path.join(ROOT, "apps/web/public", a[a.index("--dir") + 1])
         os.makedirs(OUT, exist_ok=True)
         man_f = os.path.join(OUT, "manifest.json")
         man = json.load(open(man_f)) if os.path.exists(man_f) else {}

@@ -1,21 +1,29 @@
 import { useState, useEffect, useCallback } from 'react'
 import type { TTSSettings } from '../types'
 import { API } from '../lib/api'
+import { useBoardStore } from '../store/boardStore'
 
 // Pre-recorded natural voice clips (scripts/make_voice.py → public/voice/).
 // Keys are normalized spoken text; must match norm() in make_voice.py.
-const VOICE_BASE = `${import.meta.env.BASE_URL}voice/`
-let manifest: Record<string, string> | null = null
-let manifestLoad: Promise<void> | null = null
+// One recorded set per character voice: Zed's in /voice, the girl's in /voice-girl
+export type VoiceId = 'boy' | 'girl'
+const VOICE_DIR: Record<VoiceId, string> = { boy: 'voice/', girl: 'voice-girl/' }
+const manifests: Partial<Record<VoiceId, Record<string, string>>> = {}
+const manifestLoads: Partial<Record<VoiceId, Promise<void>>> = {}
+let activeVoice: VoiceId = 'boy'
+const base = (v: VoiceId) => `${import.meta.env.BASE_URL}${VOICE_DIR[v]}`
+/** The girl's voice is used once her recordings exist; until then everyone hears Zed's voice */
+const voiceInUse = (): VoiceId =>
+  activeVoice === 'girl' && Object.keys(manifests.girl ?? {}).length === 0 ? 'boy' : activeVoice
 let current: HTMLAudioElement | null = null
 let queueToken = 0
 
-function loadManifest() {
-  manifestLoad ??= fetch(`${VOICE_BASE}manifest.json`)
+function loadManifest(v: VoiceId = activeVoice) {
+  manifestLoads[v] ??= fetch(`${base(v)}manifest.json`)
     .then((r) => (r.ok ? r.json() : {}))
-    .then((m) => { manifest = m })
-    .catch(() => { manifest = {} })
-  return manifestLoad
+    .then((m) => { manifests[v] = m })
+    .catch(() => { manifests[v] = {} })
+  return manifestLoads[v]!
 }
 
 export function normalize(text: string): string {
@@ -23,8 +31,9 @@ export function normalize(text: string): string {
 }
 
 function clipFor(text: string): string | null {
-  const name = manifest?.[normalize(text)]
-  return name ? VOICE_BASE + name : null
+  const v = voiceInUse()
+  const name = manifests[v]?.[normalize(text)]
+  return name ? base(v) + name : null
 }
 
 // Typed text and family photo names: made in the same teen voice by our server, then kept
@@ -35,9 +44,10 @@ const liveUrls = new Map<string, string>()
 async function liveClip(text: string): Promise<string | null> {
   const key = normalize(text)
   if (!key) return null
-  const hit = liveUrls.get(key)
+  const hit = liveUrls.get(`${voiceInUse()}:${key}`)
   if (hit) return hit
-  const cacheKey = `${location.origin}/__live-voice/${encodeURIComponent(key)}`
+  const voice = voiceInUse()
+  const cacheKey = `${location.origin}/__live-voice/${voice}/${encodeURIComponent(key)}`
   try {
     const cache = 'caches' in window ? await caches.open(LIVE_CACHE) : null
     let res = cache ? await cache.match(cacheKey) : undefined
@@ -45,14 +55,14 @@ async function liveClip(text: string): Promise<string | null> {
       if (!navigator.onLine) return null
       const r = await fetch(`${API}/tts`, {
         method: 'POST', credentials: 'include',
-        headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text }),
+        headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text, voice }),
       })
       if (!r.ok || !(r.headers.get('content-type') ?? '').includes('audio')) return null
       res = r
       if (cache) await cache.put(cacheKey, r.clone())
     }
     const url = URL.createObjectURL(await res.blob())
-    liveUrls.set(key, url)
+    liveUrls.set(`${voice}:${key}`, url)
     return url
   } catch {
     return null
@@ -68,12 +78,18 @@ function stopClips() {
 }
 
 export function useTTS(settings: TTSSettings) {
+  const character = useBoardStore((s) => s.character)
+  activeVoice = character
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([])
   const [supported] = useState(() => 'speechSynthesis' in window)
   const natural = settings.naturalVoice !== false
 
   useEffect(() => {
-    loadManifest()
+    loadManifest('boy')
+    if (character === 'girl') loadManifest('girl')
+  }, [character])
+
+  useEffect(() => {
     if (!supported) return
     const load = () => setVoices(window.speechSynthesis.getVoices())
     load()
@@ -125,7 +141,8 @@ export function useTTS(settings: TTSSettings) {
       stopClips()
       if (supported) window.speechSynthesis.cancel()
       if (natural) {
-        await loadManifest()
+        await loadManifest('boy')
+        if (activeVoice === 'girl') await loadManifest('girl')
         const whole = clipFor(text)
         const urls = whole ? [whole] : (parts ?? []).map(clipFor)
         if (urls.length && urls.every(Boolean)) {

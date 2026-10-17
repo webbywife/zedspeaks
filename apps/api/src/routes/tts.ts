@@ -13,7 +13,12 @@ export const ttsRouter = new Hono<AppEnv>()
 
 ttsRouter.use('*', requireAuth)
 
-const VOICE = 'nzHcPRle5J78QRhxKFd8' // "ZedSpeaks Teen" (same as scripts/make_voice.py)
+const GIRL_VOICE_ID: string | undefined = undefined // set once Lea picks the girl's voice
+// One voice per character (same ids as scripts/make_voice.py recordings)
+const VOICES: Record<string, string | undefined> = {
+  boy: 'nzHcPRle5J78QRhxKFd8', // "ZedSpeaks Teen"
+  girl: process.env.TTS_GIRL_VOICE ?? GIRL_VOICE_ID,
+}
 const MODEL = 'eleven_multilingual_v2'
 const SETTINGS = { stability: 0.6, similarity_boost: 0.8, style: 0.2, use_speaker_boost: true, speed: 0.9 }
 const CACHE_DIR = process.env.TTS_CACHE_DIR ?? join(process.cwd(), 'tts-cache')
@@ -33,12 +38,14 @@ ttsRouter.post('/', async (c) => {
   const key = process.env.ELEVENLABS_API_KEY
   if (!key) return c.json({ error: 'Voice not set up' }, 503)
 
-  const body = await c.req.json<{ text?: unknown }>().catch(() => ({} as { text?: unknown }))
+  const body = await c.req.json<{ text?: unknown; voice?: unknown }>().catch(() => ({} as { text?: unknown; voice?: unknown }))
+  const voiceName = body.voice === 'girl' && VOICES.girl ? 'girl' : 'boy'
+  const voiceId = VOICES[voiceName]!
   const text = typeof body.text === 'string' ? body.text.trim().slice(0, MAX_CHARS) : ''
   const norm = normalize(text)
   if (!norm) return c.json({ error: 'Nothing to say' }, 400)
 
-  const file = join(CACHE_DIR, createHash('sha256').update(norm).digest('hex') + '.mp3')
+  const file = join(CACHE_DIR, (voiceName === 'boy' ? '' : `${voiceName}-`) + createHash('sha256').update(norm).digest('hex') + '.mp3')
   const cached = await readFile(file).catch(() => null)
   if (cached) return audio(cached)
 
@@ -51,7 +58,7 @@ ttsRouter.post('/', async (c) => {
   if (today !== day) { day = today; charsToday = 0 }
   if (charsToday + text.length > DAILY_CHARS) return c.json({ error: 'Daily voice limit reached' }, 429)
 
-  const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE}?output_format=mp3_44100_64`, {
+  const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_64`, {
     method: 'POST',
     headers: { 'xi-api-key': key, 'Content-Type': 'application/json' },
     body: JSON.stringify({ text, model_id: MODEL, voice_settings: SETTINGS }),

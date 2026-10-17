@@ -168,7 +168,7 @@ export function VoiceSettings() {
                         }`}
                       >
                         {preset.isZed && <Sparkles size={14} />}
-                        {preset.name}
+                        {preset.isZed ? (character === 'girl' ? 'Her voice' : "Zed's Voice") : preset.name}
                       </button>
                     )
                   })}
@@ -200,7 +200,7 @@ export function VoiceSettings() {
               {/* Voice selector */}
               {voices.length > 0 && (
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-sm font-medium text-gray-700">Device voice (for typed words)</label>
+                  <label className="text-sm font-medium text-gray-700">Backup phone voice (only when offline)</label>
                   <select
                     value={ttsSettings.voiceURI ?? ''}
                     onChange={(e) => updateTTSSettings({ voiceURI: e.target.value || null })}
