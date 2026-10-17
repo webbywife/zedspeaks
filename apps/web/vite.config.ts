@@ -9,6 +9,7 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
+      injectRegister: false, // registered in main.tsx, with self-updating
       includeAssets: ['icon.svg'],
       manifest: {
         name: 'ZedSpeaks – AAC Communication Board',
