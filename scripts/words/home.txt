@@ -1,15 +1,8 @@
 # Home tab cards still without a drawing (next Draw Things run, cool mode)
-red apple
-glass of milk | clear glass full of white milk, bold black outline
-glass of water | clear glass of water with light blue water, bold black outline
-orange juice | glass of orange juice with a straw
 open book | open picture book
-park | green park with trees, bench and path
 playground | playground slide and swing set
-school | small school building with a flag pole, no text
 coloring book | open colouring book with crayons
 family car | small family car seen from the side, plain blue, no logo
-fried chicken | two pieces of crispy golden fried chicken drumsticks on a plate
 # Mom's Kitchen dishes (voices already recorded)
 chicken adobo | bowl of chicken adobo stew in dark soy sauce with rice on the side
 sinigang | bowl of sour tamarind soup with pork and vegetables

@@ -24,15 +24,14 @@ const ZS_PICTURES: Record<string, string> = {
   car: 'car', toycars: 'toy-car', blocks: 'building-blocks', play: 'video-game-controller',
   watch: 'television', listen: 'headphones', home: 'house', store: 'shopping-cart', outside: 'tree',
   cookie: 'cookie', banana: 'banana', icecream: 'ice-cream', pizza: 'pizza-slice', sandwich: 'sandwich',
-  bread: 'bread', eggs: 'fried-egg', chicken: 'fried-chicken', sleep: 'bed',
-  apple: 'red-apple', milk: 'glass-of-milk', water: 'glass-of-water', juice: 'orange-juice',
-  read: 'open-book', park: 'park', school: 'school',
+  bread: 'bread', eggs: 'fried-egg', sleep: 'bed', read: 'open-book',
 }
 
 /** Our generated picture for a card, if there is one */
 export function pictureUrl(id: string): string | null {
-  const name = ZS_PICTURES[id]
-  return name && ZS_AVAILABLE.has(name) ? `${import.meta.env.BASE_URL}symbols/zs-${name}.webp` : null
+  // A drawing saved under the card id itself (scripts/words/talk.txt) needs no entry above
+  const name = ZS_PICTURES[id] ?? id
+  return ZS_AVAILABLE.has(name) ? `${import.meta.env.BASE_URL}symbols/zs-${name}.webp` : null
 }
 
 // One look everywhere: our drawing first. A stock photo only stands in until its drawing is made.

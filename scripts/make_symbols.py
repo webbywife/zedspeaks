@@ -50,6 +50,13 @@ def slug(w):
     return re.sub(r"[^a-z0-9]+", "-", w.lower()).strip("-")
 
 
+def parse(line):
+    """'word | hint' or 'card-id = word | hint' (the picture is saved under the card id)."""
+    name, _, rest = line.partition("=") if "=" in line.split("|")[0] else ("", "", line)
+    word, _, hint = rest.partition("|")
+    return (word.strip(), hint.strip(), name.strip() or None)
+
+
 def generate(word, hint=""):
     body = {
         "prompt": f"{word}{', ' + hint if hint else ''}, {STYLE}",
@@ -66,15 +73,16 @@ def generate(word, hint=""):
 
 def run(words):
     os.makedirs(OUT, exist_ok=True)
-    banned = [w for w, _ in words if BLOCKED.search(w)]
+    banned = [w[0] for w in words if BLOCKED.search(w[0] + " " + (w[1] if len(w) > 1 else ""))]
     if banned:
         sys.exit(f"Refused (brand or character names, see IP rules): {', '.join(banned)}")
-    todo = [(w, h) for w, h in words if not os.path.exists(os.path.join(OUT, slug(w) + ".png"))]
+    words = [(w[0], w[1], w[2] if len(w) > 2 else None) for w in words]
+    todo = [(w, h, n) for w, h, n in words if not os.path.exists(os.path.join(OUT, slug(n or w) + ".png"))]
     print(f"{len(words) - len(todo)} done already, {len(todo)} to make")
-    for i, (w, h) in enumerate(todo, 1):
+    for i, (w, h, n) in enumerate(todo, 1):
         for attempt in range(3):  # the server can drop one request (e.g. after a settings change)
             try:
-                open(os.path.join(OUT, slug(w) + ".png"), "wb").write(generate(w, h))
+                open(os.path.join(OUT, slug(n or w) + ".png"), "wb").write(generate(w, h))
                 print(f"[{i}/{len(todo)}] {w}", flush=True)
                 time.sleep(REST)
                 break
@@ -200,7 +208,7 @@ def main():
         publish()
     elif len(a) == 1 and os.path.exists(a[0]):
         lines = [l.strip() for l in open(a[0]) if l.strip() and not l.startswith("#")]
-        run([(l.split("|")[0].strip(), l.split("|")[1].strip() if "|" in l else "") for l in lines])
+        run([parse(l) for l in lines])
     else:
         print(__doc__)
 
