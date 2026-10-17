@@ -1,0 +1,9 @@
+alittle = one small red heart with a tiny bandage | fills half the picture, very thick black outlines, bright colors
+baddream = dark blue storm cloud above a pink pillow | bright colors, very thick black outlines
+burn = red hand with small steam lines | one hand, centered, plain white background, very thick black outlines
+eye = one big cartoon eye | fills the picture, blue iris, very thick black outlines
+mouth = big cartoon open mouth with lips and teeth | centered, plain white background, very thick black outlines
+nosleep = crescent moon and open eyes | bright yellow moon, centered, plain white background, very thick black outlines
+period = pink calendar page with a red drop | no letters or numbers, bright colors, very thick black outlines
+thirsty = empty blue drinking glass | bright blue glass, very thick black outlines
+tooth = big cartoon tooth with small red ache lines | light blue outline glow, very thick black outlines

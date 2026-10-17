@@ -1,4 +1,4 @@
-import { Star, Heart, Apple, Users, MapPin, Zap, MessageSquare, Camera } from 'lucide-react'
+import { Star, Heart, Apple, Users, MapPin, Zap, MessageSquare, Camera, HeartPulse } from 'lucide-react'
 import type { CategoryId, CategoryMeta } from '../../types'
 
 const ICONS: Record<CategoryId, React.ReactNode> = {
@@ -10,6 +10,7 @@ const ICONS: Record<CategoryId, React.ReactNode> = {
   actions:    <Zap         size={16} />,
   phrases:    <MessageSquare size={16} />,
   'my-photos': <Camera     size={16} />,
+  body:        <HeartPulse size={16} />,
 }
 
 interface CategoryNavProps {

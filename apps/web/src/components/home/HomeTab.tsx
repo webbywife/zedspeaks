@@ -48,6 +48,7 @@ export function HomeTab({ photos, onPick, onFeel, onAddPhoto, onDelete, top }: H
           </button>
         ))}
       </div>
+      {/* My Body cards always say their own sentence ("My tummy hurts"); the Say: starters don't apply */}
       {SHELVES.map((shelf) => {
         const own = photos.filter((p) => p.shelf === shelf.id || (!p.shelf && shelf.id === 'toys'))
         const starters = SYMBOLS.filter((s) => shelf.starters.includes(s.id))
@@ -57,11 +58,11 @@ export function HomeTab({ photos, onPick, onFeel, onAddPhoto, onDelete, top }: H
             <div className="flex gap-3 overflow-x-auto px-4 pb-1" style={{ scrollbarWidth: 'none' }}>
               {own.map((p) => (
                 <PictureCard key={p.id} label={p.label} src={p.imageData} photo
-                  onTap={() => onPick(p.label, sentenceFor(photoPhrase(p.label, p.shelf ?? shelf.id), starter))} onDelete={() => onDelete(p.id)} />
+                  onTap={() => onPick(p.label, shelf.id === 'body' ? `My ${p.label} hurts` : sentenceFor(photoPhrase(p.label, p.shelf ?? shelf.id), starter))} onDelete={() => onDelete(p.id)} />
               ))}
               {starters.map((s) => (
                 <PictureCard key={s.id} label={s.label} {...cardImage(s.id)} emoji={s.emoji}
-                  onTap={() => onPick(s.label, sentenceFor(CARD_PHRASES[s.id] ?? photoPhrase(s.spokenText, shelf.id), starter))} />
+                  onTap={() => onPick(s.label, s.category === 'body' ? s.spokenText : sentenceFor(CARD_PHRASES[s.id] ?? photoPhrase(s.spokenText, shelf.id), starter))} />
               ))}
               <button
                 onClick={() => onAddPhoto(shelf.id)}

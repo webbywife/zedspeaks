@@ -1,5 +1,5 @@
 export type CategoryId =
-  | 'needs' | 'feelings' | 'food' | 'people' | 'places' | 'actions'
+  | 'needs' | 'body' | 'feelings' | 'food' | 'people' | 'places' | 'actions'
   | 'phrases' | 'my-photos'
 
 export type MoodId =

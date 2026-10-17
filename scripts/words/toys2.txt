@@ -1,0 +1,16 @@
+# More toys (girls asked for). Generic only: no brands, no characters.
+doll = cartoon doll with a dress | plain generic doll, friendly, very thick black outlines
+dollhouse = toy dollhouse | small pink house with open rooms, very thick black outlines
+teaset = toy tea set | teapot and two cups, pastel, very thick black outlines
+bunny = stuffed bunny toy | soft plush rabbit, very thick black outlines
+unicorn = unicorn plush toy | soft, pastel mane, very thick black outlines
+hairclip = hair bow clip | pink bow, very thick black outlines
+bracelet = bead bracelet | colorful beads, very thick black outlines
+stickers = sheet of stickers | stars and hearts, no letters, very thick black outlines
+jumprope = jump rope | with handles, very thick black outlines
+playkitchen = toy kitchen set | small stove and pots, very thick black outlines
+dressup = dress-up costume | sparkly dress and crown on a hanger, very thick black outlines
+playdough = play dough | colorful dough tubs, no letters, very thick black outlines
+bubbles = bubble wand | soap bubbles floating, very thick black outlines
+kite = colorful kite | very thick black outlines
+stroller = toy doll stroller | small pink stroller, very thick black outlines
