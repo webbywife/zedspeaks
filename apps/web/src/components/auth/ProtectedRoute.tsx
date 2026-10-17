@@ -16,7 +16,7 @@ export function ProtectedRoute({ children, adminOnly = false }: Props) {
   useEffect(() => {
     if (!checked) return
     if (!user) { navigate('/login', { replace: true }); return }
-    if (adminOnly && user.role !== 'admin') navigate('/start', { replace: true })
+    if (adminOnly && user.role !== 'admin') navigate('/board', { replace: true })
   }, [checked, user, adminOnly, navigate])
 
   if (!checked) {

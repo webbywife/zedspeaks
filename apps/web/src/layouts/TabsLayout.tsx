@@ -8,6 +8,7 @@ import { PhraseBoard } from '../components/phrases/PhraseBoard'
 import { CameraCapture } from '../components/camera/CameraCapture'
 import { VoiceSettings } from '../components/settings/VoiceSettings'
 import { HomeTab } from '../components/home/HomeTab'
+import { WelcomeCard } from '../components/home/WelcomeCard'
 import { KitchenTab } from '../components/kitchen/KitchenTab'
 import { MeTab } from '../components/me/MeTab'
 import { TypeTab } from '../components/type/TypeTab'
@@ -92,7 +93,7 @@ export function TabsLayout() {
       {tab !== 'type' && <SentenceStrip items={sentenceItems} onSpeak={speakSentence} onClear={clearSentence} onBackspace={backspace} />}
 
       {tab === 'home' && (
-        <HomeTab photos={photos.filter((p) => p.shelf !== KITCHEN_SHELF)} onPick={pick} onFeel={tapSymbol} onAddPhoto={setCameraShelf} onDelete={remove} />
+        <HomeTab top={<WelcomeCard onGo={setTab} />} photos={photos.filter((p) => p.shelf !== KITCHEN_SHELF)} onPick={pick} onFeel={tapSymbol} onAddPhoto={setCameraShelf} onDelete={remove} />
       )}
       {tab === 'kitchen' && (
         <KitchenTab dishes={photos.filter((p) => p.shelf === KITCHEN_SHELF)} speak={speak}

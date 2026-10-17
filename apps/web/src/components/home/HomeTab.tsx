@@ -10,12 +10,15 @@ interface HomeTabProps {
   onFeel: (s: AACSymbol) => void
   onAddPhoto: (shelf: string) => void
   onDelete: (id: string) => void
+  /** Shown above the shelves (e.g. the welcome card) */
+  top?: React.ReactNode
 }
 
 /** Shopee-style shelves: the child's own photos first, then built-in cards. */
-export function HomeTab({ photos, onPick, onFeel, onAddPhoto, onDelete }: HomeTabProps) {
+export function HomeTab({ photos, onPick, onFeel, onAddPhoto, onDelete, top }: HomeTabProps) {
   return (
     <div className="flex-1 overflow-y-auto pb-4">
+      {top}
       {/* Zed's own faces first: tap = "I am happy", and his face in the header changes */}
       <section className="pt-4">
         <h2 className="px-4 pb-2 text-base font-bold text-slate-900">How I feel</h2>

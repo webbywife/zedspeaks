@@ -79,7 +79,7 @@ export function LoginPage() {
   const [suRelation, setSuRelation] = useState('Parent/Caregiver')
 
   useEffect(() => {
-    if (checked && user) navigate('/start', { replace: true })
+    if (checked && user) navigate('/board', { replace: true })
   }, [checked, user, navigate])
 
   const switchMode = (m: Mode) => { setMode(m); setError('') }
@@ -98,7 +98,7 @@ export function LoginPage() {
       if (r.status === 403 && data.status === 'pending') { navigate('/pending'); return }
       if (!r.ok) throw new Error(data.error ?? 'Sign in failed')
       setUser(data.user)
-      navigate('/start')
+      navigate('/board')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong')
     } finally {
@@ -121,7 +121,7 @@ export function LoginPage() {
       if (!r.ok) throw new Error(data.error ?? 'Sign up failed')
       if (data.status === 'pending') { navigate('/pending'); return }
       setUser(data.user)
-      navigate('/start')
+      navigate('/board')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong')
     } finally {

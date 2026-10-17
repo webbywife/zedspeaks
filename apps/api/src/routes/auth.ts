@@ -210,7 +210,7 @@ authRouter.get('/google/callback', async (c) => {
 
   const session = await lucia.createSession(user.id, {})
   c.header('Set-Cookie', lucia.createSessionCookie(session.id).serialize())
-  return c.redirect(`${frontendUrl}/start`)
+  return c.redirect(`${frontendUrl}/board`)
 })
 
 // ── Session ───────────────────────────────────────────────────────────────────

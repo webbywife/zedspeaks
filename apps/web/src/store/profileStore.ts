@@ -67,6 +67,7 @@ export const useActiveProfile = () =>
 
 /** Items saved before profiles existed belong to the first child */
 export function ownsItem(itemProfileId: string | undefined, activeId: string | null, firstId: string | undefined) {
+  if (!activeId) return true // no child chosen: show everything saved on this device
   return itemProfileId ? itemProfileId === activeId : activeId === firstId
 }
 

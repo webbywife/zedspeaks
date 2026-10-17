@@ -6,7 +6,7 @@ import { useActiveProfile } from './store/profileStore'
 
 // Parents choose the layout that suits their child (Settings → Layout).
 // Each child has their own board: without a chosen child, go back to "Who's talking?".
-export default function App({ requireProfile = true }: { requireProfile?: boolean }) {
+export default function App({ requireProfile = false }: { requireProfile?: boolean }) {
   const layout = useBoardStore((s) => s.layout)
   const active = useActiveProfile()
   if (requireProfile && !active) return <Navigate to="/start" replace />
