@@ -1,7 +1,8 @@
 // Sign-in sessions, replacing the retired Lucia library with the pattern its authors recommend.
 // - The browser holds a random token in an httpOnly cookie.
 // - The database stores only a SHA-256 hash of that token, so a database leak can't be used to sign in.
-// - Sessions last 30 days and are extended automatically when used in their last 15 days.
+// - Sessions last 90 days and are extended automatically when used in their last 45 days, so a
+//   child's own device stays signed in as long as the app is used.
 import { createHash, randomBytes } from 'node:crypto'
 import type { Context } from 'hono'
 import { deleteCookie, getCookie, setCookie } from 'hono/cookie'
@@ -11,8 +12,8 @@ import { sessions, users } from '../db/schema.js'
 
 export const SESSION_COOKIE = 'zs_session'
 const DAY = 24 * 60 * 60 * 1000
-const LIFETIME = 30 * DAY
-const RENEW_WITHIN = 15 * DAY
+const LIFETIME = 90 * DAY
+const RENEW_WITHIN = 45 * DAY
 
 export interface SessionUser {
   id: string

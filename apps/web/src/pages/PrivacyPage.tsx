@@ -48,7 +48,7 @@ export function PrivacyPage() {
             <li><b>Your email address</b>, to sign you in and to tell you when your access is approved.</li>
             <li><b>Your password</b>, if you sign in with email. It is stored only as a one-way scrambled code (Argon2id), so no one, including us, can read it.</li>
             <li><b>Your account status</b>: whether your access is approved, and whether you are the administrator.</li>
-            <li><b>A sign-in cookie</b> that keeps you signed in for up to 30 days. Our database stores only a scrambled version of it.</li>
+            <li><b>A sign-in cookie</b> that keeps you signed in for up to 90 days (renewed while you use the app). Our database stores only a scrambled version of it.</li>
           </ul>
           <p>
             If you choose <b>Continue with Google</b>, Google tells us your email address and that it is verified. We do not keep
@@ -100,7 +100,7 @@ export function PrivacyPage() {
 
         <Section title="How long we keep it">
           <p>
-            Until you ask us to delete your account. Sign-in sessions end after 30 days without use. If your access request is
+            Until you ask us to delete your account. Sign-in sessions end after 90 days without use. If your access request is
             not approved, we delete it on request.
           </p>
         </Section>

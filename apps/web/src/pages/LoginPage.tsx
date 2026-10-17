@@ -162,14 +162,11 @@ export function LoginPage() {
                 <PasswordInput value={siPassword} onChange={setSiPassword} />
               </div>
 
-              <div className="flex items-center justify-between text-sm">
-                <label className="flex items-center gap-2 text-gray-600 cursor-pointer">
-                  <input type="checkbox" className="rounded border-gray-300 text-pink-600" />
-                  Remember me
-                </label>
-                <button type="button" className="text-pink-600 hover:underline font-medium">
+              <div className="flex items-center justify-between gap-3 text-sm">
+                <span className="text-gray-500">You'll stay signed in on this device.</span>
+                <a href="mailto:privacy@zedspeaks.io?subject=Forgot%20my%20ZedSpeaks%20password" className="text-pink-600 hover:underline font-medium whitespace-nowrap">
                   Forgot password?
-                </button>
+                </a>
               </div>
 
               {error && <p className="text-sm text-red-600">{error}</p>}

@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 
 export interface AuthUser {
   id: string
@@ -14,9 +15,16 @@ interface AuthStore {
   setChecked: () => void
 }
 
-export const useAuthStore = create<AuthStore>((set) => ({
-  user: null,
-  checked: false,
-  setUser: (user) => set({ user }),
-  setChecked: () => set({ checked: true }),
-}))
+// The last signed-in user is remembered on this device, so the board still opens offline.
+// Only the server saying "signed out" (or signing out here) clears it.
+export const useAuthStore = create<AuthStore>()(
+  persist(
+    (set) => ({
+      user: null,
+      checked: false,
+      setUser: (user) => set({ user }),
+      setChecked: () => set({ checked: true }),
+    }),
+    { name: 'zedspeaks-auth', partialize: (s) => ({ user: s.user }) }
+  )
+)
