@@ -18,10 +18,23 @@ export function getCategoryMeta(id: CategoryId): CategoryMeta {
 import { PHOTO_CREDITS } from './photoCredits'
 
 /** A starter card's picture: a credited Pexels photo when we have one, else our icon */
+// Card id -> our own generated picture (scripts/make_symbols.py → public/symbols/zs-<name>.webp)
+const ZS_PICTURES: Record<string, string> = {
+  car: 'car', toycars: 'toy-car', blocks: 'building-blocks', play: 'video-game-controller',
+  watch: 'television', listen: 'headphones', home: 'house', store: 'shopping-cart', outside: 'tree',
+  cookie: 'cookie', banana: 'banana', icecream: 'ice-cream', pizza: 'pizza-slice', sandwich: 'sandwich',
+  bread: 'bread', eggs: 'fried-egg', chicken: 'fried-chicken', sleep: 'bed',
+}
+
+/** Our generated picture for a card, if there is one */
+export function pictureUrl(id: string): string | null {
+  const name = ZS_PICTURES[id]
+  return name ? `${import.meta.env.BASE_URL}symbols/zs-${name}.webp` : null
+}
+
 export function cardImage(id: string): { src: string; photo: boolean } {
-  return id in PHOTO_CREDITS
-    ? { src: `${import.meta.env.BASE_URL}photos/${id}.jpg`, photo: true }
-    : { src: iconUrl(id), photo: false }
+  if (id in PHOTO_CREDITS) return { src: `${import.meta.env.BASE_URL}photos/${id}.jpg`, photo: true }
+  return { src: pictureUrl(id) ?? iconUrl(id), photo: false }
 }
 
 // ZedSpeaks icon set (scripts/make_icons.py → public/icons/)

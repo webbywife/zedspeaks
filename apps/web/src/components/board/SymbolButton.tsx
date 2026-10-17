@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { arasaacUrl, iconUrl, getCategoryMeta } from '../../data/symbols'
+import { arasaacUrl, iconUrl, pictureUrl, getCategoryMeta } from '../../data/symbols'
 import type { AACSymbol } from '../../types'
 
 interface SymbolButtonProps {
@@ -12,7 +12,7 @@ export function SymbolButton({ symbol, onTap }: SymbolButtonProps) {
   // Own icon set first, then the ARASAAC pictogram, then the emoji.
   const sources = symbol.customImageUrl
     ? [symbol.customImageUrl]
-    : [iconUrl(symbol.id), arasaacUrl(symbol.arasaacId)]
+    : [pictureUrl(symbol.id), iconUrl(symbol.id), arasaacUrl(symbol.arasaacId)].filter((u): u is string => !!u)
   const [srcIndex, setSrcIndex] = useState(0)
   const imgError = srcIndex >= sources.length
   const category = getCategoryMeta(symbol.category)
