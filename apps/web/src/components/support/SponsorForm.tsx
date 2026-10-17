@@ -2,10 +2,10 @@ import { useState } from 'react'
 import { Check } from 'lucide-react'
 import { api } from '../../lib/api'
 
-const KINDS = ['Sponsor a family', 'Sponsor a school or class', 'Sponsor a new voice or language', 'Collaborate or partner', 'Other']
+const KINDS = ['Support the app', 'Help sustain it every month', 'Volunteer my time or skills', 'Partner as an organisation', 'Something else']
 const field = 'w-full px-3 h-11 rounded-xl border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-pink-500'
 
-/** For companies, schools, clinics and organisations who want to help. Messages go to the admin dashboard. */
+/** For anyone who wants to support or help sustain ZedSpeaks. Messages go to the admin dashboard. */
 export function SponsorForm() {
   const [v, setV] = useState({ name: '', organisation: '', email: '', kind: KINDS[0], message: '', website: '' })
   const [consent, setConsent] = useState(false)
@@ -42,7 +42,7 @@ export function SponsorForm() {
           <input value={v.name} onChange={set('name')} required maxLength={100} autoComplete="name" className={field} />
         </label>
         <label className="flex flex-col gap-1 text-sm font-semibold text-slate-700">
-          <span>Organisation <span className="font-normal text-slate-500">(optional)</span></span>
+          <span>Organisation <span className="font-normal text-slate-500">(optional, if you're with one)</span></span>
           <input value={v.organisation} onChange={set('organisation')} maxLength={150} autoComplete="organization" className={field} />
         </label>
       </div>
@@ -58,7 +58,7 @@ export function SponsorForm() {
       </div>
       <label className="flex flex-col gap-1 text-sm font-semibold text-slate-700">Message
         <textarea value={v.message} onChange={set('message')} required minLength={5} maxLength={2000} rows={4}
-          placeholder="Tell me a little about how you'd like to help."
+          placeholder="Tell me a little about how you'd like to support ZedSpeaks."
           className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm font-normal focus:outline-none focus:ring-2 focus:ring-pink-500" />
       </label>
       {/* Hidden from people; bots fill it in and get ignored */}

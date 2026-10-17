@@ -3,11 +3,11 @@ import { db } from '../db/index.js'
 import { inquiries } from '../db/schema.js'
 import type { AppEnv } from '../lib/types.js'
 
-// Public form on the Support page for sponsors, schools, clinics and collaborators.
+// Public form on the Support page for anyone who wants to support or help sustain ZedSpeaks.
 // Spam guards: a hidden "website" field bots fill in, size limits, and 5 messages per hour per address.
 export const inquiriesRouter = new Hono<AppEnv>()
 
-const KINDS = ['Sponsor a family', 'Sponsor a school or class', 'Sponsor a new voice or language', 'Collaborate or partner', 'Other']
+const KINDS = ['Support the app', 'Help sustain it every month', 'Volunteer my time or skills', 'Partner as an organisation', 'Something else']
 const recent = new Map<string, number[]>()
 
 const clean = (v: unknown, max: number) => (typeof v === 'string' ? v.trim().replace(/\s+/g, ' ').slice(0, max) : '')
@@ -25,7 +25,7 @@ inquiriesRouter.post('/', async (c) => {
   const name = clean(body.name, 100)
   const organisation = clean(body.organisation, 150)
   const email = clean(body.email, 255).toLowerCase()
-  const kind = KINDS.includes(String(body.kind)) ? String(body.kind) : 'Other'
+  const kind = KINDS.includes(String(body.kind)) ? String(body.kind) : 'Something else'
   const message = typeof body.message === 'string' ? body.message.trim().slice(0, 2000) : ''
 
   if (!name) return c.json({ error: 'Please tell us your name.' }, 400)

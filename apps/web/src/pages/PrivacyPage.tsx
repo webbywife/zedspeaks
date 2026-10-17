@@ -64,10 +64,10 @@ export function PrivacyPage() {
           </p>
         </Section>
 
-        <Section title="If you contact us to sponsor or collaborate">
+        <Section title="If you contact us to support ZedSpeaks">
           <p>
             The form on our Support page asks for your name, organisation (optional), email and message. We keep them only to
-            reply and to follow up on your offer, and delete them when you ask or when they're no longer needed.
+            reply and to follow up on your offer of support, and delete them when you ask or when they're no longer needed.
           </p>
         </Section>
 

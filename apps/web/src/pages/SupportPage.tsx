@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowLeft, Building2, Check, Heart, MessageSquare, Mic, Server, Share2, Sparkles } from 'lucide-react'
+import { ArrowLeft, HeartHandshake, Check, Heart, MessageSquare, Mic, Server, Share2, Sparkles } from 'lucide-react'
 import { SponsorForm } from '../components/support/SponsorForm'
 
 const FONT = { fontFamily: "'Plus Jakarta Sans Variable', ui-sans-serif, system-ui, sans-serif" }
@@ -96,12 +96,13 @@ export function SupportPage() {
 
           <div id="sponsor" className="rounded-3xl bg-pink-50 border border-pink-100 p-5 sm:p-6 flex flex-col gap-4 scroll-mt-20">
             <div className="flex gap-4">
-              <Building2 className="text-pink-600 shrink-0" />
+              <HeartHandshake className="text-pink-600 shrink-0" />
               <div>
-                <h3 className="font-bold text-slate-900">Sponsor, collaborate or help sustain ZedSpeaks</h3>
+                <h3 className="font-bold text-slate-900">Support or help sustain ZedSpeaks</h3>
                 <p className="text-sm text-slate-600">
-                  For companies, schools, clinics and organisations: help fund Filipino voices, set-up for families who need it,
-                  or ZedSpeaks for a whole class. I'd love to talk.
+                  Would you like to help keep ZedSpeaks running? You can support the app, help sustain it every month, share your
+                  skills (design, translation, therapy, coding), or partner with us as an organisation. Leave a message and I'll
+                  get back to you personally.
                 </p>
               </div>
             </div>
