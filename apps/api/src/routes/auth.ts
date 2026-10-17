@@ -5,6 +5,7 @@ import { db } from '../db/index.js'
 import { users, accessRequests } from '../db/schema.js'
 import { endSession, readSession, startSession } from '../lib/session.js'
 import { hashPassword, verifyPassword } from '../lib/password.js'
+import { allow, clientIp } from '../lib/rateLimit.js'
 import { eq } from 'drizzle-orm'
 import { sendAdminNotificationEmail } from '../lib/email.js'
 import type { AppEnv } from '../lib/types.js'
@@ -27,6 +28,9 @@ authRouter.post('/register', async (c) => {
   // Only what ZedSpeaks needs: no names for parents or children (data minimisation, RA 10173)
   const { email, password } = await c.req.json<{ email: string; password: string }>()
 
+  if (!allow(`register:${clientIp((h) => c.req.header(h))}`, 5, 60 * 60 * 1000)) {
+    return c.json({ error: 'Too many sign-ups from here. Please try again in an hour.' }, 429)
+  }
   if (!email?.includes('@')) return c.json({ error: 'Valid email required' }, 400)
   if (!password || password.length < 8) return c.json({ error: 'Password must be at least 8 characters' }, 400)
 
@@ -84,6 +88,11 @@ authRouter.post('/login', async (c) => {
   if (!email || !password) return c.json({ error: 'Email and password required' }, 400)
 
   const normalizedEmail = email.toLowerCase().trim()
+  // Slow down password guessing: per address and per account, 15-minute windows
+  const ip = clientIp((h) => c.req.header(h))
+  if (!allow(`login-ip:${ip}`, 30, 15 * 60 * 1000) || !allow(`login-email:${normalizedEmail}`, 10, 15 * 60 * 1000)) {
+    return c.json({ error: 'Too many sign-in attempts. Please wait 15 minutes and try again.' }, 429)
+  }
 
   const [user] = await db.select().from(users).where(eq(users.email, normalizedEmail))
 

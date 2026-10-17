@@ -36,6 +36,7 @@ export const sessions = mysqlTable('sessions', {
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
   expiresAt: timestamp('expires_at').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 
 // ── Email PINs ────────────────────────────────────────────────────────────────
@@ -175,6 +176,16 @@ export const inquiries = mysqlTable('inquiries', {
   email: varchar('email', { length: 255 }).notNull(),
   kind: varchar('kind', { length: 40 }).notNull(),
   message: text('message').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+})
+
+// ── Audit log (append-only record of admin actions) ──────────────────────────
+
+export const auditLog = mysqlTable('audit_log', {
+  id: varchar('id', { length: 36 }).primaryKey(),
+  actorId: varchar('actor_id', { length: 36 }).notNull(),
+  action: varchar('action', { length: 60 }).notNull(),
+  recordId: varchar('record_id', { length: 36 }).notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 

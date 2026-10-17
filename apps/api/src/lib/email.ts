@@ -37,7 +37,7 @@ export async function sendApprovalEmail(to: string, frontendUrl: string) {
 
 export async function sendAdminNotificationEmail(
   adminEmail: string,
-  applicantEmail: string,
+  _applicantEmail: string, // not included in the email: details stay in the dashboard
   frontendUrl: string,
 ) {
   await transporter().sendMail({
@@ -45,10 +45,7 @@ export async function sendAdminNotificationEmail(
     to: adminEmail,
     subject: 'New ZedSpeaks access request',
     html: shell(`
-      <p style="color:#475569;margin:0 0 16px">A new access request is waiting for your approval.</p>
-      <table style="width:100%;border-collapse:collapse;font-size:14px">
-        <tr><td style="color:#94a3b8;padding:4px 0">Email</td><td style="color:#1e293b">${esc(applicantEmail)}</td></tr>
-      </table>
+      <p style="color:#475569;margin:0 0 16px">A new access request is waiting for your approval in the dashboard.</p>
       <a href="${esc(frontendUrl)}/admin" style="display:inline-block;margin-top:20px;padding:12px 24px;background:#db2777;color:#fff;border-radius:12px;font-weight:700;text-decoration:none">Review request</a>
     `),
   })

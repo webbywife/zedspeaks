@@ -31,7 +31,7 @@ export const router = createBrowserRouter([
     ),
   },
   // Local development only: see the board without signing in (not in production builds)
-  ...(import.meta.env.DEV ? [{ path: '/preview', element: <App requireProfile={false} /> }] : []),
+  ...(import.meta.env.DEV || import.meta.env.VITE_TEST_PREVIEW === '1' ? [{ path: '/preview', element: <App requireProfile={false} /> }] : []),
   { path: '*', element: <ErrorPage /> },
   {
     path: '/admin',

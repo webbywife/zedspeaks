@@ -14,6 +14,7 @@ export const SESSION_COOKIE = 'zs_session'
 const DAY = 24 * 60 * 60 * 1000
 const LIFETIME = 90 * DAY
 const RENEW_WITHIN = 45 * DAY
+const MAX_AGE = 180 * DAY // absolute limit: sign in again at least every 6 months
 
 export interface SessionUser {
   id: string
@@ -45,7 +46,7 @@ export async function readSession(c: Context): Promise<{ session: Session; user:
   if (!token) return null
   const id = hashToken(token)
   const [row] = await db
-    .select({ session: sessions, user: { id: users.id, email: users.email, name: users.name, role: users.role, isActive: users.isActive } })
+    .select({ session: sessions, user: { id: users.id, email: users.email, name: users.name, role: users.role, isActive: users.isActive, approvedAt: users.approvedAt } })
     .from(sessions)
     .innerJoin(users, eq(sessions.userId, users.id))
     .where(eq(sessions.id, id))
@@ -54,7 +55,9 @@ export async function readSession(c: Context): Promise<{ session: Session; user:
     return null
   }
   const session: Session = { id: row.session.id, userId: row.session.userId, expiresAt: row.session.expiresAt }
-  if (Date.now() >= session.expiresAt.getTime()) {
+  const tooOld = row.session.createdAt && Date.now() - row.session.createdAt.getTime() > MAX_AGE
+  // Expired, past the absolute limit, or the account isn't approved: sign out
+  if (Date.now() >= session.expiresAt.getTime() || tooOld || !row.user.approvedAt) {
     await db.delete(sessions).where(eq(sessions.id, id))
     clearSessionCookie(c)
     return null
@@ -64,7 +67,8 @@ export async function readSession(c: Context): Promise<{ session: Session; user:
     await db.update(sessions).set({ expiresAt: session.expiresAt }).where(eq(sessions.id, id))
     setSessionCookie(c, token, session.expiresAt)
   }
-  return { session, user: { ...row.user, isActive: !!row.user.isActive } }
+  const { approvedAt: _approved, ...user } = row.user
+  return { session, user: { ...user, isActive: !!user.isActive } }
 }
 
 /** Signs this browser out */

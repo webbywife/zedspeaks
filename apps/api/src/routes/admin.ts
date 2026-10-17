@@ -4,6 +4,7 @@ import { users, accessRequests, feedback, inquiries } from '../db/schema.js'
 import { desc, eq, gte, sql } from 'drizzle-orm'
 import { requireAdmin } from '../middleware/auth.js'
 import { sendApprovalEmail } from '../lib/email.js'
+import { audit } from '../lib/audit.js'
 import type { AppEnv } from '../lib/types.js'
 
 export const adminRouter = new Hono<AppEnv>()
@@ -36,6 +37,7 @@ adminRouter.post('/requests/:id/approve', async (c) => {
 
   const frontendUrl = (process.env.FRONTEND_URL ?? 'http://localhost:5173').split(',')[0].trim()
   sendApprovalEmail(request.email, frontendUrl).catch(console.error)
+  await audit(admin.id, 'request.approve', id)
 
   return c.json({ ok: true })
 })
@@ -48,6 +50,7 @@ adminRouter.post('/requests/:id/deny', async (c) => {
   await db.update(accessRequests)
     .set({ status: 'denied', reviewedAt: new Date(), reviewedBy: admin.id })
     .where(eq(accessRequests.id, id))
+  await audit(admin.id, 'request.deny', id)
 
   return c.json({ ok: true })
 })
@@ -98,6 +101,7 @@ adminRouter.get('/feedback', async (c) => {
 // DELETE /admin/feedback/:id
 adminRouter.delete('/feedback/:id', async (c) => {
   await db.delete(feedback).where(eq(feedback.id, c.req.param('id')))
+  await audit(c.get('user').id, 'feedback.delete', c.req.param('id'))
   return c.json({ ok: true })
 })
 
@@ -110,5 +114,6 @@ adminRouter.get('/inquiries', async (c) => {
 // DELETE /admin/inquiries/:id
 adminRouter.delete('/inquiries/:id', async (c) => {
   await db.delete(inquiries).where(eq(inquiries.id, c.req.param('id')))
+  await audit(c.get('user').id, 'inquiry.delete', c.req.param('id'))
   return c.json({ ok: true })
 })

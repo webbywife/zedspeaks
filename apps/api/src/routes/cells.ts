@@ -31,15 +31,34 @@ cellsRouter.put('/', async (c) => {
     }>
   }>()
 
+  if (typeof body.boardId !== 'string' || !Array.isArray(body.cells) || body.cells.length > 200) {
+    return c.json({ error: 'Invalid request' }, 400)
+  }
   if (!await ownsBoard(user.id, body.boardId)) return c.json({ error: 'Forbidden' }, 403)
+
+  // Only these fields are taken from the request; board and id are always set by the server,
+  // and a linked board must belong to the same family
+  const rows = []
+  for (const cell of body.cells) {
+    const linkBoardId = typeof cell.linkBoardId === 'string' && cell.linkBoardId ? cell.linkBoardId : null
+    if (linkBoardId && !await ownsBoard(user.id, linkBoardId)) return c.json({ error: 'Forbidden' }, 403)
+    rows.push({
+      position: Number.isFinite(Number(cell.position)) ? Math.trunc(Number(cell.position)) : 0,
+      label: String(cell.label ?? '').slice(0, 255),
+      spokenText: String(cell.spokenText ?? '').slice(0, 500),
+      iconUrl: typeof cell.iconUrl === 'string' ? cell.iconUrl.slice(0, 500) : null,
+      bgColor: typeof cell.bgColor === 'string' ? cell.bgColor.slice(0, 20) : null,
+      linkBoardId,
+      id: crypto.randomUUID(),
+      boardId: body.boardId,
+    })
+  }
 
   await db.delete(cells).where(eq(cells.boardId, body.boardId))
 
-  if (body.cells.length === 0) return c.json([])
+  if (rows.length === 0) return c.json([])
 
-  await db.insert(cells).values(
-    body.cells.map((cell) => ({ id: crypto.randomUUID(), boardId: body.boardId, ...cell }))
-  )
+  await db.insert(cells).values(rows)
   const inserted = await db.select().from(cells).where(eq(cells.boardId, body.boardId))
   return c.json(inserted)
 })

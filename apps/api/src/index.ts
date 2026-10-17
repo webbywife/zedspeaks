@@ -2,7 +2,6 @@ import 'dotenv/config'
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
-import { logger } from 'hono/logger'
 import { secureHeaders } from 'hono/secure-headers'
 import { authRouter } from './routes/auth.js'
 import { adminRouter } from './routes/admin.js'
@@ -12,11 +11,22 @@ import { ttsRouter } from './routes/tts.js'
 import { inquiriesRouter } from './routes/inquiries.js'
 import { boardsRouter } from './routes/boards.js'
 import { cellsRouter } from './routes/cells.js'
-import { symbolsRouter } from './routes/symbols.js'
 
 const app = new Hono()
 
-app.use('*', logger())
+// Log method, path, status and time only: never query strings (OAuth codes) or bodies
+app.use('*', async (c, next) => {
+  const start = Date.now()
+  await next()
+  console.log(`${c.req.method} ${c.req.path} ${c.res.status} ${Date.now() - start}ms`)
+})
+// Kill switch: MAINTENANCE=1 in the environment pauses the API (health check still answers)
+app.use('*', async (c, next) => {
+  if (process.env.MAINTENANCE === '1' && c.req.path !== '/health') {
+    return c.json({ error: 'ZedSpeaks is paused for maintenance. Please try again soon.' }, 503)
+  }
+  await next()
+})
 app.use('*', secureHeaders())
 app.use(
   '*',
@@ -41,7 +51,6 @@ app.route('/tts', ttsRouter)
 app.route('/inquiries', inquiriesRouter)
 app.route('/boards', boardsRouter)
 app.route('/cells', cellsRouter)
-app.route('/symbols', symbolsRouter)
 
 // 404
 app.notFound((c) => c.json({ error: 'Not found' }, 404))
@@ -49,6 +58,7 @@ app.notFound((c) => c.json({ error: 'Not found' }, 404))
 const port = Number(process.env.PORT ?? 3001)
 console.log(`ZedSpeaks API running on http://localhost:${port}`)
 
-serve({ fetch: app.fetch, port })
+// Listen on this server only; nginx is the public entrance
+serve({ fetch: app.fetch, port, hostname: process.env.HOST ?? '127.0.0.1' })
 
 export default app
