@@ -55,10 +55,10 @@ export function TabsLayout() {
     [addToSentence]
   )
 
-  // Home: tap = "I want …" out loud, and the item joins the sentence strip
-  const pick = useCallback((label: string, spokenText: string) => {
-    add(label, spokenText)
-    speak(`I want ${spokenText}`, ['I want', spokenText])
+  // Home: tap = the card's full sentence out loud ("I want to go to the park"), shown in the strip
+  const pick = useCallback((label: string, sentence: string) => {
+    add(label, sentence)
+    speak(sentence)
   }, [add, speak])
 
   // Zed's face in the header shows the feeling he taps, then settles back

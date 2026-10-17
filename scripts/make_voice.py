@@ -49,11 +49,16 @@ def texts():
 
 def sentences(symbols_src):
     """Whole sentences the app speaks, recorded as one clip so they don't sound stitched:
-    Home tab "I want <card>" and Kitchen "<start> <dish> <end>"."""
+    Home tab card sentences and Kitchen "<start> <dish> <end>"."""
     spoken = dict(re.findall(r"id:\s*'(\w+)'.*?spokenText:\s*'([^']*)'", symbols_src))
-    shelves = open(os.path.join(DATA, "shelves.ts")).read()
-    ids = {i for grp in re.findall(r"starters:\s*\[([^\]]*)\]", shelves) for i in re.findall(r"'(\w+)'", grp)}
-    out = [f"I want {spoken[i]}" for i in ids if i in spoken]
+    # Home cards: natural sentence + every starter (data/homePhrases.ts)
+    hp = open(os.path.join(DATA, "homePhrases.ts")).read()
+    cards = re.findall(r"(\w+): p\('([^']*)', '([^']*)', '(thing|doing)'\)", hp)
+    starters = re.findall(r"text: (?:'([^']*)'|\"([^\"]*)\"), uses: '(thing|doing)'", hp)
+    out = []
+    for _, thing, doing, auto in cards:
+        out.append(f"I want to {doing}" if auto == "doing" else f"I want {thing}")
+        out += [f"{a or b} {doing if uses == 'doing' else thing}" for a, b, uses in starters]
     k = open(os.path.join(DATA, "kitchen.ts")).read()
     start = re.search(r"ORDER_START = say\('([^']*)'", k).group(1)
     end = re.search(r"ORDER_END = say\('([^']*)'", k).group(1)
