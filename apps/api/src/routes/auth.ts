@@ -5,7 +5,7 @@ import { db } from '../db/index.js'
 import { users, accessRequests } from '../db/schema.js'
 import { endSession, readSession, startSession } from '../lib/session.js'
 import { hashPassword, verifyPassword } from '../lib/password.js'
-import { eq, or } from 'drizzle-orm'
+import { eq } from 'drizzle-orm'
 import { sendAdminNotificationEmail } from '../lib/email.js'
 import type { AppEnv } from '../lib/types.js'
 
@@ -24,36 +24,22 @@ function google() {
 
 // POST /auth/register
 authRouter.post('/register', async (c) => {
-  const { email, password, name, username, relation } = await c.req.json<{
-    email: string
-    password: string
-    name: string
-    username: string
-    relation?: string
-  }>()
+  // Only what ZedSpeaks needs: no names for parents or children (data minimisation, RA 10173)
+  const { email, password } = await c.req.json<{ email: string; password: string }>()
 
   if (!email?.includes('@')) return c.json({ error: 'Valid email required' }, 400)
   if (!password || password.length < 8) return c.json({ error: 'Password must be at least 8 characters' }, 400)
-  if (!name?.trim()) return c.json({ error: 'Name is required' }, 400)
-  if (!username?.trim()) return c.json({ error: 'Username is required' }, 400)
-  if (!/^[a-z0-9_]{3,20}$/.test(username.toLowerCase())) {
-    return c.json({ error: 'Username must be 3–20 characters: letters, numbers, underscores only' }, 400)
-  }
 
   const normalizedEmail = email.toLowerCase().trim()
-  const normalizedUsername = username.toLowerCase().trim()
   const adminEmail = process.env.ADMIN_EMAIL?.toLowerCase()
   const isAdmin = normalizedEmail === adminEmail
 
   const [existing] = await db
     .select()
     .from(users)
-    .where(or(eq(users.email, normalizedEmail), eq(users.username, normalizedUsername)))
+    .where(eq(users.email, normalizedEmail))
 
-  if (existing) {
-    const field = existing.email === normalizedEmail ? 'email' : 'username'
-    return c.json({ error: `That ${field} is already taken` }, 409)
-  }
+  if (existing) return c.json({ error: 'That email is already registered. Try signing in.' }, 409)
 
   const passwordHash = await hashPassword(password)
   const now = new Date()
@@ -61,28 +47,26 @@ authRouter.post('/register', async (c) => {
   await db.insert(users).values({
     id: crypto.randomUUID(),
     email: normalizedEmail,
-    username: normalizedUsername,
     passwordHash,
-    name: name.trim(),
+    name: '',
     role: isAdmin ? 'admin' : 'caregiver',
     approvedAt: isAdmin ? now : null,
     isActive: true,
   })
 
   if (!isAdmin) {
-    const userRelation = relation?.trim() || 'Parent/Caregiver'
     await db.insert(accessRequests).values({
       id: crypto.randomUUID(),
       email: normalizedEmail,
-      applicantName: name.trim(),
-      relation: userRelation,
+      applicantName: '',
+      relation: '',
       reason: 'Signed up via ZedSpeaks',
       status: 'pending',
     })
 
     const frontendUrl = (process.env.FRONTEND_URL ?? 'http://localhost:5173').split(',')[0].trim()
     if (adminEmail) {
-      sendAdminNotificationEmail(adminEmail, name.trim(), normalizedEmail, userRelation, frontendUrl).catch(console.error)
+      sendAdminNotificationEmail(adminEmail, normalizedEmail, frontendUrl).catch(console.error)
     }
 
     return c.json({ status: 'pending' })
@@ -122,7 +106,7 @@ authRouter.post('/login', async (c) => {
 authRouter.get('/google', async (c) => {
   const state = generateState()
   const codeVerifier = generateCodeVerifier()
-  const url = google().createAuthorizationURL(state, codeVerifier, ['email', 'profile'])
+  const url = google().createAuthorizationURL(state, codeVerifier, ['openid', 'email'])
 
   const cookieOpts = {
     httpOnly: true,
@@ -158,27 +142,23 @@ authRouter.get('/google/callback', async (c) => {
 
   const googleUser = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
     headers: { Authorization: `Bearer ${tokens.accessToken()}` },
-  }).then((r) => r.json()) as { sub: string; email: string; name: string }
+  }).then((r) => r.json()) as { sub: string; email?: string; email_verified?: boolean }
 
+  // We keep only the email: match accounts by Google-verified email, never store Google's ID or profile
+  if (!googleUser.email || googleUser.email_verified !== true) return c.redirect(`${frontendUrl}/login?error=oauth_failed`)
   const normalizedEmail = googleUser.email.toLowerCase()
   const isAdmin = normalizedEmail === adminEmail
   const now = new Date()
 
-  let [user] = await db.select().from(users).where(eq(users.googleId, googleUser.sub))
+  let [user] = await db.select().from(users).where(eq(users.email, normalizedEmail))
 
   if (!user) {
-    const [byEmail] = await db.select().from(users).where(eq(users.email, normalizedEmail))
-
-    if (byEmail) {
-      await db.update(users).set({ googleId: googleUser.sub }).where(eq(users.id, byEmail.id))
-      user = byEmail
-    } else {
+    {
       const id = crypto.randomUUID()
       await db.insert(users).values({
         id,
         email: normalizedEmail,
-        name: googleUser.name,
-        googleId: googleUser.sub,
+        name: '',
         role: isAdmin ? 'admin' : 'caregiver',
         approvedAt: isAdmin ? now : null,
         isActive: true,
@@ -188,13 +168,13 @@ authRouter.get('/google/callback', async (c) => {
         await db.insert(accessRequests).values({
           id: crypto.randomUUID(),
           email: normalizedEmail,
-          applicantName: googleUser.name,
-          relation: 'Parent/Caregiver',
+          applicantName: '',
+          relation: '',
           reason: 'Signed up via Google',
           status: 'pending',
         })
         if (adminEmail) {
-          sendAdminNotificationEmail(adminEmail, googleUser.name, normalizedEmail, 'Google signup', frontendUrl).catch(console.error)
+          sendAdminNotificationEmail(adminEmail, normalizedEmail, frontendUrl).catch(console.error)
         }
         return c.redirect(`${frontendUrl}/pending`)
       }

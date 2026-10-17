@@ -6,7 +6,7 @@ import { SYMBOLS, cardImage } from '../data/symbols'
 import { useBoardStore } from '../store/boardStore'
 import { useTTS } from '../hooks/useTTS'
 
-const FONT = { fontFamily: "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif" }
+const FONT = { fontFamily: "'Plus Jakarta Sans Variable', ui-sans-serif, system-ui, sans-serif" }
 const pic = (name: string) => `${import.meta.env.BASE_URL}symbols/zs-${name}.webp`
 
 // Fade-and-rise as a section scrolls into view (MotionConfig turns it off for reduced motion)
@@ -26,7 +26,7 @@ const BENEFITS = [
   { Icon: Smile, title: 'Made for older kids', desc: 'No baby look. Built with a 12-year-old who knows what he likes.' },
   { Icon: Camera, title: 'Their own world', desc: 'Add photos of their toys, snacks and the dishes you cook.' },
   { Icon: WifiOff, title: 'Works offline', desc: 'Once opened, it works anywhere: home, school or the car.' },
-  { Icon: ShieldCheck, title: 'Private by design', desc: 'Photos stay on your phone. No ads, and we never sell data.' },
+  { Icon: ShieldCheck, title: 'Private by design', desc: "We only keep your email. No names, no ads, no tracking, and photos stay on your phone." },
   { Icon: Heart, title: 'Free for families', desc: 'Always free for families. Made at home, for children like Zed.' },
 ]
 
@@ -58,7 +58,7 @@ const TABS = [
 ]
 
 const STEPS = [
-  { n: '1', title: 'Request access', desc: 'Sign up with Google or your email and tell us a little about your child.' },
+  { n: '1', title: 'Request access', desc: 'Sign up with just your email or Google. No names needed.' },
   { n: '2', title: 'Get approved', desc: 'We review every request personally.' },
   { n: '3', title: 'Start talking', desc: "Open ZedSpeaks on your child's phone or tablet. Add your own photos anytime." },
 ]
@@ -409,6 +409,7 @@ export function LandingPage() {
             <div className="flex flex-col gap-2">
               <span className="font-bold text-slate-900">About</span>
               <a href="#story" className="text-slate-600 hover:text-slate-900">Our story</a>
+              <Link to="/privacy" className="text-slate-600 hover:text-slate-900">Privacy Notice</Link>
               <span className="text-slate-600">Free for families, always</span>
             </div>
             <div className="flex flex-col gap-2">

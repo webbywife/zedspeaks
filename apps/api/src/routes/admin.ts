@@ -35,7 +35,7 @@ adminRouter.post('/requests/:id/approve', async (c) => {
   await db.update(users).set({ approvedAt: now }).where(eq(users.email, request.email))
 
   const frontendUrl = process.env.FRONTEND_URL ?? 'http://localhost:5173'
-  sendApprovalEmail(request.email, request.applicantName, frontendUrl).catch(console.error)
+  sendApprovalEmail(request.email, frontendUrl).catch(console.error)
 
   return c.json({ ok: true })
 })

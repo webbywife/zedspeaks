@@ -71,12 +71,10 @@ export function LoginPage() {
   const [siPassword, setSiPassword] = useState('')
 
   // Sign up
-  const [suName, setSuName] = useState('')
-  const [suUsername, setSuUsername] = useState('')
   const [suEmail, setSuEmail] = useState('')
   const [suPassword, setSuPassword] = useState('')
   const [suConfirm, setSuConfirm] = useState('')
-  const [suRelation, setSuRelation] = useState('Parent/Caregiver')
+  const [suConsent, setSuConsent] = useState(false)
 
   useEffect(() => {
     if (checked && user) navigate('/board', { replace: true })
@@ -115,7 +113,7 @@ export function LoginPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ email: suEmail, password: suPassword, name: suName, username: suUsername, relation: suRelation }),
+        body: JSON.stringify({ email: suEmail, password: suPassword }),
       })
       const data = await r.json()
       if (!r.ok) throw new Error(data.error ?? 'Sign up failed')
@@ -147,9 +145,10 @@ export function LoginPage() {
             <h2 className="text-xl font-bold text-gray-900 mb-6">Sign in to ZedSpeaks</h2>
             <form onSubmit={handleSignIn} className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-gray-700">Email or Username</label>
+                <label className="text-sm font-medium text-gray-700">Email</label>
                 <input
                   type="text"
+                  autoComplete="username"
                   value={siIdentifier}
                   onChange={(e) => setSiIdentifier(e.target.value)}
                   required
@@ -203,23 +202,11 @@ export function LoginPage() {
           <>
             <h2 className="text-xl font-bold text-gray-900 mb-6">Create an account</h2>
             <form onSubmit={handleSignUp} className="flex flex-col gap-3">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-gray-700">Full name</label>
-                <input type="text" value={suName} onChange={(e) => setSuName(e.target.value)} required autoFocus
-                  className="w-full px-3 py-2.5 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent" />
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-gray-700">Username</label>
-                <input type="text" value={suUsername}
-                  onChange={(e) => setSuUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
-                  required minLength={3} maxLength={20} placeholder="e.g. leaabarentos"
-                  className="w-full px-3 py-2.5 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent" />
-              </div>
+              <p className="text-xs text-slate-500 -mt-2">We only ask for your email, to sign you in. Nothing else about you or your child.</p>
 
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium text-gray-700">Email</label>
-                <input type="email" value={suEmail} onChange={(e) => setSuEmail(e.target.value)} required
+                <input type="email" value={suEmail} onChange={(e) => setSuEmail(e.target.value)} required autoFocus autoComplete="email"
                   className="w-full px-3 py-2.5 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent" />
               </div>
 
@@ -233,20 +220,14 @@ export function LoginPage() {
                 <PasswordInput value={suConfirm} onChange={setSuConfirm} placeholder="Confirm password" />
               </div>
 
-              <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-gray-700">I am a</label>
-                <select value={suRelation} onChange={(e) => setSuRelation(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 bg-white">
-                  <option>Parent/Caregiver</option>
-                  <option>Therapist</option>
-                  <option>Teacher</option>
-                  <option>Other</option>
-                </select>
-              </div>
+              <label className="flex items-start gap-2 text-sm text-gray-700">
+                <input type="checkbox" checked={suConsent} onChange={(e) => setSuConsent(e.target.checked)} required className="mt-0.5 accent-pink-600" />
+                <span>I have read the <Link to="/privacy" target="_blank" className="text-pink-700 font-semibold underline">Privacy Notice</Link> and agree to ZedSpeaks keeping my email only to sign me in.</span>
+              </label>
 
               {error && <p className="text-sm text-red-600">{error}</p>}
 
-              <button type="submit" disabled={loading}
+              <button type="submit" disabled={loading || !suConsent}
                 className="w-full py-2.5 rounded-lg bg-pink-600 text-white font-semibold text-sm disabled:opacity-50 hover:bg-pink-700 transition-colors mt-1">
                 {loading ? 'Creating account…' : 'Request Access'}
               </button>

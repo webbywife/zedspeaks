@@ -1,6 +1,8 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { RouterProvider } from 'react-router-dom'
+// Font served from our own site (no Google Fonts request, nothing shared with third parties)
+import '@fontsource-variable/plus-jakarta-sans'
 import './index.css'
 import { router } from './router'
 import { registerSW } from 'virtual:pwa-register'

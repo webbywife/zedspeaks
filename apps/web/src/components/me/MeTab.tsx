@@ -22,7 +22,9 @@ export function MeTab() {
         <p className="text-sm text-slate-600"><b>iPhone / iPad:</b> Settings → Accessibility → Guided Access → On. Open ZedSpeaks, triple-click the side button, tap Start.</p>
         <p className="text-sm text-slate-600"><b>Android:</b> Settings → Security → App pinning → On. Open recent apps, tap the ZedSpeaks icon, tap Pin.</p>
       </div>
-      <p className="text-xs text-slate-400 text-center">Photos you add stay on this device.</p>
+      <p className="text-xs text-slate-400 text-center">
+        Photos you add stay on this device. <a href="/privacy" className="underline">Privacy Notice</a>
+      </p>
       <p className="px-4 text-xs text-slate-500 text-center">
         Picture library: <a href="https://mulberrysymbols.org" target="_blank" rel="noopener noreferrer" className="underline">Mulberry Symbols</a>{' '}
         by Steve Lee, <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer" className="underline">CC BY-SA 4.0</a>.

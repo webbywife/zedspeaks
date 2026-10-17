@@ -94,9 +94,7 @@ export function AdminPage() {
                       className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-start gap-3"
                     >
                       <div className="flex-1 min-w-0">
-                        <p className="font-bold text-slate-900 text-sm">{req.applicantName}</p>
-                        <p className="text-xs text-slate-500">{req.email}</p>
-                        <p className="text-xs text-slate-400 mt-0.5">{req.relation}</p>
+                        <p className="font-bold text-slate-900 text-sm break-all">{req.email}</p>
                       </div>
                       <div className="flex gap-2 shrink-0">
                         <button
@@ -131,8 +129,7 @@ export function AdminPage() {
                       className="bg-white rounded-2xl p-3 shadow-sm border border-gray-100 flex items-center gap-3"
                     >
                       <div className="flex-1 min-w-0">
-                        <p className="font-bold text-slate-900 text-sm">{req.applicantName}</p>
-                        <p className="text-xs text-slate-500">{req.email}</p>
+                        <p className="font-bold text-slate-900 text-sm break-all">{req.email}</p>
                       </div>
                       <span
                         className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${
