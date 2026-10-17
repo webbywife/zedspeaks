@@ -166,6 +166,18 @@ export const feedback = mysqlTable('feedback', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 
+// ── Inquiries (Support page: sponsors, schools, collaborators) ────────────────
+
+export const inquiries = mysqlTable('inquiries', {
+  id: varchar('id', { length: 36 }).primaryKey(),
+  name: varchar('name', { length: 100 }).notNull(),
+  organisation: varchar('organisation', { length: 150 }),
+  email: varchar('email', { length: 255 }).notNull(),
+  kind: varchar('kind', { length: 40 }).notNull(),
+  message: text('message').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+})
+
 // ── Relations ─────────────────────────────────────────────────────────────────
 
 export const usersRelations = relations(users, ({ many }) => ({

@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { db } from '../db/index.js'
-import { users, accessRequests, feedback } from '../db/schema.js'
+import { users, accessRequests, feedback, inquiries } from '../db/schema.js'
 import { desc, eq, gte, sql } from 'drizzle-orm'
 import { requireAdmin } from '../middleware/auth.js'
 import { sendApprovalEmail } from '../lib/email.js'
@@ -98,5 +98,17 @@ adminRouter.get('/feedback', async (c) => {
 // DELETE /admin/feedback/:id
 adminRouter.delete('/feedback/:id', async (c) => {
   await db.delete(feedback).where(eq(feedback.id, c.req.param('id')))
+  return c.json({ ok: true })
+})
+
+// GET /admin/inquiries
+adminRouter.get('/inquiries', async (c) => {
+  const items = await db.select().from(inquiries).orderBy(desc(inquiries.createdAt)).limit(200)
+  return c.json({ items })
+})
+
+// DELETE /admin/inquiries/:id
+adminRouter.delete('/inquiries/:id', async (c) => {
+  await db.delete(inquiries).where(eq(inquiries.id, c.req.param('id')))
   return c.json({ ok: true })
 })

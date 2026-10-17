@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { CheckCircle, XCircle, LogOut, Trash2, Mail, Star, Users, Clock, MessageSquare, LayoutGrid } from 'lucide-react'
+import { CheckCircle, XCircle, LogOut, Trash2, Mail, Star, Users, Clock, MessageSquare, LayoutGrid, Handshake } from 'lucide-react'
 import { api } from '../lib/api'
 import { useAuthStore } from '../store/authStore'
 import { logout } from '../hooks/useAuth'
@@ -31,7 +31,17 @@ interface FeedbackItem {
   createdAt: string
 }
 
-type Tab = 'overview' | 'requests' | 'feedback'
+interface Inquiry {
+  id: string
+  name: string
+  organisation: string | null
+  email: string
+  kind: string
+  message: string
+  createdAt: string
+}
+
+type Tab = 'overview' | 'requests' | 'feedback' | 'inquiries'
 
 const fmtDate = (s: string) => new Date(s).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
 
@@ -63,17 +73,19 @@ export function AdminPage() {
   const [requests, setRequests] = useState<AccessRequest[]>([])
   const [stats, setStats] = useState<Stats | null>(null)
   const [items, setItems] = useState<FeedbackItem[]>([])
+  const [inquiries, setInquiries] = useState<Inquiry[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
   const load = useCallback(async () => {
     try {
-      const [r, s, f] = await Promise.all([
+      const [r, s, f, q] = await Promise.all([
         api<{ requests: AccessRequest[] }>('/admin/requests'),
         api<Stats>('/admin/stats'),
         api<{ items: FeedbackItem[] }>('/admin/feedback'),
+        api<{ items: Inquiry[] }>('/admin/inquiries').catch(() => ({ items: [] as Inquiry[] })),
       ])
-      setRequests(r.requests ?? []); setStats(s); setItems(f.items ?? []); setError('')
+      setRequests(r.requests ?? []); setStats(s); setItems(f.items ?? []); setInquiries(q.items ?? []); setError('')
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Could not load the dashboard')
     } finally {
@@ -90,6 +102,10 @@ export function AdminPage() {
     await api(`/admin/feedback/${id}`, { method: 'DELETE' })
     setItems((prev) => prev.filter((x) => x.id !== id))
   }
+  const removeInquiry = async (id: string) => {
+    await api(`/admin/inquiries/${id}`, { method: 'DELETE' })
+    setInquiries((prev) => prev.filter((x) => x.id !== id))
+  }
   const handleLogout = async () => { await logout(); setUser(null); navigate('/login') }
 
   const pending = requests.filter((r) => r.status === 'pending')
@@ -102,6 +118,7 @@ export function AdminPage() {
     { id: 'overview', label: 'Overview', Icon: LayoutGrid },
     { id: 'requests', label: 'Requests', Icon: Clock, badge: pending.length },
     { id: 'feedback', label: 'Feedback', Icon: MessageSquare, badge: items.length },
+    { id: 'inquiries', label: 'Inquiries', Icon: Handshake, badge: inquiries.length },
   ]
 
   return (
@@ -205,6 +222,29 @@ export function AdminPage() {
                 </div>
               </section>
             )}
+          </div>
+        ) : tab === 'inquiries' ? (
+          <div className="flex flex-col gap-3">
+            {inquiries.length === 0 ? (
+              <p className="text-sm text-slate-400 py-12 text-center">No sponsor or partner messages yet. They come from the Support page form.</p>
+            ) : inquiries.map((q) => (
+              <div key={q.id} className="bg-white rounded-2xl p-4 border border-slate-200 flex gap-3">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="px-2.5 py-0.5 rounded-full bg-pink-100 text-pink-700 text-xs font-bold">{q.kind}</span>
+                    <span className="text-xs text-slate-500">{fmtDate(q.createdAt)}</span>
+                  </div>
+                  <p className="mt-2 font-bold text-slate-900 break-words">{q.name}{q.organisation ? ` · ${q.organisation}` : ''}</p>
+                  {/* Plain text only: React escapes it */}
+                  <p className="mt-1 text-slate-800 whitespace-pre-wrap break-words">{q.message}</p>
+                  <a href={`mailto:${q.email}?subject=${encodeURIComponent('Re: ZedSpeaks')}`} className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-pink-700 break-all">
+                    <Mail size={14} /> Reply to {q.email}
+                  </a>
+                </div>
+                <button onClick={() => removeInquiry(q.id)} aria-label="Delete message"
+                  className="self-start p-2 rounded-xl text-slate-400 hover:bg-red-50 hover:text-red-600"><Trash2 size={16} /></button>
+              </div>
+            ))}
           </div>
         ) : (
           <div className="flex flex-col gap-3">

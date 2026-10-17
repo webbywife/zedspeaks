@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowLeft, Building2, Check, Heart, MessageSquare, Mic, Server, Share2, Sparkles } from 'lucide-react'
+import { SponsorForm } from '../components/support/SponsorForm'
 
 const FONT = { fontFamily: "'Plus Jakarta Sans Variable', ui-sans-serif, system-ui, sans-serif" }
-const CONTACT = 'zedspeaks.info@gmail.com'
 const SITE = 'https://zedspeaks.io'
 // Add a payment link here later (GCash/Maya page, Ko-fi…) and the "Chip in" button appears
 const CHIP_IN_URL: string | null = null
@@ -94,19 +94,18 @@ export function SupportPage() {
             </div>
           )}
 
-          <div className="rounded-3xl bg-pink-50 border border-pink-100 p-5 flex flex-col sm:flex-row sm:items-center gap-4">
-            <Building2 className="text-pink-600 shrink-0" />
-            <div className="flex-1">
-              <h3 className="font-bold text-slate-900">Sponsor a family, a school or a new voice</h3>
-              <p className="text-sm text-slate-600">
-                For companies, schools, clinics and organisations: help fund Filipino voices, set-up for families who need it,
-                or ZedSpeaks for a whole class. I'd love to talk.
-              </p>
+          <div id="sponsor" className="rounded-3xl bg-pink-50 border border-pink-100 p-5 sm:p-6 flex flex-col gap-4 scroll-mt-20">
+            <div className="flex gap-4">
+              <Building2 className="text-pink-600 shrink-0" />
+              <div>
+                <h3 className="font-bold text-slate-900">Sponsor, collaborate or help sustain ZedSpeaks</h3>
+                <p className="text-sm text-slate-600">
+                  For companies, schools, clinics and organisations: help fund Filipino voices, set-up for families who need it,
+                  or ZedSpeaks for a whole class. I'd love to talk.
+                </p>
+              </div>
             </div>
-            <a href={`mailto:${CONTACT}?subject=${encodeURIComponent('Supporting ZedSpeaks')}`}
-              className="px-5 h-11 rounded-full bg-white border border-pink-200 font-bold text-pink-700 flex items-center justify-center shrink-0">
-              Email me
-            </a>
+            <SponsorForm />
           </div>
         </section>
 

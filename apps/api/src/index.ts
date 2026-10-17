@@ -9,6 +9,7 @@ import { adminRouter } from './routes/admin.js'
 import { profilesRouter } from './routes/profiles.js'
 import { feedbackRouter } from './routes/feedback.js'
 import { ttsRouter } from './routes/tts.js'
+import { inquiriesRouter } from './routes/inquiries.js'
 import { boardsRouter } from './routes/boards.js'
 import { cellsRouter } from './routes/cells.js'
 import { symbolsRouter } from './routes/symbols.js'
@@ -37,6 +38,7 @@ app.route('/admin', adminRouter)
 app.route('/profiles', profilesRouter)
 app.route('/feedback', feedbackRouter)
 app.route('/tts', ttsRouter)
+app.route('/inquiries', inquiriesRouter)
 app.route('/boards', boardsRouter)
 app.route('/cells', cellsRouter)
 app.route('/symbols', symbolsRouter)

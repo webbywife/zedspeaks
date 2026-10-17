@@ -64,6 +64,13 @@ export function PrivacyPage() {
           </p>
         </Section>
 
+        <Section title="If you contact us to sponsor or collaborate">
+          <p>
+            The form on our Support page asks for your name, organisation (optional), email and message. We keep them only to
+            reply and to follow up on your offer, and delete them when you ask or when they're no longer needed.
+          </p>
+        </Section>
+
         <Section title="What we never collect">
           <ul className="list-disc pl-6 flex flex-col gap-2">
             <li>Your name, or your child's name, age, school or diagnosis.</li>
