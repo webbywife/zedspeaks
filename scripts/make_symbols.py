@@ -6,7 +6,8 @@ Setup (once): Draw Things → model "FLUX.1 [schnell]" → Settings → API Serv
   python3 scripts/make_symbols.py test              # the 50-word style test
   python3 scripts/make_symbols.py words.txt         # one word per line (optional "word | hint")
   python3 scripts/make_symbols.py sheet             # contact sheet of everything generated
-  python3 scripts/make_symbols.py publish           # approved images -> app library (public/symbols)
+  python3 scripts/make_symbols.py check             # quality gate: moves failures to _gen_review/
+  python3 scripts/make_symbols.py publish           # runs check, then approved images -> app library
 
 Images land in scripts/_gen/<slug>.png for review (not shipped). Delete a bad one and run
 again to redo it; existing files are skipped.
@@ -20,9 +21,17 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "scripts/_gen")
 API = os.environ.get("DRAWTHINGS_URL", "http://127.0.0.1:7860")
 
-STYLE = ("flat illustration, thick dark outline, soft bright pastel colors, plain white background, "
-         "one object, centered, no text")
+STYLE = ("flat vector sticker illustration, bold thick black outlines around every shape, simple shapes, "
+         "soft bright pastel colors, plain white background, one object, centered, no text")
 NEGATIVE = "text, letters, words, watermark, logo, brand, photo, realistic, shadow, gradient background, frame"
+
+# IP guard: words that name brands, characters or products are refused before generating.
+# Families add their own photos of branded favourites; the shared library stays generic.
+BLOCKED = re.compile(r"\b(lego|tomica|hot ?wheels|barbie|disney|mickey|minnie|pokemon|pikachu|marvel|spider-?man|"
+                     r"batman|superman|frozen|elsa|peppa|paw patrol|bluey|cocomelon|minecraft|roblox|fortnite|mario|"
+                     r"sonic|nintendo|playstation|xbox|ipad|iphone|samsung|apple watch|youtube|tiktok|shopee|grab|"
+                     r"jollibee|mcdonald'?s?|kfc|coca-?cola|coke|pepsi|nike|adidas|starbucks|nutella|oreo|"
+                     r"thomas the tank|hello kitty|sanrio|teletubbies|sesame street|elmo)\b", re.I)
 
 # Style test: everyday words for an older child, a few not in the Mulberry set
 TEST = [
@@ -55,6 +64,9 @@ def generate(word, hint=""):
 
 def run(words):
     os.makedirs(OUT, exist_ok=True)
+    banned = [w for w, _ in words if BLOCKED.search(w)]
+    if banned:
+        sys.exit(f"Refused (brand or character names, see IP rules): {', '.join(banned)}")
     todo = [(w, h) for w, h in words if not os.path.exists(os.path.join(OUT, slug(w) + ".png"))]
     print(f"{len(words) - len(todo)} done already, {len(todo)} to make")
     for i, (w, h) in enumerate(todo, 1):
@@ -87,12 +99,69 @@ def sheet():
     print(path)
 
 
+def check():
+    """Quality gate, all local. Each picture must have: a plain white background, the object fully
+    in frame at a readable size, bold dark outlines, real colour, and no text or logo lettering."""
+    import subprocess
+    import numpy as np
+    from PIL import Image
+    review = os.path.join(ROOT, "scripts/_gen_review")
+    os.makedirs(review, exist_ok=True)
+    files = []
+    for f in sorted(os.listdir(OUT)):
+        if f.endswith(".png"):
+            try:
+                Image.open(os.path.join(OUT, f)).verify()
+                files.append(f)
+            except Exception:
+                pass  # still being written
+    reasons = {}
+    for f in files:
+        a = np.asarray(Image.open(os.path.join(OUT, f)).convert("RGB").resize((256, 256))).astype(float)
+        lum = a @ [0.299, 0.587, 0.114]
+        mx, mn = a.max(axis=2), a.min(axis=2)
+        sat = np.where(mx > 0, (mx - mn) / np.maximum(mx, 1), 0)
+        why = []
+        edge = np.concatenate([lum[:6].ravel(), lum[-6:].ravel(), lum[:, :6].ravel(), lum[:, -6:].ravel()])
+        if edge.mean() < 235 or edge.std() > 18:
+            why.append("background not plain white")
+        ink = lum < 225
+        if ink.any():
+            ys, xs = np.where(ink)
+            area = (np.ptp(ys) + 1) * (np.ptp(xs) + 1) / 256 ** 2
+            if area < 0.18:
+                why.append("object too small to read")
+            if ys.min() < 3 or xs.min() < 3 or ys.max() > 252 or xs.max() > 252:
+                why.append("object cut off at the edge")
+            subject = lum[ink]
+            if (subject < 80).mean() < 0.04:
+                why.append("outlines too thin or faint")
+            if sat[ink].mean() < 0.12:
+                why.append("too pale or grey")
+        else:
+            why.append("blank picture")
+        if why:
+            reasons[f] = why
+    out = subprocess.run(["swift", os.path.join(ROOT, "scripts/find_text.swift")] + [os.path.join(OUT, f) for f in files],
+                         capture_output=True, text=True).stdout
+    for line in out.splitlines():
+        path, text = line.split("\t", 1)
+        reasons.setdefault(os.path.basename(path), []).append(f"has text/lettering: {text}")
+    for f, why in reasons.items():
+        os.replace(os.path.join(OUT, f), os.path.join(review, f))
+        print(f"REVIEW {f[:-4]}: {'; '.join(why)}")
+    print(f"{len(files) - len(reasons)} passed, {len(reasons)} moved to scripts/_gen_review/")
+
+
 def publish():
     """Copy every image in _gen (delete rejects first) into the app library as small WebP files."""
     from PIL import Image
     lib = os.path.join(ROOT, "apps/web/public/symbols")
     index_f = os.path.join(lib, "index.json")
     index = [e for e in json.load(open(index_f)) if not e["f"].startswith("zs-")]
+    for old in os.listdir(lib):  # republish from scratch so removed/failed pictures disappear
+        if old.startswith("zs-"):
+            os.remove(os.path.join(lib, old))
     added = 0
     for f in sorted(os.listdir(OUT)):
         if not f.endswith(".png"):
@@ -117,7 +186,10 @@ def main():
         run([(w, "") for w in TEST])
     elif a == ["sheet"]:
         sheet()
+    elif a == ["check"]:
+        check()
     elif a == ["publish"]:
+        check()
         publish()
     elif len(a) == 1 and os.path.exists(a[0]):
         lines = [l.strip() for l in open(a[0]) if l.strip() and not l.startswith("#")]
