@@ -30,10 +30,16 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,mp3,json,jpg,webp}'],
         // The Mulberry library (~3,000 SVGs) is fetched on demand; our own small zs-*.webp pictures
         // are on the cards, so they're downloaded up front and work offline
-        globIgnores: ['symbols/*.svg', 'symbols/index.json'],
+        // The girl's voice set downloads only for families who pick her (see useTTS warm-up)
+        globIgnores: ['symbols/*.svg', 'symbols/index.json', 'voice-girl/**'],
         // /api/* is the API server (e.g. Google sign-in): never answer it with the offline app page
         navigateFallbackDenylist: [/^\/api\//],
         runtimeCaching: [
+          {
+            urlPattern: ({ url }) => url.pathname.startsWith('/voice-girl/'),
+            handler: 'CacheFirst',
+            options: { cacheName: 'voice-girl', expiration: { maxEntries: 2000 } },
+          },
           {
             urlPattern: ({ url }) => url.pathname.startsWith('/symbols/'),
             handler: 'CacheFirst',

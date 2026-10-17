@@ -13,7 +13,7 @@ export const ttsRouter = new Hono<AppEnv>()
 
 ttsRouter.use('*', requireAuth)
 
-const GIRL_VOICE_ID: string | undefined = undefined // set once Lea picks the girl's voice
+const GIRL_VOICE_ID: string | undefined = '2bk7ULW9HfwvcIbMWod0' // "Bianca" (ElevenLabs), Lea's pick
 // One voice per character (same ids as scripts/make_voice.py recordings)
 const VOICES: Record<string, string | undefined> = {
   boy: 'nzHcPRle5J78QRhxKFd8', // "ZedSpeaks Teen"

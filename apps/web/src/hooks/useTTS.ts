@@ -18,6 +18,22 @@ const voiceInUse = (): VoiceId =>
 let current: HTMLAudioElement | null = null
 let queueToken = 0
 
+// When a family picks the girl, download her recordings once in the background so they work offline
+let warming = false
+function warmVoice(v: VoiceId) {
+  const m = manifests[v]
+  if (v === 'boy' || !m || warming || !navigator.onLine) return
+  try { if (localStorage.getItem(`zedspeaks-voice-ready-${v}`)) return } catch { /* ignore */ }
+  warming = true
+  const urls = [...new Set(Object.entries(m).filter(([k]) => !k.startsWith('_')).map(([, f]) => base(v) + f))]
+  let i = 0
+  const next = (): Promise<void> => (i < urls.length ? fetch(urls[i++]).catch(() => null).then(next) : Promise.resolve())
+  Promise.all([next(), next(), next(), next()]).then(() => {
+    try { localStorage.setItem(`zedspeaks-voice-ready-${v}`, '1') } catch { /* ignore */ }
+    warming = false
+  })
+}
+
 function loadManifest(v: VoiceId = activeVoice) {
   manifestLoads[v] ??= fetch(`${base(v)}manifest.json`)
     .then((r) => (r.ok ? r.json() : {}))
@@ -86,7 +102,7 @@ export function useTTS(settings: TTSSettings) {
 
   useEffect(() => {
     loadManifest('boy')
-    if (character === 'girl') loadManifest('girl')
+    if (character === 'girl') loadManifest('girl').then(() => warmVoice('girl'))
   }, [character])
 
   useEffect(() => {
