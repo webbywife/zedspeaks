@@ -5,7 +5,7 @@
 - **Commit:** `fb94491` (main), live at https://zedspeaks.io
 - **Checklist:** `~/Desktop/Security-Checklist.md` (OWASP Top 10:2025, ASVS 5.0, WSTG, access control, data protection, platform, privacy, operations, documentation)
 - **Risk tier:** **Elevated**. The app holds only parents' email addresses, but its users are families of children with disabilities and it is public on the internet. Family photos and what children say stay on the device and are not processed by the server.
-- **Result after fixes (18 Oct 2026): PASS once deployed.** Every Critical and High finding is fixed in code, or has a ready server step (backups). The remaining items are Low/process (#9 deploy key, #13 release tags).
+- **Result after fixes (18 Oct 2026): PASS (deployed and verified live).** Every Critical and High finding is fixed in code, or has a ready server step (backups). The remaining items are Low/process (#9 deploy key, #13 release tags).
 - **Original result: FAIL** (2 High: #1 cross-family write, #2 no backups).
 
 ## Summary
@@ -17,14 +17,14 @@ The core of ZedSpeaks is in good shape. Sign-in uses hashed session tokens in ht
 | # | Status | How it was verified |
 |---|---|---|
 | 1 | ✅ Fixed (`cells.ts`: whitelisted fields, linked boards checked) | Attack test: smuggled `boardId`/`id` ignored, cross-family link 403, normal save 200 |
-| 2 | ✅ Ready (`scripts/server/setup-backup.sh`, nightly with a check after each backup) | Script syntax checked; first backup runs at install |
+| 2 | ✅ Live (nightly at 19:45; first backup `db-2026-10-17.sql.gz` made and checked) | Script syntax checked; first backup runs at install |
 | 3 | ✅ Fixed (10 tries per account and 30 per address per 15 min) | 11th try 429; other accounts unaffected |
 | 4 | ✅ Fixed (5 sign-ups per address per hour) | 6th sign-up 429 |
 | 5 | ✅ Removed `/symbols` proxy | 404 |
 | 6 | ✅ Fixed (logger writes method, path, status, time only) | Test codes absent from the log |
 | 7 | ✅ Fixed (`audit_log` on approve, deny, delete feedback, delete inquiry) | Approve wrote one audit row |
-| 8 | ✅ Ready (headers for nginx; CSP tested against a production build) | Full app test with the headers: sign-in, refresh, dashboard, all tabs, voices and pictures, nothing blocked |
-| 10 | ✅ Ready (`chmod 600 .env` in the backup setup) | Applied at install |
+| 8 | ✅ Live (HSTS, CSP, Referrer-Policy, Permissions-Policy on zedspeaks.io; CSP tested on a production build and on the live site, nothing blocked) | Full app test with the headers: sign-in, refresh, dashboard, all tabs, voices and pictures, nothing blocked |
+| 10 | ✅ Live (`.env` is `-rw-------`) | Applied at install |
 | 11 | ✅ Fixed (180-day absolute session limit) | 200-day-old session refused |
 | 12 | ✅ Fixed (admin email has only a link) | Code check |
 | 14 | ✅ Fixed (API binds `127.0.0.1`) | Listens on 127.0.0.1 only |
