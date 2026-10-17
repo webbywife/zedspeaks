@@ -152,8 +152,15 @@ function Nav() {
               <span className="relative">{l.label}</span>
             </a>
           ))}
+          <Link to="/support" className="px-3 py-1.5 rounded-full text-slate-600 hover:text-slate-900 flex items-center gap-1.5">
+            <Heart size={14} className="text-pink-600 fill-pink-600" /> Support
+          </Link>
         </div>
         <div className="ml-auto flex items-center gap-2">
+          {/* Phones: the menu is hidden, so keep a small heart link to Support */}
+          <Link to="/support" aria-label="Support ZedSpeaks" className="md:hidden w-9 h-9 rounded-full flex items-center justify-center hover:bg-pink-50">
+            <Heart size={18} className="text-pink-600 fill-pink-600" />
+          </Link>
           <Link to="/login" className="hidden sm:inline px-4 py-2 text-sm font-bold text-slate-700 hover:text-slate-900">Sign in</Link>
           <Link to="/login" className="px-4 py-2 rounded-full bg-pink-600 text-white text-sm font-bold hover:bg-pink-700 transition-colors">
             Get started
