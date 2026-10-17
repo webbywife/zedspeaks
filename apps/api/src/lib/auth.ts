@@ -17,7 +17,8 @@ export const lucia = new Lucia(adapter, {
       email: attrs.email,
       name: attrs.name,
       role: attrs.role,
-      isActive: attrs.is_active,
+      // The Drizzle adapter passes schema field names (isActive), not column names
+      isActive: attrs.isActive ?? attrs.is_active,
     }
   },
 })
@@ -29,7 +30,8 @@ declare module 'lucia' {
       email: string
       name: string
       role: 'aac_user' | 'caregiver' | 'therapist' | 'admin'
-      is_active: boolean
+      isActive?: boolean | number
+      is_active?: boolean | number
     }
   }
 }

@@ -17,7 +17,8 @@ export const requireAuth: MiddlewareHandler<AppEnv> = async (c, next) => {
     return c.json({ error: 'Unauthorized' }, 401)
   }
 
-  if (!user.isActive) return c.json({ error: 'Account disabled' }, 403)
+  // Only an explicit false/0 from the database means disabled
+  if (user.isActive === false || user.isActive === 0) return c.json({ error: 'Account disabled' }, 403)
 
   if (session.fresh) {
     c.header('Set-Cookie', lucia.createSessionCookie(session.id).serialize())
