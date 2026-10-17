@@ -6,9 +6,12 @@ import { PrivacyPage } from './pages/PrivacyPage'
 import { AdminPage } from './pages/AdminPage'
 import { ProtectedRoute } from './components/auth/ProtectedRoute'
 import App from './App'
+import { ErrorPage, ServerHandoff } from './pages/ServerHandoff'
 
 export const router = createBrowserRouter([
-  { path: '/', element: <LandingPage /> },
+  { path: '/', element: <LandingPage />, errorElement: <ErrorPage /> },
+  // An old offline copy answered an /api/... address: hand it to the server
+  { path: '/api/*', element: <ServerHandoff /> },
   { path: '/login', element: <LoginPage /> },
   { path: '/pending', element: <PendingPage /> },
   { path: '/privacy', element: <PrivacyPage /> },
@@ -25,6 +28,7 @@ export const router = createBrowserRouter([
   },
   // Local development only: see the board without signing in (not in production builds)
   ...(import.meta.env.DEV ? [{ path: '/preview', element: <App requireProfile={false} /> }] : []),
+  { path: '*', element: <ErrorPage /> },
   {
     path: '/admin',
     element: (
