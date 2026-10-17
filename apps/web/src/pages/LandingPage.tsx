@@ -269,8 +269,8 @@ export function LandingPage() {
         {/* One big quote, from the note below */}
         <section className="max-w-4xl mx-auto px-5 py-20 text-center">
           <motion.blockquote {...rise}>
-            <p className="text-2xl sm:text-4xl font-bold leading-snug tracking-tight">
-              "Zed doesn't use words, but he has always known exactly what he wants. <span className="text-pink-600">I just didn't always know what.</span>"
+            <p className="max-w-3xl mx-auto text-2xl sm:text-4xl font-bold leading-snug tracking-tight text-balance">
+              <span className="-ml-[0.4em]">&ldquo;</span>Zed doesn&rsquo;t use words, but he has always known exactly what he wants. <span className="text-pink-600">I just didn&rsquo;t always <span className="whitespace-nowrap">know what.&rdquo;</span></span>
             </p>
             <footer className="mt-8 flex items-center justify-center gap-3">
               <img src="/assets/moods/hopeful.png" alt="" className="w-12 h-12 rounded-full object-cover ring-2 ring-pink-100" />
