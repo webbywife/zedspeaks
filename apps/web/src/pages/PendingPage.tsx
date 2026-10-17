@@ -14,8 +14,8 @@ export function PendingPage() {
         <h1 className="text-xl font-black text-slate-900">You're on the list!</h1>
       </div>
       <p className="text-slate-600 max-w-xs leading-relaxed mb-6">
-        Your access request is being reviewed. We'll email you once you're approved — usually
-        within 24 hours.
+        Thank you for signing up. We review every request personally. Once you're approved,
+        just come back and sign in.
       </p>
       <p className="text-sm text-slate-400">
         Already approved?{' '}
