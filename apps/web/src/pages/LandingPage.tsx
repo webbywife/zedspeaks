@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { AnimatePresence, MotionConfig, motion } from 'framer-motion'
-import { ArrowRight, Camera, Check, Heart, ShieldCheck, Smile, Volume2, WifiOff } from 'lucide-react'
+import { AnimatePresence, MotionConfig, motion, useScroll, useSpring } from 'framer-motion'
+import { ArrowRight, ArrowUp, Camera, Check, Heart, ShieldCheck, Smile, Volume2, WifiOff } from 'lucide-react'
 import { SYMBOLS, cardImage } from '../data/symbols'
 import { useBoardStore } from '../store/boardStore'
 import { useTTS } from '../hooks/useTTS'
@@ -110,8 +110,31 @@ function LiveDemo() {
   )
 }
 
+const NAV_LINKS = [
+  { id: 'features', label: 'Features' },
+  { id: 'how', label: 'How it works' },
+  { id: 'story', label: 'Our story' },
+]
+
+/** Which section is on screen, so the menu can show where you are */
+function useActiveSection(ids: string[]) {
+  const [active, setActive] = useState<string | null>(null)
+  useEffect(() => {
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) if (e.isIntersecting) setActive(e.target.id)
+    }, { rootMargin: '-45% 0px -50% 0px' })
+    ids.forEach((id) => { const el = document.getElementById(id); if (el) io.observe(el) })
+    return () => io.disconnect()
+  }, [ids])
+  return active
+}
+
 function Nav() {
   const [scrolled, setScrolled] = useState(false)
+  const active = useActiveSection(NAV_LINKS.map((l) => l.id))
+  // Reading progress: a thin bar that fills as you scroll
+  const { scrollYProgress } = useScroll()
+  const progress = useSpring(scrollYProgress, { stiffness: 200, damping: 30, restDelta: 0.001 })
   useEffect(() => {
     const on = () => setScrolled(window.scrollY > 8)
     on(); window.addEventListener('scroll', on, { passive: true })
@@ -121,10 +144,14 @@ function Nav() {
     <nav className={`sticky top-0 z-30 transition-all ${scrolled ? 'bg-white/85 backdrop-blur border-b border-slate-200/70' : 'bg-transparent'}`}>
       <div className="max-w-6xl mx-auto px-5 h-16 flex items-center gap-6">
         <span className="text-2xl font-extrabold text-pink-600 tracking-tight">ZedSpeaks</span>
-        <div className="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
-          <a href="#features" className="hover:text-slate-900">Features</a>
-          <a href="#how" className="hover:text-slate-900">How it works</a>
-          <a href="#story" className="hover:text-slate-900">Our story</a>
+        <div className="hidden md:flex items-center gap-1 text-sm font-semibold">
+          {NAV_LINKS.map((l) => (
+            <a key={l.id} href={`#${l.id}`} aria-current={active === l.id ? 'true' : undefined}
+              className={`relative px-3 py-1.5 rounded-full transition-colors ${active === l.id ? 'text-pink-700' : 'text-slate-600 hover:text-slate-900'}`}>
+              {active === l.id && <motion.span layoutId="nav-pill" className="absolute inset-0 rounded-full bg-pink-50" transition={{ type: 'spring', stiffness: 400, damping: 34 }} />}
+              <span className="relative">{l.label}</span>
+            </a>
+          ))}
         </div>
         <div className="ml-auto flex items-center gap-2">
           <Link to="/login" className="hidden sm:inline px-4 py-2 text-sm font-bold text-slate-700 hover:text-slate-900">Sign in</Link>
@@ -133,16 +160,53 @@ function Nav() {
           </Link>
         </div>
       </div>
+      <motion.div aria-hidden className="absolute left-0 right-0 bottom-0 h-0.5 bg-pink-600 origin-left" style={{ scaleX: progress }} />
     </nav>
   )
+}
+
+/** Appears after scrolling down; glides back to the top */
+function BackToTop() {
+  const [show, setShow] = useState(false)
+  useEffect(() => {
+    const on = () => setShow(window.scrollY > 900)
+    on(); window.addEventListener('scroll', on, { passive: true })
+    return () => window.removeEventListener('scroll', on)
+  }, [])
+  return (
+    <AnimatePresence>
+      {show && (
+        <motion.button initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 12 }} transition={{ duration: 0.2 }}
+          onClick={() => window.scrollTo({ top: 0 })} aria-label="Back to top"
+          className="fixed bottom-5 right-5 z-40 w-12 h-12 rounded-full bg-pink-600 text-white shadow-lg flex items-center justify-center hover:bg-pink-700">
+          <ArrowUp size={22} />
+        </motion.button>
+      )}
+    </AnimatePresence>
+  )
+}
+
+const MOTION_KEY = 'zedspeaks-motion'
+
+/** Visitor's own motion switch (on top of the phone's reduce-motion setting) */
+function useMotionChoice() {
+  const [reduce, setReduce] = useState(() => { try { return localStorage.getItem(MOTION_KEY) === 'reduce' } catch { return false } })
+  useEffect(() => {
+    if (reduce) document.documentElement.dataset.motion = 'reduce'
+    else delete document.documentElement.dataset.motion
+    try { localStorage.setItem(MOTION_KEY, reduce ? 'reduce' : 'full') } catch { /* private mode */ }
+    return () => { delete document.documentElement.dataset.motion }
+  }, [reduce])
+  return [reduce, setReduce] as const
 }
 
 export function LandingPage() {
   const [tab, setTab] = useState(TABS[0].id)
   const active = TABS.find((t) => t.id === tab) ?? TABS[0]
+  const [reduceMotion, setReduceMotion] = useMotionChoice()
 
   return (
-    <MotionConfig reducedMotion="user">
+    <MotionConfig reducedMotion={reduceMotion ? 'always' : 'user'}>
       <div className="min-h-screen bg-white text-slate-900 overflow-x-hidden" style={FONT}>
         <div className="bg-gradient-to-b from-pink-50 via-white to-white">
           <Nav />
@@ -354,8 +418,15 @@ export function LandingPage() {
               <a href="https://www.pexels.com" target="_blank" rel="noopener noreferrer" className="text-slate-600 hover:text-slate-900">Photos from Pexels</a>
             </div>
           </div>
-          <div className="border-t border-slate-100 py-5 text-center text-xs text-slate-400">© {new Date().getFullYear()} ZedSpeaks · Made at home, for children like Zed.</div>
+          <div className="border-t border-slate-100 py-5 px-5 flex flex-col sm:flex-row items-center justify-center gap-3 text-xs text-slate-400">
+            <span>© {new Date().getFullYear()} ZedSpeaks · Made at home, for children like Zed.</span>
+            <button onClick={() => setReduceMotion(!reduceMotion)} aria-pressed={reduceMotion}
+              className="px-3 py-1.5 rounded-full border border-slate-200 font-semibold text-slate-600 hover:border-slate-300">
+              {reduceMotion ? 'Motion: off' : 'Motion: on'} · tap to {reduceMotion ? 'turn on' : 'reduce'}
+            </button>
+          </div>
         </footer>
+        <BackToTop />
       </div>
     </MotionConfig>
   )

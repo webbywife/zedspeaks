@@ -42,3 +42,13 @@ button {
 @media (prefers-reduced-motion: reduce) {
   .zs-marquee, .zs-float { animation: none; }
 }
+
+/* Smooth scroll for in-page links; off when the visitor (or our toggle) reduces motion */
+html { scroll-behavior: smooth; }
+.zs-marquee:hover { animation-play-state: paused; }
+html[data-motion="reduce"] { scroll-behavior: auto; }
+html[data-motion="reduce"] .zs-marquee, html[data-motion="reduce"] .zs-float { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
