@@ -66,9 +66,9 @@ export function TabsLayout() {
 
   return (
     <div className="flex flex-col h-dvh bg-slate-50 overflow-hidden">
-      <header className="px-4 pt-3 pb-1 bg-white flex items-center gap-3">
+      <header className="px-4 py-2 bg-blue-900 flex items-center gap-3 shrink-0">
         <ZedMascot size="sm" />
-        <h1 className="text-lg font-black text-slate-900">Zed<span className="text-pink-600">Speaks</span></h1>
+        <h1 className="text-lg font-black text-white">Zed<span className="text-blue-300">Speaks</span></h1>
       </header>
       <SentenceStrip items={sentenceItems} onSpeak={speakSentence} onClear={clearSentence} onBackspace={backspace} />
 
@@ -92,7 +92,7 @@ export function TabsLayout() {
       <nav className="flex bg-white border-t border-slate-200 shrink-0" aria-label="Main">
         {TABS.map(({ id, label, Icon }) => (
           <button key={id} onClick={() => setTab(id)}
-            className={`flex-1 flex flex-col items-center gap-0.5 py-2 text-xs font-semibold ${tab === id ? 'text-pink-600' : 'text-slate-500'}`}
+            className={`flex-1 flex flex-col items-center gap-0.5 py-2 text-xs font-semibold ${tab === id ? 'text-blue-700' : 'text-slate-500'}`}
             aria-current={tab === id ? 'page' : undefined}>
             <Icon size={24} />
             {label}
