@@ -7,6 +7,7 @@ import { secureHeaders } from 'hono/secure-headers'
 import { authRouter } from './routes/auth.js'
 import { adminRouter } from './routes/admin.js'
 import { profilesRouter } from './routes/profiles.js'
+import { feedbackRouter } from './routes/feedback.js'
 import { boardsRouter } from './routes/boards.js'
 import { cellsRouter } from './routes/cells.js'
 import { symbolsRouter } from './routes/symbols.js'
@@ -33,6 +34,7 @@ app.get('/health', (c) => c.json({ ok: true, service: 'zedspeaks-api' }))
 app.route('/auth', authRouter)
 app.route('/admin', adminRouter)
 app.route('/profiles', profilesRouter)
+app.route('/feedback', feedbackRouter)
 app.route('/boards', boardsRouter)
 app.route('/cells', cellsRouter)
 app.route('/symbols', symbolsRouter)

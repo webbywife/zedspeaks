@@ -56,6 +56,14 @@ export function PrivacyPage() {
           </p>
         </Section>
 
+        <Section title="Feedback you choose to send">
+          <p>
+            If you send feedback from the Me tab, we keep your rating and message. It is anonymous: it is not linked to your
+            account unless you tick "You can email me back", in which case we keep your email with it so we can reply.
+            You can ask us to delete any feedback.
+          </p>
+        </Section>
+
         <Section title="What we never collect">
           <ul className="list-disc pl-6 flex flex-col gap-2">
             <li>Your name, or your child's name, age, school or diagnosis.</li>

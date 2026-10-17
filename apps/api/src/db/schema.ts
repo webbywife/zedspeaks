@@ -156,6 +156,16 @@ export const profileTherapists = mysqlTable('profile_therapists', {
   linkedAt: timestamp('linked_at').defaultNow().notNull(),
 })
 
+// ── Feedback (anonymous unless the parent asks for a reply) ──────────────────
+
+export const feedback = mysqlTable('feedback', {
+  id: varchar('id', { length: 36 }).primaryKey(),
+  rating: int('rating'),
+  message: text('message'),
+  replyEmail: varchar('reply_email', { length: 255 }),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+})
+
 // ── Relations ─────────────────────────────────────────────────────────────────
 
 export const usersRelations = relations(users, ({ many }) => ({

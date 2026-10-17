@@ -1,6 +1,7 @@
 import { Settings, Lock } from 'lucide-react'
 import { useBoardStore } from '../../store/boardStore'
 import { PHOTO_CREDITS } from '../../data/photoCredits'
+import { FeedbackCard } from './FeedbackCard'
 
 /** Parent corner: settings (layout, voice) and how to keep the child inside the app. */
 export function MeTab() {
@@ -22,6 +23,7 @@ export function MeTab() {
         <p className="text-sm text-slate-600"><b>iPhone / iPad:</b> Settings → Accessibility → Guided Access → On. Open ZedSpeaks, triple-click the side button, tap Start.</p>
         <p className="text-sm text-slate-600"><b>Android:</b> Settings → Security → App pinning → On. Open recent apps, tap the ZedSpeaks icon, tap Pin.</p>
       </div>
+      <FeedbackCard />
       <p className="text-xs text-slate-400 text-center">
         Photos you add stay on this device. <a href="/privacy" className="underline">Privacy Notice</a>
       </p>
