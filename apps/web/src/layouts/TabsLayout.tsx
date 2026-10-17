@@ -14,6 +14,7 @@ import { MeTab } from '../components/me/MeTab'
 import { TypeTab } from '../components/type/TypeTab'
 import { BuildTab } from '../components/build/BuildTab'
 import { ZedMascot } from '../components/mascot/ZedMascot'
+import { CharacterSwitch } from '../components/settings/CharacterSwitch'
 import { Link } from 'react-router-dom'
 import { Avatar } from '../components/profile/Avatar'
 import { useActiveProfile } from '../store/profileStore'
@@ -85,8 +86,9 @@ export function TabsLayout() {
       <header className="px-4 py-2 bg-white border-b border-gray-100 flex items-center gap-3 shrink-0">
         <ZedMascot size="sm" />
         <h1 className="text-xl font-black text-pink-600">ZedSpeaks</h1>
+        <CharacterSwitch className="ml-auto" />
         {profile && (
-          <Link to="/start" className="ml-auto flex items-center gap-2 pl-1 pr-3 h-10 rounded-full bg-pink-50 text-pink-700 font-bold"
+          <Link to="/start" className="flex items-center gap-2 pl-1 pr-3 h-10 rounded-full bg-pink-50 text-pink-700 font-bold"
             aria-label={`${profile.name}. Switch child`}>
             <Avatar profile={profile} size={32} />
             {profile.name}
