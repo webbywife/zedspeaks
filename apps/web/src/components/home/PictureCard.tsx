@@ -32,7 +32,7 @@ export function PictureCard({ label, src, emoji, photo, wide, onTap, onDelete }:
         className="flex flex-col w-full rounded-2xl bg-white border border-slate-200 shadow-sm overflow-hidden text-left select-none"
         aria-label={label}
       >
-        <div className={`w-full ${wide ? 'aspect-[4/3]' : 'aspect-square'} bg-slate-50 flex items-center justify-center`}>
+        <div className={`w-full ${wide ? 'aspect-[4/3]' : 'aspect-square'} relative overflow-hidden bg-white flex items-center justify-center`}>
           {failed ? (
             <span className="text-4xl" aria-hidden>{emoji}</span>
           ) : (
@@ -40,7 +40,7 @@ export function PictureCard({ label, src, emoji, photo, wide, onTap, onDelete }:
               src={src}
               alt=""
               onError={() => setFailed(true)}
-              className={photo ? 'w-full h-full object-cover' : 'w-4/5 h-4/5 object-contain'}
+              className={photo ? 'absolute inset-0 w-full h-full object-cover object-[center_65%]' : 'w-[92%] h-[92%] object-contain'}
               loading="lazy"
             />
           )}

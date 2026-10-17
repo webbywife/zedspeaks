@@ -30,7 +30,7 @@ GLYPHS = {
                  icecream="ice-cream-cone"),
     "places": dict(home="house", school="school", park="trees", store="store", hospital="hospital", car="car",
                    outside="sun", bedroom="bed-double"),
-    "actions": dict(go="circle-arrow-right", play="toy-brick", read="book-open", watch="tv", listen="headphones",
+    "actions": dict(go="circle-arrow-right", play="gamepad-2", read="book-open", watch="tv", listen="headphones",
                     run="footprints", sit="armchair", wait="hourglass", look="eye", come="hand", open="door-open",
                     want="hand-metal", blocks="toy-brick", toycars="car-front"),
 }

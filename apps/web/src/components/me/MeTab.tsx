@@ -28,7 +28,7 @@ export function MeTab() {
           <summary className="font-bold text-slate-900 cursor-pointer">Photo credits</summary>
           <p className="pt-2">
             Starter photos provided by{' '}
-            <a href="https://www.pexels.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">Pexels</a>.
+            <a href="https://www.pexels.com" target="_blank" rel="noopener noreferrer" className="text-pink-600 underline">Pexels</a>.
           </p>
           <ul className="pt-2 flex flex-col gap-1">
             {Object.entries(PHOTO_CREDITS).map(([id, c]) => (

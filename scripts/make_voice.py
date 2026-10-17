@@ -43,7 +43,24 @@ def texts():
     for name in os.listdir(DATA):
         if name.endswith(".ts"):
             out += [a or b for a, b in re.findall(r"\bsay\(\s*" + q + r"\s*\)", open(os.path.join(DATA, name)).read())]
+    out += sentences(s)
     return sorted({(t or "").replace("\\'", "'") for t in out if (t or "").strip()})
+
+
+def sentences(symbols_src):
+    """Whole sentences the app speaks, recorded as one clip so they don't sound stitched:
+    Home tab "I want <card>" and Kitchen "<start> <dish> <end>"."""
+    spoken = dict(re.findall(r"id:\s*'(\w+)'.*?spokenText:\s*'([^']*)'", symbols_src))
+    shelves = open(os.path.join(DATA, "shelves.ts")).read()
+    ids = {i for grp in re.findall(r"starters:\s*\[([^\]]*)\]", shelves) for i in re.findall(r"'(\w+)'", grp)}
+    out = [f"I want {spoken[i]}" for i in ids if i in spoken]
+    k = open(os.path.join(DATA, "kitchen.ts")).read()
+    start = re.search(r"ORDER_START = say\('([^']*)'", k).group(1)
+    end = re.search(r"ORDER_END = say\('([^']*)'", k).group(1)
+    starters = re.findall(r"'(\w+)'", re.search(r"STARTER_DISHES = \[([^\]]*)\]", k).group(1))
+    recorded = re.findall(r"say\('([^']*)'\)", re.search(r"RECORDED_DISHES = \[(.*?)\]", k, re.S).group(1))
+    dishes = [spoken[i] for i in starters if i in spoken] + recorded
+    return out + [f"{start} {d} {end}" for d in dishes]
 
 
 def norm(t):  # must match normalize() in useTTS.ts

@@ -43,7 +43,7 @@ export function SentenceStrip({ items, onSpeak, onClear, onBackspace }: Sentence
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.7, opacity: 0 }}
                 transition={{ type: 'spring', stiffness: 500, damping: 25 }}
-                className="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 text-blue-800 font-semibold text-sm whitespace-nowrap shrink-0"
+                className="inline-flex items-center px-3 py-1 rounded-full bg-pink-100 text-pink-800 font-semibold text-sm whitespace-nowrap shrink-0"
               >
                 {item.label}
               </motion.span>
@@ -73,7 +73,7 @@ export function SentenceStrip({ items, onSpeak, onClear, onBackspace }: Sentence
         <button
           onClick={onSpeak}
           disabled={isEmpty}
-          className="flex items-center gap-2 px-4 h-10 rounded-xl bg-green-600 text-white font-bold text-sm disabled:opacity-30 active:scale-95 transition-transform shadow-sm"
+          className="flex items-center gap-2 px-4 h-10 rounded-xl bg-pink-600 text-white font-bold text-sm disabled:opacity-30 active:scale-95 transition-transform shadow-sm"
           aria-label="Speak sentence"
         >
           <Volume2 size={18} />

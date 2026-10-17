@@ -1,20 +1,31 @@
 import { Plus } from 'lucide-react'
 import { SHELVES } from '../../data/shelves'
-import { SYMBOLS, cardImage } from '../../data/symbols'
-import type { CustomSymbol } from '../../types'
+import { SYMBOLS, cardImage, getSymbolsByCategory } from '../../data/symbols'
+import type { AACSymbol, CustomSymbol } from '../../types'
 import { PictureCard } from './PictureCard'
 
 interface HomeTabProps {
   photos: CustomSymbol[]
   onPick: (label: string, spokenText: string) => void
+  onFeel: (s: AACSymbol) => void
   onAddPhoto: (shelf: string) => void
   onDelete: (id: string) => void
 }
 
 /** Shopee-style shelves: the child's own photos first, then built-in cards. */
-export function HomeTab({ photos, onPick, onAddPhoto, onDelete }: HomeTabProps) {
+export function HomeTab({ photos, onPick, onFeel, onAddPhoto, onDelete }: HomeTabProps) {
   return (
     <div className="flex-1 overflow-y-auto pb-4">
+      {/* Zed's own faces first: tap = "I am happy", and his face in the header changes */}
+      <section className="pt-4">
+        <h2 className="px-4 pb-2 text-base font-bold text-slate-900">How I feel</h2>
+        <div className="flex gap-3 overflow-x-auto px-4 pb-1" style={{ scrollbarWidth: 'none' }}>
+          {getSymbolsByCategory('feelings').map((s) => (
+            <PictureCard key={s.id} label={s.label} src={s.customImageUrl ?? cardImage(s.id).src}
+              photo={!!s.customImageUrl} emoji={s.emoji} onTap={() => onFeel(s)} />
+          ))}
+        </div>
+      </section>
       {SHELVES.map((shelf, i) => {
         const own = photos.filter((p) => p.shelf === shelf.id || (!p.shelf && i === 0))
         const starters = SYMBOLS.filter((s) => shelf.starters.includes(s.id))
