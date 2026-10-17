@@ -18,7 +18,8 @@ app.use('*', secureHeaders())
 app.use(
   '*',
   cors({
-    origin: process.env.FRONTEND_URL ?? 'http://localhost:5173',
+    // FRONTEND_URL may list several sites, comma-separated (e.g. during a domain move)
+    origin: (process.env.FRONTEND_URL ?? 'http://localhost:5173').split(',').map((u) => u.trim()),
     credentials: true,
     allowHeaders: ['Content-Type'],
     allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],

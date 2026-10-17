@@ -1,7 +1,7 @@
+import { API } from '../lib/api'
 import { useEffect } from 'react'
 import { useAuthStore } from '../store/authStore'
 
-const API = import.meta.env.VITE_API_URL ?? 'http://localhost:3001'
 
 export function useAuthCheck() {
   const { checked, setUser, setChecked } = useAuthStore()

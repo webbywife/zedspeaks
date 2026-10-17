@@ -1,10 +1,10 @@
+import { API } from '../lib/api'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { Eye, EyeOff } from 'lucide-react'
 import { useAuthStore } from '../store/authStore'
 import { useAuthCheck } from '../hooks/useAuth'
 
-const API = import.meta.env.VITE_API_URL ?? 'http://localhost:3001'
 
 type Mode = 'signin' | 'signup'
 

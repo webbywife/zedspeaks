@@ -1,10 +1,10 @@
+import { API } from '../lib/api'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CheckCircle, XCircle, LogOut } from 'lucide-react'
 import { useAuthStore } from '../store/authStore'
 import { logout } from '../hooks/useAuth'
 
-const API = import.meta.env.VITE_API_URL ?? 'http://localhost:3001'
 
 interface AccessRequest {
   id: string

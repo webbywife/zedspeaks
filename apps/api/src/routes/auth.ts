@@ -81,7 +81,7 @@ authRouter.post('/register', async (c) => {
       status: 'pending',
     })
 
-    const frontendUrl = process.env.FRONTEND_URL ?? 'http://localhost:5173'
+    const frontendUrl = (process.env.FRONTEND_URL ?? 'http://localhost:5173').split(',')[0].trim()
     if (adminEmail) {
       sendAdminNotificationEmail(adminEmail, name.trim(), normalizedEmail, userRelation, frontendUrl).catch(console.error)
     }
@@ -145,7 +145,7 @@ authRouter.get('/google/callback', async (c) => {
   const { code, state } = c.req.query()
   const storedState = getCookie(c, 'google_oauth_state')
   const storedVerifier = getCookie(c, 'google_code_verifier')
-  const frontendUrl = process.env.FRONTEND_URL ?? 'http://localhost:5173'
+  const frontendUrl = (process.env.FRONTEND_URL ?? 'http://localhost:5173').split(',')[0].trim()
   const adminEmail = process.env.ADMIN_EMAIL?.toLowerCase()
 
   if (!code || !state || state !== storedState || !storedVerifier) {
