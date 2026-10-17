@@ -37,7 +37,11 @@ export function TabsLayout() {
   const { currentCategory, sentenceItems, ttsSettings, setCategory, addToSentence, clearSentence, backspace, setMascotState } = useBoardStore()
   const { speak } = useTTS(ttsSettings)
   const { symbols: photos, save, remove } = useCustomSymbols()
-  const [tab, setTab] = useState<Tab>('home')
+  // ?tab=kitchen opens a tab directly (handy for links and previews)
+  const [tab, setTab] = useState<Tab>(() => {
+    const t = new URLSearchParams(window.location.search).get('tab') as Tab | null
+    return t && TABS.some((x) => x.id === t) ? t : 'home'
+  })
   const [cameraShelf, setCameraShelf] = useState<string | null>(null)
   const talkCategory = currentCategory === 'my-photos' ? 'needs' : currentCategory
 

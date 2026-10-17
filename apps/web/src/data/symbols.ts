@@ -1,4 +1,5 @@
 import type { AACSymbol, CategoryMeta, CategoryId } from '../types'
+import { ZS_AVAILABLE } from './zsAvailable'
 
 export const CATEGORIES: CategoryMeta[] = [
   { id: 'needs',     label: 'Needs',    color: '#dc2626', bgColor: '#fee2e2', borderColor: '#fca5a5' },
@@ -24,17 +25,23 @@ const ZS_PICTURES: Record<string, string> = {
   watch: 'television', listen: 'headphones', home: 'house', store: 'shopping-cart', outside: 'tree',
   cookie: 'cookie', banana: 'banana', icecream: 'ice-cream', pizza: 'pizza-slice', sandwich: 'sandwich',
   bread: 'bread', eggs: 'fried-egg', chicken: 'fried-chicken', sleep: 'bed',
+  apple: 'red-apple', milk: 'glass-of-milk', water: 'glass-of-water', juice: 'orange-juice',
+  read: 'open-book', park: 'park', school: 'school',
 }
 
 /** Our generated picture for a card, if there is one */
 export function pictureUrl(id: string): string | null {
   const name = ZS_PICTURES[id]
-  return name ? `${import.meta.env.BASE_URL}symbols/zs-${name}.webp` : null
+  return name && ZS_AVAILABLE.has(name) ? `${import.meta.env.BASE_URL}symbols/zs-${name}.webp` : null
 }
 
+// One look everywhere: our drawing first. A stock photo only stands in until its drawing is made.
+// (Family photos are separate: they always come first on their own cards.)
 export function cardImage(id: string): { src: string; photo: boolean } {
+  const drawing = pictureUrl(id)
+  if (drawing) return { src: drawing, photo: false }
   if (id in PHOTO_CREDITS) return { src: `${import.meta.env.BASE_URL}photos/${id}.jpg`, photo: true }
-  return { src: pictureUrl(id) ?? iconUrl(id), photo: false }
+  return { src: iconUrl(id), photo: false }
 }
 
 // ZedSpeaks icon set (scripts/make_icons.py → public/icons/)
