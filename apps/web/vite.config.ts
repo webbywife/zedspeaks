@@ -27,7 +27,14 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,mp3,json,jpg}'],
+        // The Mulberry library (~3,000 SVGs) is fetched on demand, not downloaded up front
+        globIgnores: ['symbols/**'],
         runtimeCaching: [
+          {
+            urlPattern: ({ url }) => url.pathname.startsWith('/symbols/'),
+            handler: 'CacheFirst',
+            options: { cacheName: 'library-symbols', expiration: { maxEntries: 4000 } },
+          },
           {
             urlPattern: /^https:\/\/static\.arasaac\.org\/.*/i,
             handler: 'CacheFirst',

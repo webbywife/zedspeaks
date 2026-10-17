@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Delete, Volume2, X } from 'lucide-react'
 import { LETTER_ROWS, NUMBER_ROW, SPACE, SYMBOL_ROW, type Key } from '../../data/keyboard'
 import { SYMBOLS, cardImage } from '../../data/symbols'
+import { librarySrc, loadLibrary, searchLibrary } from '../../data/library'
 
 interface TypeTabProps {
   speak: (text: string) => void
@@ -18,6 +19,8 @@ function loadSayKeys() {
 export function TypeTab({ speak }: TypeTabProps) {
   const [text, setText] = useState('')
   const [sayKeys, setSayKeys] = useState(loadSayKeys)
+  const [libraryReady, setLibraryReady] = useState(false)
+  useEffect(() => { loadLibrary().then(() => setLibraryReady(true)) }, [])
 
   const toggleSayKeys = () => {
     const next = !sayKeys
@@ -36,9 +39,16 @@ export function TypeTab({ speak }: TypeTabProps) {
 
   // Picture hints for the word being typed (e.g. "ap" → Apple)
   const word = text.split(/\s+/).pop()?.toLowerCase() ?? ''
-  const hints = word
-    ? SYMBOLS.filter((s) => s.category !== 'people' && s.label.toLowerCase().startsWith(word)).slice(0, 6)
+  // App cards first (Zed's own pictures), then the Mulberry library
+  const own = word
+    ? SYMBOLS.filter((s) => s.category !== 'people' && s.label.toLowerCase().startsWith(word))
+        .map((s) => ({ key: s.id, label: s.label, src: s.customImageUrl ?? cardImage(s.id).src }))
     : []
+  const lib = libraryReady && word.length >= 2
+    ? searchLibrary(word).filter((l) => !own.some((o) => o.label.toLowerCase() === l.w.toLowerCase()))
+        .map((l) => ({ key: l.f, label: l.w, src: librarySrc(l) }))
+    : []
+  const hints = [...own, ...lib].slice(0, 8)
   const pickHint = (label: string) => {
     const next = text.slice(0, text.length - word.length) + label + ' '
     setText(next)
@@ -64,9 +74,9 @@ export function TypeTab({ speak }: TypeTabProps) {
 
       <div className="flex gap-2 overflow-x-auto px-3 py-2 min-h-[64px]" style={{ scrollbarWidth: 'none' }}>
         {hints.map((s) => (
-          <button key={s.id} onClick={() => pickHint(s.label)}
+          <button key={s.key} onClick={() => pickHint(s.label)}
             className="shrink-0 flex items-center gap-2 pl-1 pr-3 h-12 rounded-xl bg-white border border-slate-200 shadow-sm font-semibold text-slate-800">
-            <img src={s.customImageUrl ?? cardImage(s.id).src} alt="" className="w-10 h-10 rounded-lg object-cover" />
+            <img src={s.src} alt="" className="w-10 h-10 rounded-lg object-contain bg-white" />
             {s.label}
           </button>
         ))}

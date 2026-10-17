@@ -23,6 +23,10 @@ export function MeTab() {
         <p className="text-sm text-slate-600"><b>Android:</b> Settings → Security → App pinning → On. Open recent apps, tap the ZedSpeaks icon, tap Pin.</p>
       </div>
       <p className="text-xs text-slate-400 text-center">Photos you add stay on this device.</p>
+      <p className="px-4 text-xs text-slate-500 text-center">
+        Picture library: <a href="https://mulberrysymbols.org" target="_blank" rel="noopener noreferrer" className="underline">Mulberry Symbols</a>{' '}
+        by Steve Lee, <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer" className="underline">CC BY-SA 4.0</a>.
+      </p>
       {Object.keys(PHOTO_CREDITS).length > 0 && (
         <details className="p-4 rounded-2xl bg-white border border-slate-200 text-sm text-slate-600">
           <summary className="font-bold text-slate-900 cursor-pointer">Photo credits</summary>
