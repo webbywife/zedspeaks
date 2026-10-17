@@ -199,7 +199,8 @@ export function LoginPage() {
           <>
             <h2 className="text-xl font-bold text-gray-900 mb-6">Create an account</h2>
             <form onSubmit={handleSignUp} className="flex flex-col gap-3">
-              <p className="text-xs text-slate-500 -mt-2">We only ask for your email, to sign you in. Nothing else about you or your child.</p>
+              <p className="text-xs text-slate-500 -mt-2">We only ask for your email, to sign you in. Nothing else about you or your child.
+                ZedSpeaks is an early version, and your feedback shapes it.</p>
 
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium text-gray-700">Email</label>

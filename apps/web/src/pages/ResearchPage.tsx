@@ -104,6 +104,7 @@ export function ResearchPage() {
           <ul className="list-disc pl-5 flex flex-col gap-2 text-slate-700 leading-relaxed">
             <li>Gains in <b>spoken words</b> are usually <b>modest</b>. AAC's biggest effect is on communication itself: being understood.</li>
             <li>Many studies are small, and every child is different. Results are encouraging, not guarantees.</li>
+            <li>ZedSpeaks itself is an early version and a work in progress. It hasn't been studied yet; the research above is about AAC in general.</li>
             <li>ZedSpeaks is a communication tool, not therapy. It works best alongside a speech-language pathologist or teacher who knows your child.</li>
           </ul>
         </section>

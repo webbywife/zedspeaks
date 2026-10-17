@@ -23,6 +23,9 @@ export function MeTab() {
         <p className="text-sm text-slate-600"><b>iPhone / iPad:</b> Settings → Accessibility → Guided Access → On. Open ZedSpeaks, triple-click the side button, tap Start.</p>
         <p className="text-sm text-slate-600"><b>Android:</b> Settings → Security → App pinning → On. Open recent apps, tap the ZedSpeaks icon, tap Pin.</p>
       </div>
+      <p className="px-4 py-3 rounded-2xl bg-amber-50 border border-amber-100 text-sm text-slate-700">
+        <b>🌱 Early version.</b> ZedSpeaks is a work in progress. I'm still learning, from Zed and from families like yours, so please tell me what works, what doesn't, and what your child needs.
+      </p>
       <FeedbackCard />
       {/* Parents only (never on the child's screens): a calm invitation, no pop-ups or locked features */}
       <a href="/support" className="p-4 rounded-2xl bg-pink-50 border border-pink-100 flex items-center gap-3">

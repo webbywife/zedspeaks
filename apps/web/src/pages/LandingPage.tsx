@@ -236,7 +236,10 @@ export function LandingPage() {
                 ZedSpeaks is a free AAC (Augmentative and Alternative Communication) board built
                 for non-verbal children. Tap a symbol, build a sentence, and speak — works offline, always.
               </p>
-              <p className="text-sm font-semibold text-pink-700 mb-8">Made by a mom, for her son Zed, and for yours.</p>
+              <p className="text-sm font-semibold text-pink-700 mb-3">Made by a mom, for her son Zed, and for yours.</p>
+              <p className="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 bg-white border border-slate-200 rounded-full px-3 py-1.5 mb-8">
+                <span aria-hidden>🌱</span> Early version: a work in progress, shaped by families' feedback
+              </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
                 <Link to="/login" className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-pink-600 text-white font-bold text-lg hover:bg-pink-700 transition-colors shadow-lg shadow-pink-600/20">
                   Get started free <ArrowRight size={20} className="transition-transform group-hover:translate-x-1" />
@@ -387,6 +390,8 @@ export function LandingPage() {
               <p>So I started building one around him: his own pictures, his favourite things, a voice that sounds like a boy his age,
                 and a kitchen menu so he can ask me to cook. Every part is tried with Zed first.</p>
               <p>If your child points, waits and hopes you understand, I made this for you too. It's free for families, always.</p>
+              <p>ZedSpeaks is still a work in progress. I'm not a big company, just a mom learning as I go, and I'd love to learn from you too.
+                If something doesn't work for your child, or you have an idea, please tell me.</p>
               <p className="font-bold text-slate-900">With love,<br />Zed's mom</p>
             </div>
           </motion.div>
