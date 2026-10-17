@@ -1,17 +1,16 @@
 import { Hono } from 'hono'
 import { getCookie, setCookie } from 'hono/cookie'
 import { Google, generateCodeVerifier, generateState } from 'arctic'
-import { Argon2id } from 'oslo/password'
 import { db } from '../db/index.js'
 import { users, accessRequests } from '../db/schema.js'
-import { lucia } from '../lib/auth.js'
+import { endSession, readSession, startSession } from '../lib/session.js'
+import { hashPassword, verifyPassword } from '../lib/password.js'
 import { eq, or } from 'drizzle-orm'
 import { sendAdminNotificationEmail } from '../lib/email.js'
 import type { AppEnv } from '../lib/types.js'
 
 export const authRouter = new Hono<AppEnv>()
 
-const argon = new Argon2id()
 
 function google() {
   return new Google(
@@ -56,7 +55,7 @@ authRouter.post('/register', async (c) => {
     return c.json({ error: `That ${field} is already taken` }, 409)
   }
 
-  const passwordHash = await argon.hash(password)
+  const passwordHash = await hashPassword(password)
   const now = new Date()
 
   await db.insert(users).values({
@@ -90,8 +89,7 @@ authRouter.post('/register', async (c) => {
   }
 
   const [user] = await db.select().from(users).where(eq(users.email, normalizedEmail))
-  const session = await lucia.createSession(user.id, {})
-  c.header('Set-Cookie', lucia.createSessionCookie(session.id).serialize())
+  await startSession(c, user.id)
   return c.json({ status: 'ok', user: { id: user.id, email: user.email, name: user.name, role: user.role } })
 })
 
@@ -109,13 +107,12 @@ authRouter.post('/login', async (c) => {
     return c.json({ error: 'Invalid email or password' }, 401)
   }
 
-  const valid = await argon.verify(user.passwordHash, password)
+  const valid = await verifyPassword(user.passwordHash, password)
   if (!valid) return c.json({ error: 'Invalid email or password' }, 401)
 
   if (!user.approvedAt) return c.json({ status: 'pending' }, 403)
 
-  const session = await lucia.createSession(user.id, {})
-  c.header('Set-Cookie', lucia.createSessionCookie(session.id).serialize())
+  await startSession(c, user.id)
   return c.json({ status: 'ok', user: { id: user.id, email: user.email, name: user.name, role: user.role } })
 })
 
@@ -208,8 +205,7 @@ authRouter.get('/google/callback', async (c) => {
 
   if (!user.approvedAt) return c.redirect(`${frontendUrl}/pending`)
 
-  const session = await lucia.createSession(user.id, {})
-  c.header('Set-Cookie', lucia.createSessionCookie(session.id).serialize())
+  await startSession(c, user.id)
   return c.redirect(`${frontendUrl}/board`)
 })
 
@@ -217,23 +213,14 @@ authRouter.get('/google/callback', async (c) => {
 
 // GET /auth/me
 authRouter.get('/me', async (c) => {
-  const sessionId = getCookie(c, lucia.sessionCookieName)
-  if (!sessionId) return c.json({ user: null })
-
-  const { session, user } = await lucia.validateSession(sessionId)
-  if (!session) return c.json({ user: null })
-
-  if (session.fresh) {
-    c.header('Set-Cookie', lucia.createSessionCookie(session.id).serialize())
-  }
-
+  const result = await readSession(c)
+  if (!result || !result.user.isActive) return c.json({ user: null })
+  const { user } = result
   return c.json({ user: { id: user.id, email: user.email, name: user.name, role: user.role } })
 })
 
 // POST /auth/logout
 authRouter.post('/logout', async (c) => {
-  const sessionId = getCookie(c, lucia.sessionCookieName)
-  if (sessionId) await lucia.invalidateSession(sessionId)
-  c.header('Set-Cookie', lucia.createBlankSessionCookie().serialize())
+  await endSession(c)
   return c.json({ ok: true })
 })

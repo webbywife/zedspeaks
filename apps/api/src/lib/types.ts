@@ -1,8 +1,8 @@
-import type { User, Session } from 'lucia'
+import type { Session, SessionUser } from './session.js'
 
 export type AppEnv = {
   Variables: {
-    user: User
+    user: SessionUser
     session: Session
   }
 }
