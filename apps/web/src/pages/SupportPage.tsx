@@ -100,7 +100,7 @@ export function SupportPage() {
               <div>
                 <h3 className="font-bold text-slate-900">Help fund ZedSpeaks</h3>
                 <p className="text-sm text-slate-600">
-                  Would you like to help keep ZedSpeaks running? You can support the app, help sustain it every month, share your
+                  Would you like to help keep ZedSpeaks running? You can help fund the app once or every month, share your
                   skills (design, translation, therapy, coding), or partner with us as an organisation. Leave a message and I'll
                   get back to you personally.
                 </p>
