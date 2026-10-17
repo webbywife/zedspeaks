@@ -43,6 +43,55 @@ export const CARD_PHRASES: Record<string, CardPhrase> = {
   brother: p('my brother', 'play with my brother', 'thing'),
   friend: p('my friend', 'play with my friend', 'thing'),
   teacher: p('my teacher', 'see my teacher', 'thing'),
+  // more snacks and meals
+  chicken: p('chicken', 'eat chicken', 'thing'),
+  eggs: p('eggs', 'eat eggs', 'thing'),
+  pizza: p('pizza', 'eat pizza', 'thing'),
+  sandwich: p('a sandwich', 'eat a sandwich', 'thing'),
+  rice: p('rice', 'eat rice', 'thing'),
+  noodles: p('noodles', 'eat noodles', 'thing'),
+  soup: p('soup', 'eat soup', 'thing'),
+  spaghetti: p('spaghetti', 'eat spaghetti', 'thing'),
+  burger: p('a burger', 'eat a burger', 'thing'),
+  hotdog: p('a hotdog', 'eat a hotdog', 'thing'),
+  pancakes: p('pancakes', 'eat pancakes', 'thing'),
+  fish: p('fish', 'eat fish', 'thing'),
+  cereal: p('cereal', 'eat cereal', 'thing'),
+  mango: p('a mango', 'eat a mango', 'thing'),
+  watermelon: p('watermelon', 'eat watermelon', 'thing'),
+  orange: p('an orange', 'eat an orange', 'thing'),
+  grapes: p('grapes', 'eat grapes', 'thing'),
+  crackers: p('crackers', 'eat crackers', 'thing'),
+  candy: p('candy', 'eat candy', 'thing'),
+  cake: p('cake', 'eat cake', 'thing'),
+  chocolate: p('chocolate', 'eat chocolate', 'thing'),
+  yogurt: p('yogurt', 'eat yogurt', 'thing'),
+  // more to do
+  dance: p('to dance', 'dance', 'doing'),
+  swim: p('to swim', 'swim', 'doing'),
+  bike: p('my bike', 'ride my bike', 'doing'),
+  jump: p('to jump', 'jump', 'doing'),
+  cook: p('to cook', 'cook with you', 'doing'),
+  walk: p('a walk', 'go for a walk', 'doing'),
+  music: p('music', 'listen to music', 'thing'),
+  // more places
+  playground: p('to go to the playground', 'go to the playground', 'doing'),
+  beach: p('to go to the beach', 'go to the beach', 'doing'),
+  pool: p('to go to the pool', 'go to the pool', 'doing'),
+  mall: p('to go to the mall', 'go to the mall', 'doing'),
+  church: p('to go to church', 'go to church', 'doing'),
+  restaurant: p('to eat out', 'eat at a restaurant', 'doing'),
+  grandparents: p('my grandparents', 'visit my grandparents', 'thing'),
+  // what I need
+  bathroom: p('the bathroom', 'go to the bathroom', 'doing'),
+  help: p('help', 'get help', 'thing'),
+  hug: p('a hug', 'give you a hug', 'thing'),
+  break: p('a break', 'take a break', 'thing'),
+  sleep: p('to sleep', 'sleep', 'doing'),
+  washhands: p('to wash my hands', 'wash my hands', 'doing'),
+  brushteeth: p('to brush my teeth', 'brush my teeth', 'doing'),
+  bath: p('a bath', 'take a bath', 'thing'),
+  dress: p('my clothes', 'get dressed', 'doing'),
 }
 
 export interface Starter { id: string; text: string; uses: 'thing' | 'doing' }
@@ -52,17 +101,21 @@ export const STARTERS: Starter[] = [
   { id: 'wantto', text: 'I want to', uses: 'doing' },
   { id: 'dontwant', text: "I don't want", uses: 'thing' },
   { id: 'like', text: 'I like', uses: 'thing' },
+  { id: 'need', text: 'I need', uses: 'thing' },
+  { id: 'needto', text: 'I need to', uses: 'doing' },
 ]
 
 // Family photos have only a name: build both forms from the shelf they're on
 const PHOTO_DOING: Record<string, (name: string) => string> = {
   toys: (n) => `play with ${n}`,
   snacks: (n) => `eat ${n}`,
+  meals: (n) => `eat ${n}`,
+  needs: (n) => `have ${n}`,
   watch: (n) => `watch ${n}`,
   places: (n) => `go to ${n}`,
   people: (n) => `see ${n}`,
 }
-const PHOTO_AUTO: Record<string, CardPhrase['auto']> = { toys: 'thing', snacks: 'thing', watch: 'doing', places: 'doing', people: 'thing' }
+const PHOTO_AUTO: Record<string, CardPhrase['auto']> = { toys: 'thing', snacks: 'thing', meals: 'thing', needs: 'thing', watch: 'doing', places: 'doing', people: 'thing' }
 
 export function photoPhrase(name: string, shelf: ShelfId | string | undefined): CardPhrase {
   const s = shelf ?? 'toys'

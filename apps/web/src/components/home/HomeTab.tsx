@@ -48,8 +48,8 @@ export function HomeTab({ photos, onPick, onFeel, onAddPhoto, onDelete, top }: H
           </button>
         ))}
       </div>
-      {SHELVES.map((shelf, i) => {
-        const own = photos.filter((p) => p.shelf === shelf.id || (!p.shelf && i === 0))
+      {SHELVES.map((shelf) => {
+        const own = photos.filter((p) => p.shelf === shelf.id || (!p.shelf && shelf.id === 'toys'))
         const starters = SYMBOLS.filter((s) => shelf.starters.includes(s.id))
         return (
           <section key={shelf.id} className="pt-4">

@@ -1,0 +1,14 @@
+# Second try for pictures that failed the quality check (thin outlines / lettering)
+cold = snowflake | big simple snowflake, very thick black outline, light blue
+hot = bright sun | big smiling-free simple sun, very thick black outline, orange and yellow
+draw = crayon drawing a heart on paper | very thick black outlines
+grandparents = small cottage house with a garden | very thick black outlines
+mall = big shopping bags | two shopping bags, very thick black outlines, plain bags
+mango = ripe mango | one whole yellow mango, very thick black outline
+orange = orange fruit | one whole orange with a green leaf, very thick black outline
+playground = playground slide | colorful slide, very thick black outlines
+pool = swimming ring float on water | very thick black outlines
+sing = microphone | very thick black outlines
+swim = swimming goggles | very thick black outlines
+medicine = medicine cup with a spoon | plain bottle with no label, very thick black outlines
+tired = sleepy crescent moon | eyes closed, very thick black outline, no letters

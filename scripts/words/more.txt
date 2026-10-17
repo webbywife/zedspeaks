@@ -1,0 +1,54 @@
+# More default cards (Oct 2026). Format: card-id = what to draw | extra detail
+# Generic everyday things only: no brands, no characters, no real people.
+# Food
+rice = bowl of white rice | steaming bowl, simple
+noodles = bowl of noodles | with chopsticks
+mango = ripe yellow mango | whole mango with a leaf
+watermelon = slice of watermelon | red with black seeds
+orange = orange fruit | whole orange with a leaf
+grapes = bunch of purple grapes
+cereal = bowl of cereal with milk | with a spoon
+fish = cooked fish on a plate | whole fried fish
+soup = bowl of hot soup | with a spoon
+spaghetti = plate of spaghetti | red sauce
+burger = hamburger | simple bun, patty, lettuce
+hotdog = hotdog in a bun
+pancakes = stack of pancakes | with syrup
+crackers = crackers | a few square crackers
+candy = wrapped candy | two sweets in colorful wrappers
+cake = slice of birthday cake | with one candle
+chocolate = bar of chocolate | plain, unwrapped
+yogurt = cup of yogurt | with a spoon
+# Needs
+medicine = medicine bottle and spoon | child's syrup
+hug = two simple cartoon figures hugging | warm, friendly
+break = hand showing pause sign | open palm, calm
+cold = snowflake and shivering thermometer | blue
+hot = sun and thermometer | red, warm
+quiet = finger on lips | simple cartoon face, shh
+tired = yawning moon | sleepy crescent moon with zzz shapes, no letters
+# Places
+playground = playground | slide and swing set
+beach = beach | sand, sea, umbrella
+pool = swimming pool | blue water, ladder
+mall = shopping mall building | big generic building
+church = small church | simple chapel with a cross
+restaurant = restaurant table | table with plates and a menu, no words
+kitchen = kitchen | stove, sink and cupboards
+livingroom = living room | sofa and lamp
+grandparents = cozy small house with flowers | grandparents' home
+# Actions
+swim = child swimming | simple cartoon, in water
+draw = hand drawing with a crayon | on paper
+sing = musical notes | colorful notes floating
+dance = musical notes and dancing shoes
+jump = child jumping | arms up, simple cartoon
+walk = shoes walking | footsteps
+bike = bicycle | child-size bike
+cook = cooking pot on a stove
+washhands = washing hands | hands under a tap with soap bubbles
+brushteeth = toothbrush with toothpaste | and a cup
+bath = bathtub with bubbles | rubber duck
+dress = shirt and pants on a hanger | clothes
+give = hand giving a gift box
+music = headphones and musical notes
