@@ -12,3 +12,6 @@ apps/api/dist
 scripts/samples/
 scripts/_sheet*
 scripts/_photos*
+scripts/_gen/
+scripts/_gen_sheet.png
+scripts/_gen_rejected/

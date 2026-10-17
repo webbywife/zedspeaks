@@ -22,5 +22,7 @@ export function searchLibrary(prefix: string, limit = 8): LibrarySymbol[] {
   if (!library || !prefix) return []
   const p = prefix.toLowerCase()
   const hits = library.filter((s) => s.w.toLowerCase().startsWith(p) && !/\d[ab]?$/.test(s.w))
-  return hits.sort((a, b) => a.w.length - b.w.length).slice(0, limit)
+  // Shorter (closer) words first; our own ZedSpeaks pictures before Mulberry's on a tie
+  const rank = (s: LibrarySymbol) => s.w.length * 2 + (s.c === 'ZedSpeaks' ? 0 : 1)
+  return hits.sort((a, b) => rank(a) - rank(b)).slice(0, limit)
 }
