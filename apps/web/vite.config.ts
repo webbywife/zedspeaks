@@ -15,7 +15,7 @@ export default defineConfig({
         name: 'ZedSpeaks – AAC Communication Board',
         short_name: 'ZedSpeaks',
         description: 'Free, offline-capable AAC communication board for non-verbal individuals',
-        theme_color: '#1e40af',
+        theme_color: '#db2777',
         background_color: '#f1f5f9',
         display: 'standalone',
         orientation: 'any',
