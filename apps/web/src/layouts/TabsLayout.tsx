@@ -13,6 +13,9 @@ import { MeTab } from '../components/me/MeTab'
 import { TypeTab } from '../components/type/TypeTab'
 import { BuildTab } from '../components/build/BuildTab'
 import { ZedMascot } from '../components/mascot/ZedMascot'
+import { Link } from 'react-router-dom'
+import { Avatar } from '../components/profile/Avatar'
+import { useActiveProfile } from '../store/profileStore'
 import { KITCHEN_SHELF } from '../data/shelves'
 import { CATEGORIES, getSymbolsByCategory } from '../data/symbols'
 import { useBoardStore } from '../store/boardStore'
@@ -36,6 +39,7 @@ const TALK_CATEGORIES = CATEGORIES.filter((c) => c.id !== 'my-photos')
 export function TabsLayout() {
   const { currentCategory, sentenceItems, ttsSettings, setCategory, addToSentence, clearSentence, backspace, setMascotState } = useBoardStore()
   const { speak } = useTTS(ttsSettings)
+  const profile = useActiveProfile()
   const { symbols: photos, save, remove } = useCustomSymbols()
   // ?tab=kitchen opens a tab directly (handy for links and previews)
   const [tab, setTab] = useState<Tab>(() => {
@@ -77,6 +81,13 @@ export function TabsLayout() {
       <header className="px-4 py-2 bg-blue-900 flex items-center gap-3 shrink-0">
         <ZedMascot size="sm" />
         <h1 className="text-lg font-black text-white">Zed<span className="text-blue-300">Speaks</span></h1>
+        {profile && (
+          <Link to="/start" className="ml-auto flex items-center gap-2 pl-1 pr-3 h-10 rounded-full bg-white/10 text-white font-bold"
+            aria-label={`${profile.name}. Switch child`}>
+            <Avatar profile={profile} size={32} />
+            {profile.name}
+          </Link>
+        )}
       </header>
       {tab !== 'type' && <SentenceStrip items={sentenceItems} onSpeak={speakSentence} onClear={clearSentence} onBackspace={backspace} />}
 

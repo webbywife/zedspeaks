@@ -43,32 +43,42 @@ export function KitchenTab({ dishes, speak, onAddDish, onDelete }: KitchenTabPro
   const close = () => { setPicked(null); setSent(false) }
 
   return (
-    <div className="flex-1 overflow-y-auto p-4">
-      <div className="flex items-center gap-2 pb-3">
-        <ChefHat className="text-orange-500" size={22} />
-        <h2 className="text-base font-bold text-slate-900">Mom's Kitchen</h2>
+    <div className="flex-1 overflow-y-auto">
+      <div className="max-w-5xl mx-auto p-4 flex flex-col gap-4">
+        <div className="rounded-3xl bg-gradient-to-br from-orange-100 to-amber-50 border border-orange-200 px-5 py-4 flex items-center gap-4">
+          <span className="w-14 h-14 shrink-0 rounded-2xl bg-white shadow-sm flex items-center justify-center">
+            <ChefHat className="text-orange-500" size={32} />
+          </span>
+          <div className="min-w-0">
+            <h2 className="text-xl font-black text-slate-900">Mom's Kitchen</h2>
+            <p className="text-sm text-slate-600">What should Mom cook? Tap a dish to order.</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+          {menu.map((d) => (
+            <PictureCard key={d.key} wide label={d.label} src={d.src} photo={d.photo} emoji={d.emoji}
+              footer={<span className="mx-2 mb-2 h-9 rounded-xl bg-orange-500 text-white text-sm font-bold flex items-center justify-center">Order</span>}
+              onTap={() => setPicked(d)} onDelete={d.id ? () => onDelete(d.id!) : undefined} />
+          ))}
+          <button
+            onClick={onAddDish}
+            className="rounded-2xl border-2 border-dashed border-orange-300 bg-white/60 text-orange-700 flex flex-col items-center justify-center gap-1 text-sm font-semibold min-h-40"
+          >
+            <Plus size={28} /> Add a dish
+            <span className="text-xs font-medium text-slate-500 px-3 text-center">Take a photo of something you cook</span>
+          </button>
+        </div>
+        {!dishes.length && (
+          <p className="text-xs text-slate-500">Tip for parents: add photos of the dishes you cook. The examples disappear once you add your first dish.</p>
+        )}
       </div>
-      <div className="grid grid-cols-2 gap-3">
-        {menu.map((d) => (
-          <PictureCard key={d.key} wide label={d.label} src={d.src} photo={d.photo} emoji={d.emoji}
-            onTap={() => setPicked(d)} onDelete={d.id ? () => onDelete(d.id!) : undefined} />
-        ))}
-        <button
-          onClick={onAddDish}
-          className="aspect-[4/3] rounded-2xl border-2 border-dashed border-slate-300 text-slate-500 flex flex-col items-center justify-center gap-1 text-sm font-semibold"
-        >
-          <Plus size={24} /> Add a dish
-        </button>
-      </div>
-      {!dishes.length && (
-        <p className="pt-3 text-xs text-slate-500">Tip for parents: add photos of the dishes you cook. The examples disappear once you add your first dish.</p>
-      )}
 
       <AnimatePresence>
         {picked && (
-          <motion.div className="fixed inset-0 z-40 bg-black/40 flex items-end" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={close}>
+          <motion.div className="fixed inset-0 z-40 bg-black/40 flex items-end sm:items-center sm:justify-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={close}>
             <motion.div
-              className="w-full bg-white rounded-t-3xl p-5 pb-8 flex flex-col gap-4"
+              className="w-full sm:max-w-md bg-white rounded-t-3xl sm:rounded-3xl p-5 pb-8 flex flex-col gap-4"
               initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
               transition={{ type: 'spring', stiffness: 350, damping: 35 }}
               onClick={(e) => e.stopPropagation()}
@@ -85,7 +95,7 @@ export function KitchenTab({ dishes, speak, onAddDish, onDelete }: KitchenTabPro
                 </div>
               ) : (
                 <>
-                  <div className="w-full aspect-[4/3] rounded-2xl bg-slate-50 overflow-hidden flex items-center justify-center">
+                  <div className="w-full aspect-[4/3] rounded-2xl bg-orange-50 overflow-hidden flex items-center justify-center">
                     <img src={picked.src} alt="" className={picked.photo ? 'w-full h-full object-cover' : 'w-1/2 h-1/2 object-contain'} />
                   </div>
                   <p className="text-xl font-bold text-slate-900">{picked.label}</p>

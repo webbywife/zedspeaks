@@ -54,7 +54,14 @@ cellsRouter.patch('/:id', async (c) => {
   if (!cell) return c.json({ error: 'Not found' }, 404)
   if (!await ownsBoard(user.id, cell.boardId)) return c.json({ error: 'Forbidden' }, 403)
 
-  await db.update(cells).set(body).where(eq(cells.id, id))
+  // Editable fields only: a cell can't be moved to another family's board or given a new id
+  const changes: Partial<typeof cells.$inferInsert> = {}
+  for (const k of ['position', 'label', 'spokenText', 'iconUrl', 'bgColor', 'linkBoardId', 'customAudioUrl'] as const) {
+    if (body[k] !== undefined) (changes as Record<string, unknown>)[k] = body[k]
+  }
+  if (changes.linkBoardId && !await ownsBoard(user.id, changes.linkBoardId)) return c.json({ error: 'Forbidden' }, 403)
+  if (!Object.keys(changes).length) return c.json(cell)
+  await db.update(cells).set(changes).where(eq(cells.id, id))
   const [updated] = await db.select().from(cells).where(eq(cells.id, id))
   return c.json(updated)
 })

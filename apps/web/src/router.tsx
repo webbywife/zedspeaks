@@ -3,6 +3,8 @@ import { LandingPage } from './pages/LandingPage'
 import { LoginPage } from './pages/LoginPage'
 import { PendingPage } from './pages/PendingPage'
 import { AdminPage } from './pages/AdminPage'
+import { StartPage } from './pages/StartPage'
+import { ParentPage } from './pages/ParentPage'
 import { ProtectedRoute } from './components/auth/ProtectedRoute'
 import App from './App'
 
@@ -10,6 +12,8 @@ export const router = createBrowserRouter([
   { path: '/', element: <LandingPage /> },
   { path: '/login', element: <LoginPage /> },
   { path: '/pending', element: <PendingPage /> },
+  { path: '/start', element: <ProtectedRoute><StartPage /></ProtectedRoute> },
+  { path: '/parent', element: <ProtectedRoute><ParentPage /></ProtectedRoute> },
   {
     path: '/board',
     element: (
@@ -19,7 +23,7 @@ export const router = createBrowserRouter([
     ),
   },
   // Local development only: see the board without signing in (not in production builds)
-  ...(import.meta.env.DEV ? [{ path: '/preview', element: <App /> }] : []),
+  ...(import.meta.env.DEV ? [{ path: '/preview', element: <App requireProfile={false} /> }] : []),
   {
     path: '/admin',
     element: (

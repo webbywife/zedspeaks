@@ -64,7 +64,13 @@ boardsRouter.patch('/:id', async (c) => {
   if (!existing) return c.json({ error: 'Not found' }, 404)
   if (!await ownsProfile(user.id, existing.profileId)) return c.json({ error: 'Forbidden' }, 403)
 
-  await db.update(boards).set(body).where(eq(boards.id, id))
+  // Editable fields only: a board can't be moved to another family's profile or given a new id
+  const changes: Partial<typeof boards.$inferInsert> = {}
+  if (body.name !== undefined) changes.name = body.name
+  if (body.isHome !== undefined) changes.isHome = body.isHome
+  if (body.parentBoardId !== undefined) changes.parentBoardId = body.parentBoardId
+  if (!Object.keys(changes).length) return c.json(existing)
+  await db.update(boards).set(changes).where(eq(boards.id, id))
   const [updated] = await db.select().from(boards).where(eq(boards.id, id))
   return c.json(updated)
 })

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Volume2, BookmarkPlus, Trash2, Mic } from 'lucide-react'
 import { PHRASE_SECTIONS, getPhrasesByType } from '../../data/phrases'
 import { PhraseButton } from './PhraseButton'
-import { useBoardStore } from '../../store/boardStore'
+import { useBoardStore, useMySavedPhrases } from '../../store/boardStore'
 import { useTTS } from '../../hooks/useTTS'
 import type { Phrase } from '../../types'
 
@@ -13,7 +13,8 @@ interface PhraseBoardProps {
 
 function TypeSayBar({ onPhraseTap }: { onPhraseTap: (p: Phrase) => void }) {
   const [text, setText] = useState('')
-  const { ttsSettings, savedPhrases, savePhrase, deletePhrase } = useBoardStore()
+  const { ttsSettings, savePhrase, deletePhrase } = useBoardStore()
+  const savedPhrases = useMySavedPhrases()
   const { speak } = useTTS(ttsSettings)
   const inputRef = useRef<HTMLInputElement>(null)
 

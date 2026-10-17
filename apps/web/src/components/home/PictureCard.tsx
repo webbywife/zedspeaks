@@ -8,12 +8,16 @@ interface PictureCardProps {
   emoji?: string
   photo?: boolean
   wide?: boolean
+  /** Background behind a drawing (photos fill the card) */
+  tint?: string
+  /** Extra line under the label, e.g. an "Order" pill */
+  footer?: React.ReactNode
   onTap: () => void
   onDelete?: () => void
 }
 
 /** One tappable picture: a built-in icon or the family's own photo. Hold to delete own photos. */
-export function PictureCard({ label, src, emoji, photo, wide, onTap, onDelete }: PictureCardProps) {
+export function PictureCard({ label, src, emoji, photo, wide, tint = 'bg-white', footer, onTap, onDelete }: PictureCardProps) {
   const [failed, setFailed] = useState(false)
   const [confirm, setConfirm] = useState(false)
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -32,7 +36,7 @@ export function PictureCard({ label, src, emoji, photo, wide, onTap, onDelete }:
         className="flex flex-col w-full rounded-2xl bg-white border border-slate-200 shadow-sm overflow-hidden text-left select-none"
         aria-label={label}
       >
-        <div className={`w-full ${wide ? 'aspect-[4/3]' : 'aspect-square'} relative overflow-hidden bg-white flex items-center justify-center`}>
+        <div className={`w-full aspect-square relative overflow-hidden ${tint} flex items-center justify-center`}>
           {failed ? (
             <span className="text-4xl" aria-hidden>{emoji}</span>
           ) : (
@@ -40,12 +44,13 @@ export function PictureCard({ label, src, emoji, photo, wide, onTap, onDelete }:
               src={src}
               alt=""
               onError={() => setFailed(true)}
-              className={photo ? 'absolute inset-0 w-full h-full object-cover object-[center_65%]' : 'w-[92%] h-[92%] object-contain'}
+              className={photo ? 'absolute inset-0 w-full h-full object-cover object-[center_65%]' : `${wide ? 'w-[78%] h-[78%]' : 'w-[92%] h-[92%]'} object-contain`}
               loading="lazy"
             />
           )}
         </div>
-        <span className="px-2 py-1.5 text-sm font-semibold text-slate-800 leading-tight line-clamp-2">{label}</span>
+        <span className={`px-2 py-1.5 font-semibold text-slate-800 leading-tight line-clamp-2 ${wide ? 'text-base' : 'text-sm'}`}>{label}</span>
+        {footer}
       </motion.button>
       {confirm && (
         <div className="absolute inset-0 bg-black/60 rounded-2xl flex flex-col items-center justify-center gap-2">

@@ -63,4 +63,6 @@ export interface CustomSymbol {
   createdAt: number
   /** Home shelf or 'kitchen'; older photos have none and show on the first shelf */
   shelf?: string
+  /** Which child this photo belongs to (older photos have none: first child) */
+  profileId?: string
 }

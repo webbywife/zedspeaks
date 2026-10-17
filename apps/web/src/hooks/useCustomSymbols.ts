@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
+import { ownsItem, useProfileStore } from '../store/profileStore'
 import type { CustomSymbol } from '../types'
 
 const DB_NAME = 'zedspeaks'
@@ -60,8 +61,12 @@ export async function captureAndResize(file: File, size = 300): Promise<string> 
   })
 }
 
+/** The active child's own photos (each child has their own; photos stay on this device). */
 export function useCustomSymbols() {
-  const [symbols, setSymbols] = useState<CustomSymbol[]>([])
+  const [all, setSymbols] = useState<CustomSymbol[]>([])
+  const activeId = useProfileStore((s) => s.activeId)
+  const firstId = useProfileStore((s) => s.profiles[0]?.id)
+  const symbols = useMemo(() => all.filter((x) => ownsItem(x.profileId, activeId, firstId)), [all, activeId, firstId])
 
   useEffect(() => {
     dbOp<CustomSymbol[]>('readonly', (s) => s.getAll()).then(setSymbols).catch(console.error)
@@ -74,11 +79,12 @@ export function useCustomSymbols() {
       imageData,
       createdAt: Date.now(),
       shelf,
+      profileId: activeId ?? undefined,
     }
     await dbOp('readwrite', (s) => s.put(sym))
     setSymbols((prev) => [sym, ...prev])
     return sym
-  }, [])
+  }, [activeId])
 
   const remove = useCallback(async (id: string) => {
     await dbOp('readwrite', (s) => s.delete(id))

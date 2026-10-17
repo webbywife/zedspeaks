@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { ownsItem, useProfileStore } from './profileStore'
 import type { CategoryId, MoodId, SentenceItem, TTSSettings } from '../types'
 
 export interface SavedPhrase {
@@ -7,6 +8,8 @@ export interface SavedPhrase {
   label: string
   spokenText: string
   createdAt: number
+  /** Which child saved it (older phrases have none: first child) */
+  profileId?: string
 }
 
 export type LayoutId = 'tabs' | 'classic'
@@ -63,7 +66,8 @@ export const useBoardStore = create<BoardStore>()(
       savePhrase: (label, spokenText) =>
         set((s) => ({
           savedPhrases: [
-            { id: crypto.randomUUID(), label: label.trim(), spokenText: spokenText.trim(), createdAt: Date.now() },
+            { id: crypto.randomUUID(), label: label.trim(), spokenText: spokenText.trim(), createdAt: Date.now(),
+              profileId: useProfileStore.getState().activeId ?? undefined },
             ...s.savedPhrases,
           ],
         })),
@@ -77,3 +81,11 @@ export const useBoardStore = create<BoardStore>()(
     }
   )
 )
+
+/** The active child's saved phrases */
+export function useMySavedPhrases(): SavedPhrase[] {
+  const all = useBoardStore((s) => s.savedPhrases)
+  const activeId = useProfileStore((s) => s.activeId)
+  const firstId = useProfileStore((s) => s.profiles[0]?.id)
+  return all.filter((p) => ownsItem(p.profileId, activeId, firstId))
+}
