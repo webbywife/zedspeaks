@@ -13,10 +13,13 @@ export interface SavedPhrase {
 }
 
 export type LayoutId = 'tabs' | 'classic'
+export type CharacterId = 'boy' | 'girl'
 
 interface BoardStore {
   layout: LayoutId
   setLayout: (layout: LayoutId) => void
+  character: CharacterId
+  setCharacter: (character: CharacterId) => void
   currentCategory: CategoryId
   sentenceItems: SentenceItem[]
   ttsSettings: TTSSettings
@@ -48,6 +51,8 @@ export const useBoardStore = create<BoardStore>()(
         autoSpeak: false,
         naturalVoice: true,
       },
+      character: 'boy' as CharacterId,
+      setCharacter: (character) => set({ character }),
       layout: 'tabs' as LayoutId,
       setLayout: (layout) => set({ layout }),
       voiceSettingsOpen: false,
@@ -77,7 +82,7 @@ export const useBoardStore = create<BoardStore>()(
     }),
     {
       name: 'zedspeaks-settings',
-      partialize: (s) => ({ layout: s.layout, ttsSettings: s.ttsSettings, savedPhrases: s.savedPhrases }),
+      partialize: (s) => ({ layout: s.layout, character: s.character, ttsSettings: s.ttsSettings, savedPhrases: s.savedPhrases }),
     }
   )
 )

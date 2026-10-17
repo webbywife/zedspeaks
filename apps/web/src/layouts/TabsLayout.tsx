@@ -19,6 +19,7 @@ import { Avatar } from '../components/profile/Avatar'
 import { useActiveProfile } from '../store/profileStore'
 import { KITCHEN_SHELF } from '../data/shelves'
 import { CATEGORIES, getSymbolsByCategory } from '../data/symbols'
+import { feelingSymbols } from '../data/characters'
 import { useBoardStore } from '../store/boardStore'
 import { useTTS } from '../hooks/useTTS'
 import { useCustomSymbols } from '../hooks/useCustomSymbols'
@@ -41,6 +42,7 @@ export function TabsLayout() {
   const { currentCategory, sentenceItems, ttsSettings, setCategory, addToSentence, clearSentence, backspace, setMascotState } = useBoardStore()
   const { speak } = useTTS(ttsSettings)
   const profile = useActiveProfile()
+  const character = useBoardStore((s) => s.character)
   const { symbols: photos, save, remove } = useCustomSymbols()
   // ?tab=kitchen opens a tab directly (handy for links and previews)
   const [tab, setTab] = useState<Tab>(() => {
@@ -103,7 +105,7 @@ export function TabsLayout() {
         <>
           {talkCategory === 'phrases'
             ? <PhraseBoard onPhraseTap={tapPhrase} />
-            : <CommunicationBoard symbols={getSymbolsByCategory(talkCategory)} currentCategory={talkCategory} onSymbolTap={tapSymbol} />}
+            : <CommunicationBoard symbols={talkCategory === 'feelings' ? feelingSymbols(character) : getSymbolsByCategory(talkCategory)} currentCategory={talkCategory} onSymbolTap={tapSymbol} />}
           <CategoryNav categories={TALK_CATEGORIES} active={talkCategory} onChange={setCategory} />
         </>
       )}

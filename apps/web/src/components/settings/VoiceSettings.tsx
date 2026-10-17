@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Sparkles } from 'lucide-react'
 import { useBoardStore } from '../../store/boardStore'
+import { CHARACTERS } from '../../data/characters'
 import { useTTS } from '../../hooks/useTTS'
 
 interface VoicePreset {
@@ -56,7 +57,7 @@ function Slider({
 }
 
 export function VoiceSettings() {
-  const { voiceSettingsOpen, ttsSettings, updateTTSSettings, setVoiceSettingsOpen, layout, setLayout } =
+  const { voiceSettingsOpen, ttsSettings, updateTTSSettings, setVoiceSettingsOpen, layout, setLayout, character, setCharacter } =
     useBoardStore()
   const { voices } = useTTS(ttsSettings)
 
@@ -122,6 +123,25 @@ export function VoiceSettings() {
                     >
                       <span className="text-sm font-semibold">{name}</span>
                       <span className={`text-xs ${layout === id ? 'text-pink-100' : 'text-gray-500'}`}>{hint}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Character: whose faces show on the feeling cards */}
+              <div className="flex flex-col gap-2">
+                <p className="text-sm font-medium text-gray-700">Character</p>
+                <div className="grid grid-cols-2 gap-2">
+                  {CHARACTERS.map((ch) => (
+                    <button key={ch.id} onClick={() => setCharacter(ch.id)} aria-pressed={character === ch.id}
+                      className={`flex items-center gap-3 px-3 py-2 rounded-xl text-left border-2 transition-colors ${
+                        character === ch.id ? 'bg-pink-600 border-pink-600 text-white' : 'bg-white border-gray-200 text-gray-700 hover:border-pink-400'
+                      }`}>
+                      <img src={ch.face} alt="" className="w-10 h-10 rounded-full object-cover bg-white" />
+                      <span className="flex flex-col">
+                        <span className="text-sm font-semibold">{ch.label}</span>
+                        <span className={`text-xs ${character === ch.id ? 'text-pink-100' : 'text-gray-500'}`}>{ch.hint}</span>
+                      </span>
                     </button>
                   ))}
                 </div>

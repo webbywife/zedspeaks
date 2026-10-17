@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { Plus } from 'lucide-react'
 import { SHELVES } from '../../data/shelves'
-import { SYMBOLS, cardImage, getSymbolsByCategory } from '../../data/symbols'
+import { SYMBOLS, cardImage } from '../../data/symbols'
+import { feelingSymbols } from '../../data/characters'
+import { useBoardStore } from '../../store/boardStore'
 import type { AACSymbol, CustomSymbol } from '../../types'
 import { PictureCard } from './PictureCard'
 import { CARD_PHRASES, STARTERS, photoPhrase, sentenceFor, type Starter } from '../../data/homePhrases'
@@ -20,14 +22,15 @@ interface HomeTabProps {
 /** Shopee-style shelves: the child's own photos first, then built-in cards. */
 export function HomeTab({ photos, onPick, onFeel, onAddPhoto, onDelete, top }: HomeTabProps) {
   const [starter, setStarter] = useState<Starter | null>(null)
+  const character = useBoardStore((s) => s.character)
   return (
     <div className="flex-1 overflow-y-auto pb-4">
       {top}
-      {/* Zed's own faces first: tap = "I am happy", and his face in the header changes */}
+      {/* Feeling faces first (Zed or the girl, per Settings): tap = "I am happy", and the header face changes */}
       <section className="pt-4">
         <h2 className="px-4 pb-2 text-base font-bold text-slate-900">How I feel</h2>
         <div className="flex gap-3 overflow-x-auto px-4 pb-1" style={{ scrollbarWidth: 'none' }}>
-          {getSymbolsByCategory('feelings').map((s) => (
+          {feelingSymbols(character).map((s) => (
             <PictureCard key={s.id} label={s.label} src={s.customImageUrl ?? cardImage(s.id).src}
               photo={!!s.customImageUrl} emoji={s.emoji} onTap={() => onFeel(s)} />
           ))}

@@ -12,6 +12,7 @@ import { useBoardStore } from '../store/boardStore'
 import { useTTS } from '../hooks/useTTS'
 import { useCustomSymbols } from '../hooks/useCustomSymbols'
 import { CATEGORIES, getSymbolsByCategory } from '../data/symbols'
+import { feelingSymbols } from '../data/characters'
 import type { AACSymbol, CategoryId, CustomSymbol, MoodId, Phrase } from '../types'
 
 const MOOD_RESET_MS = 2000
@@ -33,7 +34,8 @@ export function ClassicLayout() {
   const moodTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [cameraOpen, setCameraOpen] = useState(false)
 
-  const symbols = getSymbolsByCategory(currentCategory)
+  const character = useBoardStore((s) => s.character)
+  const symbols = currentCategory === 'feelings' ? feelingSymbols(character) : getSymbolsByCategory(currentCategory)
 
   const flashMood = useCallback(
     (mood: MoodId, text?: string) => {
