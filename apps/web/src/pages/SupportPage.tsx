@@ -98,7 +98,7 @@ export function SupportPage() {
             <div className="flex gap-4">
               <HeartHandshake className="text-pink-600 shrink-0" />
               <div>
-                <h3 className="font-bold text-slate-900">Support or help sustain ZedSpeaks</h3>
+                <h3 className="font-bold text-slate-900">Help fund ZedSpeaks</h3>
                 <p className="text-sm text-slate-600">
                   Would you like to help keep ZedSpeaks running? You can support the app, help sustain it every month, share your
                   skills (design, translation, therapy, coding), or partner with us as an organisation. Leave a message and I'll

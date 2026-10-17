@@ -7,7 +7,7 @@ import type { AppEnv } from '../lib/types.js'
 // Spam guards: a hidden "website" field bots fill in, size limits, and 5 messages per hour per address.
 export const inquiriesRouter = new Hono<AppEnv>()
 
-const KINDS = ['Support the app', 'Help sustain it every month', 'Volunteer my time or skills', 'Partner as an organisation', 'Something else']
+const KINDS = ['Help fund the app', 'Help fund it every month', 'Volunteer my time or skills', 'Partner as an organisation', 'Something else']
 const recent = new Map<string, number[]>()
 
 const clean = (v: unknown, max: number) => (typeof v === 'string' ? v.trim().replace(/\s+/g, ' ').slice(0, max) : '')
