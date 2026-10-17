@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
-import { ChefHat, Home, MessageCircle, User } from 'lucide-react'
+import { Blocks, ChefHat, Home, Keyboard, MessageCircle, User } from 'lucide-react'
 import { SentenceStrip } from '../components/board/SentenceStrip'
 import { CategoryNav } from '../components/board/CategoryNav'
 import { CommunicationBoard } from '../components/board/CommunicationBoard'
@@ -10,6 +10,8 @@ import { VoiceSettings } from '../components/settings/VoiceSettings'
 import { HomeTab } from '../components/home/HomeTab'
 import { KitchenTab } from '../components/kitchen/KitchenTab'
 import { MeTab } from '../components/me/MeTab'
+import { TypeTab } from '../components/type/TypeTab'
+import { BuildTab } from '../components/build/BuildTab'
 import { ZedMascot } from '../components/mascot/ZedMascot'
 import { KITCHEN_SHELF } from '../data/shelves'
 import { CATEGORIES, getSymbolsByCategory } from '../data/symbols'
@@ -18,12 +20,14 @@ import { useTTS } from '../hooks/useTTS'
 import { useCustomSymbols } from '../hooks/useCustomSymbols'
 import type { AACSymbol, Phrase } from '../types'
 
-type Tab = 'home' | 'kitchen' | 'talk' | 'me'
+type Tab = 'home' | 'kitchen' | 'talk' | 'build' | 'type' | 'me'
 
 const TABS: { id: Tab; label: string; Icon: typeof Home }[] = [
   { id: 'home', label: 'Home', Icon: Home },
   { id: 'kitchen', label: 'Kitchen', Icon: ChefHat },
   { id: 'talk', label: 'Talk', Icon: MessageCircle },
+  { id: 'build', label: 'Build', Icon: Blocks },
+  { id: 'type', label: 'Type', Icon: Keyboard },
   { id: 'me', label: 'Me', Icon: User },
 ]
 const TALK_CATEGORIES = CATEGORIES.filter((c) => c.id !== 'my-photos')
@@ -70,7 +74,7 @@ export function TabsLayout() {
         <ZedMascot size="sm" />
         <h1 className="text-lg font-black text-white">Zed<span className="text-blue-300">Speaks</span></h1>
       </header>
-      <SentenceStrip items={sentenceItems} onSpeak={speakSentence} onClear={clearSentence} onBackspace={backspace} />
+      {tab !== 'type' && <SentenceStrip items={sentenceItems} onSpeak={speakSentence} onClear={clearSentence} onBackspace={backspace} />}
 
       {tab === 'home' && (
         <HomeTab photos={photos.filter((p) => p.shelf !== KITCHEN_SHELF)} onPick={pick} onFeel={tapSymbol} onAddPhoto={setCameraShelf} onDelete={remove} />
@@ -87,6 +91,8 @@ export function TabsLayout() {
           <CategoryNav categories={TALK_CATEGORIES} active={talkCategory} onChange={setCategory} />
         </>
       )}
+      {tab === 'build' && <BuildTab onPiece={(t) => { add(t, t); speak(t) }} />}
+      {tab === 'type' && <TypeTab speak={speak} />}
       {tab === 'me' && <MeTab />}
 
       <nav className="flex bg-white border-t border-slate-200 shrink-0" aria-label="Main">
