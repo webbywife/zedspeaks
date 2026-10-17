@@ -33,3 +33,12 @@ button {
   user-select: none;
   -webkit-touch-callout: none;
 }
+
+/* Landing page: drawings strip that scrolls sideways forever (paused for reduced motion) */
+@keyframes zs-marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+.zs-marquee { animation: zs-marquee 40s linear infinite; }
+@keyframes zs-float { 0%, 100% { transform: translateY(0) rotate(var(--r, 0deg)) } 50% { transform: translateY(-10px) rotate(var(--r, 0deg)) } }
+.zs-float { animation: zs-float 6s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .zs-marquee, .zs-float { animation: none; }
+}
