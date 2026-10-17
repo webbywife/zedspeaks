@@ -1,0 +1,3 @@
+bathroom = white toilet next to a blue sink | bright colors, bold, very thick black outlines, plain white background
+come = open hand with fingers curling inward, beckoning | one hand, warm skin tone, small in the middle, plain white background, very thick black outlines
+stop = one open palm facing forward on a red circle | stop gesture, warm skin tone, no letters, very thick black outlines

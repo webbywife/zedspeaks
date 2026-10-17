@@ -25,7 +25,9 @@ REST = int(os.environ.get("REST", "30"))
 
 STYLE = ("flat vector sticker illustration, bold thick black outlines around every shape, simple shapes, "
          "soft bright pastel colors, plain white background, one object, centered, no text")
-NEGATIVE = "text, letters, words, watermark, logo, brand, photo, realistic, shadow, gradient background, frame"
+# Children are always drawn fully clothed; hands should have five fingers
+NEGATIVE = ("text, letters, words, watermark, logo, brand, photo, realistic, shadow, gradient background, frame, "
+            "nude, naked, bare chest, underwear, diaper, bottom, extra fingers, missing fingers, deformed hand")
 
 # IP guard: words that name brands, characters or products are refused before generating.
 # Families add their own photos of branded favourites; the shared library stays generic.

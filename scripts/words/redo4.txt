@@ -1,0 +1,4 @@
+bathroom = white toilet with a roll of toilet paper | simple, bright, centered, very thick black outlines
+help = big hand helping a small hand | warm skin tones, centered, very thick black outlines
+water = glass of water | clear glass with bright blue water, centered, very thick black outlines
+school = small school building with a red roof and a flag | bright colors, no letters or signs, very thick black outlines

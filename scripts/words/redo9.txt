@@ -1,0 +1,9 @@
+bathroom = bright bathroom with a white toilet and blue tiles | colorful, fills the picture, centered, very thick black outlines
+help = child raising one hand high | cheerful cartoon child, centered, plain white background, whole figure visible, very thick black outlines
+more = two hands bringing fingertips together | simple, warm skin tones, centered, very thick black outlines
+stop = red octagon stop sign | blank red sign with no letters, white border, very thick black outlines
+no = big red X | bold red cross mark, centered, very thick black outlines
+milk = glass of milk | white milk in a clear glass, centered, very thick black outlines
+me = cartoon child pointing at self | cheerful, centered, whole figure visible, very thick black outlines
+hospital = small hospital building with a red cross | no letters, bright colors, very thick black outlines
+come = hand waving come here | warm skin tone, centered, very thick black outlines
