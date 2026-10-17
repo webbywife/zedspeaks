@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useBoardStore } from '../../store/boardStore'
 import type { MoodId } from '../../types'
-import { moodFace } from '../../data/characters'
+import { headerFace } from '../../data/characters'
 
 const MOOD_LABELS: Record<MoodId, string> = {
   joy:       'Joy',
@@ -23,7 +23,7 @@ interface ZedMascotProps {
 }
 
 export function ZedMascot({ size = 'md' }: ZedMascotProps) {
-  const { mascotMood, narratorText, setMascotState, character } = useBoardStore()
+  const { mascotMood, narratorText, setMascotState, character, mascotFace } = useBoardStore()
 
   // Auto-clear narrator text after 3s
   useEffect(() => {
@@ -40,8 +40,8 @@ export function ZedMascot({ size = 'md' }: ZedMascotProps) {
       <div className={`${dim} rounded-full overflow-hidden border-2 border-pink-400 shrink-0 shadow-sm`}>
         <AnimatePresence mode="wait">
           <motion.img
-            key={`${character}-${mascotMood}`}
-            src={moodFace(character, mascotMood)}
+            key={headerFace(character, mascotFace)}
+            src={headerFace(character, mascotFace)}
             alt={`Feeling: ${MOOD_LABELS[mascotMood]}`}
             initial={{ scale: 0.7, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}

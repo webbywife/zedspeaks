@@ -35,15 +35,16 @@ export function ClassicLayout() {
   const [cameraOpen, setCameraOpen] = useState(false)
 
   const character = useBoardStore((s) => s.character)
+  const setMascotFace = useBoardStore((s) => s.setMascotFace)
   const symbols = currentCategory === 'feelings' ? feelingSymbols(character) : getSymbolsByCategory(currentCategory)
 
   const flashMood = useCallback(
     (mood: MoodId, text?: string) => {
       if (moodTimer.current) clearTimeout(moodTimer.current)
       setMascotState(mood, text ?? null)
-      moodTimer.current = setTimeout(() => setMascotState('relaxed', null), MOOD_RESET_MS)
+      moodTimer.current = setTimeout(() => { setMascotState('relaxed', null); setMascotFace(null) }, MOOD_RESET_MS)
     },
-    [setMascotState]
+    [setMascotState, setMascotFace]
   )
 
   const handleCategoryChange = useCallback(
@@ -61,6 +62,8 @@ export function ClassicLayout() {
   const handleSymbolTap = useCallback(
     (symbol: AACSymbol) => {
       const mood: MoodId = symbol.moodId ?? 'curious'
+      // Feeling cards show their own face in the header
+      if (symbol.category === 'feelings' && symbol.customImageUrl) setMascotFace(symbol.customImageUrl)
       if (ttsSettings.autoSpeak) {
         speak(symbol.spokenText)
         flashMood(mood, symbol.label)
@@ -69,7 +72,7 @@ export function ClassicLayout() {
         flashMood(mood)
       }
     },
-    [ttsSettings.autoSpeak, speak, addToSentence, flashMood]
+    [ttsSettings.autoSpeak, speak, addToSentence, flashMood, setMascotFace]
   )
 
   // ── Phrase tap ──────────────────────────────────────────────────────────────

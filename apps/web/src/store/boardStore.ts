@@ -20,6 +20,9 @@ interface BoardStore {
   setLayout: (layout: LayoutId) => void
   character: CharacterId
   setCharacter: (character: CharacterId) => void
+  /** Face shown in the header after a feeling is tapped (null = resting face) */
+  mascotFace: string | null
+  setMascotFace: (face: string | null) => void
   currentCategory: CategoryId
   sentenceItems: SentenceItem[]
   ttsSettings: TTSSettings
@@ -52,7 +55,9 @@ export const useBoardStore = create<BoardStore>()(
         naturalVoice: true,
       },
       character: 'boy' as CharacterId,
-      setCharacter: (character) => set({ character }),
+      setCharacter: (character) => set({ character, mascotFace: null }),
+      mascotFace: null,
+      setMascotFace: (mascotFace) => set({ mascotFace }),
       layout: 'tabs' as LayoutId,
       setLayout: (layout) => set({ layout }),
       voiceSettingsOpen: false,

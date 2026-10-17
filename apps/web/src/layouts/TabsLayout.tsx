@@ -39,7 +39,7 @@ const TALK_CATEGORIES = CATEGORIES.filter((c) => c.id !== 'my-photos')
 
 /** App-style layout: shelves, Mom's Kitchen, the talk board and a parent corner. */
 export function TabsLayout() {
-  const { currentCategory, sentenceItems, ttsSettings, setCategory, addToSentence, clearSentence, backspace, setMascotState } = useBoardStore()
+  const { currentCategory, sentenceItems, ttsSettings, setCategory, addToSentence, clearSentence, backspace, setMascotState, setMascotFace } = useBoardStore()
   const { speak } = useTTS(ttsSettings)
   const profile = useActiveProfile()
   const character = useBoardStore((s) => s.character)
@@ -70,10 +70,11 @@ export function TabsLayout() {
     speak(s.spokenText)
     if (s.moodId) {
       setMascotState(s.moodId)
+      setMascotFace(s.customImageUrl ?? null)
       if (moodTimer.current) clearTimeout(moodTimer.current)
-      moodTimer.current = setTimeout(() => setMascotState('hopeful'), 6000)
+      moodTimer.current = setTimeout(() => { setMascotState('hopeful'); setMascotFace(null) }, 6000)
     }
-  }, [add, speak, setMascotState])
+  }, [add, speak, setMascotState, setMascotFace])
   const tapPhrase = useCallback((p: Phrase) => { add(p.label, p.spokenText); speak(p.spokenText) }, [add, speak])
   const speakSentence = useCallback(() => {
     speak(sentenceItems.map((i) => i.spokenText).join(' '), sentenceItems.map((i) => i.spokenText))

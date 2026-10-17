@@ -5,7 +5,7 @@ export function PendingPage() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center px-4 text-center">
       <img
-        src="/assets/moods/hopeful.png"
+        src="/assets/characters/boy/happy.webp"
         alt="Zed is hopeful"
         className="w-24 h-24 rounded-full object-cover mx-auto mb-6 shadow-lg"
       />

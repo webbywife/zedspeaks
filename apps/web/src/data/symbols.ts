@@ -69,17 +69,17 @@ export const SYMBOLS: AACSymbol[] = [
   { id: 'thanks',     label: 'Thank you',  spokenText: 'thank you',  arasaacId: 8129,  emoji: '💙', category: 'needs' },
 
   // ── Feelings — illustrated with Zed's own face ───────────────────────────
-  { id: 'happy',     label: 'Happy',     spokenText: 'I am happy',     arasaacId: 3196, emoji: '😊', category: 'feelings', customImageUrl: '/assets/moods/joy.png',       moodId: 'joy'       },
-  { id: 'sad',       label: 'Sad',       spokenText: 'I am sad',       arasaacId: 5885, emoji: '😢', category: 'feelings', customImageUrl: '/assets/moods/sad.png',       moodId: 'sad'       },
-  { id: 'angry',     label: 'Angry',     spokenText: 'I am angry',     arasaacId: 2665, emoji: '😠', category: 'feelings', customImageUrl: '/assets/moods/angry.png',     moodId: 'angry'     },
-  { id: 'scared',    label: 'Scared',    spokenText: 'I am scared',    arasaacId: 7111, emoji: '😨', category: 'feelings', customImageUrl: '/assets/moods/fear.png',      moodId: 'fear'      },
-  { id: 'excited',   label: 'Excited',   spokenText: 'I am excited',   arasaacId: 4697, emoji: '🤩', category: 'feelings', customImageUrl: '/assets/moods/excited.png',   moodId: 'excited'   },
-  { id: 'laughing',  label: 'Laughing',  spokenText: 'I am laughing',  arasaacId: 4697, emoji: '😂', category: 'feelings', customImageUrl: '/assets/moods/laughing.png',  moodId: 'laughing'  },
-  { id: 'surprised', label: 'Surprised', spokenText: 'I am surprised', arasaacId: 5855, emoji: '😲', category: 'feelings', customImageUrl: '/assets/moods/surprised.png', moodId: 'surprised' },
-  { id: 'curious',   label: 'Curious',   spokenText: 'I am curious',   arasaacId: 3468, emoji: '🤔', category: 'feelings', customImageUrl: '/assets/moods/curious.png',   moodId: 'curious'   },
-  { id: 'hopeful',   label: 'Hopeful',   spokenText: 'I am hopeful',   arasaacId: 3120, emoji: '🌟', category: 'feelings', customImageUrl: '/assets/moods/hopeful.png',   moodId: 'hopeful'   },
-  { id: 'relaxed',   label: 'Relaxed',   spokenText: 'I am relaxed',   arasaacId: 6524, emoji: '😌', category: 'feelings', customImageUrl: '/assets/moods/relaxed.png',   moodId: 'relaxed'   },
-  { id: 'disgusted', label: 'Disgusted', spokenText: 'I am disgusted', arasaacId: 6140, emoji: '🤢', category: 'feelings', customImageUrl: '/assets/moods/disgust.png',   moodId: 'disgust'   },
+  { id: 'happy',     label: 'Happy',     spokenText: 'I am happy',     arasaacId: 3196, emoji: '😊', category: 'feelings', customImageUrl: '/assets/characters/boy/happy.webp',       moodId: 'joy'       },
+  { id: 'sad',       label: 'Sad',       spokenText: 'I am sad',       arasaacId: 5885, emoji: '😢', category: 'feelings', customImageUrl: '/assets/characters/boy/sad.webp',       moodId: 'sad'       },
+  { id: 'angry',     label: 'Angry',     spokenText: 'I am angry',     arasaacId: 2665, emoji: '😠', category: 'feelings', customImageUrl: '/assets/characters/boy/angry.webp',     moodId: 'angry'     },
+  { id: 'scared',    label: 'Scared',    spokenText: 'I am scared',    arasaacId: 7111, emoji: '😨', category: 'feelings', customImageUrl: '/assets/characters/boy/scared.webp',      moodId: 'fear'      },
+  { id: 'excited',   label: 'Excited',   spokenText: 'I am excited',   arasaacId: 4697, emoji: '🤩', category: 'feelings', customImageUrl: '/assets/characters/boy/excited.webp',   moodId: 'excited'   },
+  { id: 'laughing',  label: 'Laughing',  spokenText: 'I am laughing',  arasaacId: 4697, emoji: '😂', category: 'feelings', customImageUrl: '/assets/characters/boy/goofy.webp',  moodId: 'laughing'  },
+  { id: 'surprised', label: 'Surprised', spokenText: 'I am surprised', arasaacId: 5855, emoji: '😲', category: 'feelings', customImageUrl: '/assets/characters/boy/surprised.webp', moodId: 'surprised' },
+  { id: 'curious',   label: 'Curious',   spokenText: 'I am curious',   arasaacId: 3468, emoji: '🤔', category: 'feelings', customImageUrl: '/assets/characters/boy/thinking.webp',   moodId: 'curious'   },
+  { id: 'hopeful',   label: 'Hopeful',   spokenText: 'I am hopeful',   arasaacId: 3120, emoji: '🌟', category: 'feelings', customImageUrl: '/assets/characters/boy/happy.webp',   moodId: 'hopeful'   },
+  { id: 'relaxed',   label: 'Relaxed',   spokenText: 'I am relaxed',   arasaacId: 6524, emoji: '😌', category: 'feelings', customImageUrl: '/assets/characters/boy/bored.webp',   moodId: 'relaxed'   },
+  { id: 'disgusted', label: 'Disgusted', spokenText: 'I am disgusted', arasaacId: 6140, emoji: '🤢', category: 'feelings', customImageUrl: '/assets/characters/boy/determined.webp',   moodId: 'disgust'   },
   { id: 'love',      label: 'Love',      spokenText: 'I love you',     arasaacId: 5540, emoji: '❤️', category: 'feelings' },
 
   // ── Food ─────────────────────────────────────────────────────────────────

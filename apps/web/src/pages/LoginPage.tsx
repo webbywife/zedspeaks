@@ -132,7 +132,7 @@ export function LoginPage() {
 
       {/* Logo */}
       <div className="text-center mb-6">
-        <img src="/assets/moods/joy.png" alt="Zed" className="w-10 h-10 rounded-full object-cover mx-auto mb-2 shadow" />
+        <img src="/assets/characters/boy/happy.webp" alt="Zed" className="w-10 h-10 rounded-full object-cover mx-auto mb-2 shadow" />
         <h1 className="text-2xl font-black text-pink-600">ZedSpeaks</h1>
         <p className="text-sm text-gray-500">AAC Communication Board</p>
       </div>
