@@ -69,7 +69,8 @@ export function TabsLayout() {
   const moodTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   // Talk cards say a short sentence ("I want to eat"); after "I want" they add just their word
   const tapSymbol = useCallback((s: AACSymbol) => {
-    const last = useBoardStore.getState().sentenceItems.at(-1)?.spokenText
+    const items = useBoardStore.getState().sentenceItems
+    const last = items[items.length - 1]?.spokenText
     const text = followsStarter(last) ? s.spokenText : talkSentence(s)
     add(s.label, text)
     speak(text)
