@@ -2,15 +2,15 @@ import type { AACSymbol, CategoryMeta, CategoryId } from '../types'
 import { ZS_AVAILABLE } from './zsAvailable'
 
 export const CATEGORIES: CategoryMeta[] = [
-  { id: 'needs',     label: 'Needs',    color: '#dc2626', bgColor: '#fee2e2', borderColor: '#fca5a5' },
-  { id: 'body',      label: 'Body',     color: '#e11d48', bgColor: '#ffe4e6', borderColor: '#fda4af' },
-  { id: 'feelings',  label: 'Feelings', color: '#7c3aed', bgColor: '#ede9fe', borderColor: '#c4b5fd' },
-  { id: 'food',      label: 'Food',     color: '#16a34a', bgColor: '#dcfce7', borderColor: '#86efac' },
-  { id: 'people',    label: 'People',   color: '#ea580c', bgColor: '#ffedd5', borderColor: '#fdba74' },
-  { id: 'places',    label: 'Places',   color: '#0891b2', bgColor: '#cffafe', borderColor: '#67e8f9' },
-  { id: 'actions',   label: 'Actions',  color: '#ca8a04', bgColor: '#fef9c3', borderColor: '#fde047' },
-  { id: 'phrases',   label: 'Phrases',  color: '#db2777', bgColor: '#fce7f3', borderColor: '#f9a8d4' },
-  { id: 'my-photos', label: 'My Stuff', color: '#0f766e', bgColor: '#ccfbf1', borderColor: '#5eead4' },
+  { id: 'needs',     label: 'Needs',    color: 'var(--color-pink-600)', bgColor: '#fee2e2', borderColor: '#fca5a5' },
+  { id: 'body',      label: 'Body',     color: 'var(--color-pink-600)', bgColor: '#ffe4e6', borderColor: '#fda4af' },
+  { id: 'feelings',  label: 'Feelings', color: 'var(--color-pink-600)', bgColor: '#ede9fe', borderColor: '#c4b5fd' },
+  { id: 'food',      label: 'Food',     color: 'var(--color-pink-600)', bgColor: '#dcfce7', borderColor: '#86efac' },
+  { id: 'people',    label: 'People',   color: 'var(--color-pink-600)', bgColor: '#ffedd5', borderColor: '#fdba74' },
+  { id: 'places',    label: 'Places',   color: 'var(--color-pink-600)', bgColor: '#cffafe', borderColor: '#67e8f9' },
+  { id: 'actions',   label: 'Actions',  color: 'var(--color-pink-600)', bgColor: '#fef9c3', borderColor: '#fde047' },
+  { id: 'phrases',   label: 'Phrases',  color: 'var(--color-pink-600)', bgColor: '#fce7f3', borderColor: '#f9a8d4' },
+  { id: 'my-photos', label: 'My Stuff', color: 'var(--color-pink-600)', bgColor: '#ccfbf1', borderColor: '#5eead4' },
 ]
 
 export function getCategoryMeta(id: CategoryId): CategoryMeta {
