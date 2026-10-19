@@ -2,9 +2,10 @@ import { Settings, Lock, Heart, ChevronRight } from 'lucide-react'
 import { useBoardStore } from '../../store/boardStore'
 import { PHOTO_CREDITS } from '../../data/photoCredits'
 import { FeedbackCard } from './FeedbackCard'
+import { TeachSettings } from '../teach/TeachSettings'
 
 /** Parent corner: settings (layout, voice) and how to keep the child inside the app. */
-export function MeTab() {
+export function MeTab({ onTeach }: { onTeach: () => void }) {
   const setOpen = useBoardStore((s) => s.setVoiceSettingsOpen)
   return (
     <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
@@ -15,6 +16,7 @@ export function MeTab() {
           <p className="text-sm text-slate-500">Layout, voice, speed and volume</p>
         </div>
       </button>
+      <TeachSettings onStart={onTeach} />
       <div className="p-4 rounded-2xl bg-white border border-slate-200 flex flex-col gap-2">
         <div className="flex items-center gap-2">
           <Lock className="text-slate-700" size={20} />

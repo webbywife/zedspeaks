@@ -6,9 +6,11 @@ interface CommunicationBoardProps {
   symbols: AACSymbol[]
   currentCategory: CategoryId
   onSymbolTap: (symbol: AACSymbol) => void
+  /** Teach mode glow for a card, if any */
+  teachFor?: (id: string) => 'focus' | 'hint' | undefined
 }
 
-export function CommunicationBoard({ symbols, currentCategory, onSymbolTap }: CommunicationBoardProps) {
+export function CommunicationBoard({ symbols, currentCategory, onSymbolTap, teachFor }: CommunicationBoardProps) {
   return (
     <div className="flex-1 overflow-y-auto bg-slate-100 p-2">
       <AnimatePresence mode="wait">
@@ -25,7 +27,7 @@ export function CommunicationBoard({ symbols, currentCategory, onSymbolTap }: Co
           }}
         >
           {symbols.map((symbol) => (
-            <SymbolButton key={symbol.id} symbol={symbol} onTap={onSymbolTap} />
+            <SymbolButton key={symbol.id} symbol={symbol} onTap={onSymbolTap} teach={teachFor?.(symbol.id)} />
           ))}
         </motion.div>
       </AnimatePresence>

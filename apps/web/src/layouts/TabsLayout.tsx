@@ -24,6 +24,9 @@ import { feelingSymbols } from '../data/characters'
 import { followsStarter, talkSentence } from '../data/talkSentences'
 import { useBoardStore } from '../store/boardStore'
 import { useTTS } from '../hooks/useTTS'
+import { useTeach } from '../hooks/useTeach'
+import { useTeachStore } from '../store/teachStore'
+import { TeachBar } from '../components/teach/TeachBar'
 import { useCustomSymbols } from '../hooks/useCustomSymbols'
 import type { AACSymbol, Phrase } from '../types'
 
@@ -53,6 +56,14 @@ export function TabsLayout() {
   })
   const [cameraShelf, setCameraShelf] = useState<string | null>(null)
   const talkCategory = currentCategory === 'my-photos' ? 'needs' : currentCategory
+  // Teach mode: focus words glow on the real board; after a miss the asked word pulses
+  const teach = useTeachStore()
+  const { showMe, onTap: teachTap } = useTeach(speak, setCategory)
+  const teachFor = useCallback((id: string) => {
+    if (!teach.on) return undefined
+    if (id === teach.target && teach.missed) return 'hint' as const
+    return teach.focus.includes(id) ? 'focus' as const : undefined
+  }, [teach.on, teach.target, teach.missed, teach.focus])
 
   const add = useCallback(
     (label: string, spokenText: string) => addToSentence({ uid: `${label}-${Date.now()}`, label, spokenText }),
@@ -69,6 +80,7 @@ export function TabsLayout() {
   const moodTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   // Talk cards say a short sentence ("I want to eat"); after "I want" they add just their word
   const tapSymbol = useCallback((s: AACSymbol) => {
+    if (teachTap(s)) return
     const items = useBoardStore.getState().sentenceItems
     const last = items[items.length - 1]?.spokenText
     const text = followsStarter(last) ? s.spokenText : talkSentence(s)
@@ -80,7 +92,7 @@ export function TabsLayout() {
       if (moodTimer.current) clearTimeout(moodTimer.current)
       moodTimer.current = setTimeout(() => { setMascotState('hopeful'); setMascotFace(null) }, 6000)
     }
-  }, [add, speak, setMascotState, setMascotFace])
+  }, [add, speak, setMascotState, setMascotFace, teachTap])
   const tapPhrase = useCallback((p: Phrase) => { add(p.label, p.spokenText); speak(p.spokenText) }, [add, speak])
   const speakSentence = useCallback(() => {
     speak(sentenceItems.map((i) => i.spokenText).join(' '), sentenceItems.map((i) => i.spokenText))
@@ -111,15 +123,16 @@ export function TabsLayout() {
       )}
       {tab === 'talk' && (
         <>
+          {teach.on && <TeachBar onShowMe={showMe} onJump={setCategory} />}
           {talkCategory === 'phrases'
             ? <PhraseBoard onPhraseTap={tapPhrase} />
-            : <CommunicationBoard symbols={talkCategory === 'feelings' ? feelingSymbols(character) : getSymbolsByCategory(talkCategory)} currentCategory={talkCategory} onSymbolTap={tapSymbol} />}
+            : <CommunicationBoard symbols={talkCategory === 'feelings' ? feelingSymbols(character) : getSymbolsByCategory(talkCategory)} currentCategory={talkCategory} onSymbolTap={tapSymbol} teachFor={teachFor} />}
           <CategoryNav categories={TALK_CATEGORIES} active={talkCategory} onChange={setCategory} />
         </>
       )}
       {tab === 'build' && <BuildTab onPiece={(t) => { add(t, t); speak(t) }} />}
       {tab === 'type' && <TypeTab speak={speak} />}
-      {tab === 'me' && <MeTab />}
+      {tab === 'me' && <MeTab onTeach={() => setTab('talk')} />}
 
       <nav className="flex bg-white border-t border-slate-200 shrink-0" aria-label="Main">
         {TABS.map(({ id, label, Icon }) => (

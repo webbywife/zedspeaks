@@ -1,14 +1,17 @@
 import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { arasaacUrl, iconUrl, pictureUrl, getCategoryMeta } from '../../data/symbols'
 import type { AACSymbol } from '../../types'
 
 interface SymbolButtonProps {
   symbol: AACSymbol
   onTap: (symbol: AACSymbol) => void
+  /** Teach mode: 'focus' glows softly, 'hint' also pulses to show where the asked word is */
+  teach?: 'focus' | 'hint'
 }
 
-export function SymbolButton({ symbol, onTap }: SymbolButtonProps) {
+export function SymbolButton({ symbol, onTap, teach }: SymbolButtonProps) {
+  const still = useReducedMotion()
   // Own icon set first, then the ARASAAC pictogram, then the emoji.
   const sources = symbol.customImageUrl
     ? [symbol.customImageUrl]
@@ -20,12 +23,16 @@ export function SymbolButton({ symbol, onTap }: SymbolButtonProps) {
   return (
     <motion.button
       whileTap={{ scale: 0.88 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+      animate={teach === 'hint' && !still ? { scale: [1, 1.08, 1] } : { scale: 1 }}
+      transition={teach === 'hint' && !still
+        ? { duration: 0.9, repeat: Infinity, ease: 'easeInOut' }
+        : { type: 'spring', stiffness: 400, damping: 17 }}
       onClick={() => onTap(symbol)}
       className="flex flex-col items-center justify-center gap-1 w-full h-full min-h-[72px] rounded-2xl bg-white shadow-sm border-2 p-2 cursor-pointer select-none focus:outline-none focus-visible:ring-3 focus-visible:ring-offset-2 active:shadow-none"
       style={{
         borderColor: category.color,
         '--tw-ring-color': category.color,
+        ...(teach && { boxShadow: `0 0 0 ${teach === 'hint' ? 6 : 4}px var(--color-pink-300)` }),
       } as React.CSSProperties}
       aria-label={symbol.label}
     >
